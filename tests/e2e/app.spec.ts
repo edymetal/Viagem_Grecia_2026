@@ -70,6 +70,7 @@ test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias
   await page.getByRole('button', { name: 'Editar informações' }).click();
   await page.getByLabel('Frases em grego', { exact: true }).fill('Texto fornecido para teste');
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.reload();
   await expect(page.getByText('Texto fornecido para teste')).toBeVisible();
 });
