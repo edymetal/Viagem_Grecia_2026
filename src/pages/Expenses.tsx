@@ -362,10 +362,10 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
                 : 'O orçamento definido por você aparece no resumo acima.'}
             </p>
             <p>
-              Hotel por €240 era apenas simulação: €681,81–721,81 mais guias e eventuais extras, sem
-              lançamento de hotel a esse preço. As refeições do roteiro e os trajetos cobertos pelo
-              passe não geram despesas extras automaticamente. Ao registrar gastos reais, ajuste as
-              previsões correspondentes para evitar duplicidade.
+              Hotel por três noites e os dois guias ainda têm valor a confirmar; não foram lançados
+              como despesas. As refeições do roteiro e os trajetos cobertos pelo passe não geram
+              despesas extras automaticamente. Ao registrar gastos reais, ajuste as previsões
+              correspondentes para evitar duplicidade.
             </p>
           </details>
         )}

@@ -1,6 +1,7 @@
 import { openDB, type DBSchema } from 'idb';
 import { stateSchema, documentMetaSchema, type AppState, type LocalDocument } from '../data/schema';
 import { initialState } from '../data/initial';
+import { correctItinerary } from './itinerary';
 
 interface TravelDB extends DBSchema {
   state: { key: string; value: AppState };
@@ -38,7 +39,11 @@ export async function loadState() {
   const database = await db();
   try {
     const saved = await database.get('state', 'current');
-    return saved ? stateSchema.parse(saved) : initialState();
+    if (!saved) return initialState();
+    const current = stateSchema.parse(saved);
+    const corrected = correctItinerary(current);
+    if (corrected !== current) await database.put('state', corrected, 'current');
+    return corrected;
   } finally {
     database.close();
   }

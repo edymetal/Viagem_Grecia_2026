@@ -2,7 +2,7 @@
 
 Aplicativo pessoal de viagem para **uma pessoa, de Santo Stefano di Camastra a Atenas via Palermo, de 20 a 23/11/2026**. Interface em português brasileiro e valores em euros. React, TypeScript, Vite, Tailwind CSS, Lucide, IndexedDB (`idb`), Zod e PWA (`vite-plugin-pwa` / Workbox). Front-end estático, sem autenticação, back-end, serviços pagos ou chaves privadas.
 
-O cronograma enviado foi incorporado: **60 blocos nos quatro dias**, hotel escolhido, voos e trens consultados, transporte, ingressos, alimentação estimada, alternativas e checklist. O texto informa que nenhuma compra ou reserva foi realizada. Guias às 14h30–16h30 são propostas, não vagas garantidas. Os dados e links foram transcritos sem nova consulta de disponibilidade. Não há documentos ou códigos de reserva no código-fonte.
+O cronograma enviado foi incorporado: **89 etapas corrigidas: 19 na sexta, 24 no sábado, 27 no domingo e 19 na segunda**, hotel escolhido, voos e trens consultados, transporte, ingressos, alimentação estimada, alternativas e checklist. O texto informa que nenhuma compra ou reserva foi realizada. Guias às 14h30–16h30 são propostas, não vagas garantidas. Os dados e links foram transcritos sem nova consulta de disponibilidade. Não há documentos ou códigos de reserva no código-fonte.
 
 ## Instalar e executar
 
@@ -36,6 +36,14 @@ npm run test:e2e
 ```
 
 Os testes de navegador usam a versão já compilada em `dist`, com viewport e toque equivalentes a Android/Chromium; não substituem um teste em aparelho físico. O projeto não depende de conexão com aparelhos pessoais.
+
+## Correção do cronograma
+
+A tabela completa enviada na correção prevalece sobre a introdução em prosa, que repete parcialmente a sexta e o sábado. As 89 etapas separam caminhadas, acesso, visita e saída, preservando todos os horários fornecidos. Metrô de chegada: 19h35–20h45; caminhada ao hotel: 20h45–20h55; check-in: 20h55–21h15. No domingo, o bloco de 16h30–16h40 é somente para finalizar e sair do museu. Os dois guias às 14h30 continuam provisórios. Os percursos casa → estação e estação → casa não foram definidos; o app não inventa horários ou endereços para esses trajetos.
+
+Ao carregar uma instalação com a revisão anterior conhecida (`cronograma-2026-11-05`), o app atualiza automaticamente o IndexedDB para `cronograma-2026-11-05-correcao-2`. O arquivo `src/data/itinerary-previous.json` contém somente o planejamento público anterior, usado para comparar os campos; não contém dados extraídos do navegador. A migração atualiza campos que ainda correspondiam ao original, insere 29 etapas e preserva edições pessoais, ordem, exclusões, favoritos, visitas concluídas, fotos locais, documentos, despesas, orçamento e reservas. Se uma edição local tornaria um registro inválido ao combinar horários, esse registro é mantido integralmente. A atualização não se repete nem duplica despesas. Backups da revisão anterior recebem a mesma correção ao serem restaurados. Outras revisões ou dados sem revisão não são substituídos automaticamente.
+
+Os horários de funcionamento e links já fornecidos no planejamento anterior são mantidos como referência e identificados para reconferência; não houve consulta de disponibilidade. Preços continuam €107 para seis ingressos e €441,81–481,81 com alimentação, sem hotel e guias.
 
 ## Usar o roteiro
 
@@ -111,9 +119,9 @@ Não existem backups automáticos nem envio a servidores. A escolha do local do 
 
 Consulte [docs/CRONOGRAMA.md](docs/CRONOGRAMA.md). A transcrição está em `src/data/itinerary-activities.json`; os detalhes, preços e demais módulos em `src/data/itinerary.ts`. `src/data/initial.ts` fornece o plano para novas instalações. Os contratos ficam em `src/data/schema.ts`. Campos ausentes são vazios ou `null`. Fusos Itália/Atenas, preços consultados, estimativas e horários propostos são explícitos. Não coloque códigos de reservas, comprovantes ou documentos privados nesses arquivos públicos.
 
-Se a versão anterior já tem dados salvos, use **Incorporar cronograma** no aviso do aplicativo. A incorporação acrescenta o plano uma vez, mantém atividades já existentes com o mesmo ID ou nome/dia, preserva orçamento, arquivos, reservas, hotel já informado e campos já preenchidos. As despesas previstas ficam desmarcadas por padrão quando já houver gastos locais, para evitar duplicidade. Faça um backup antes e revise eventuais sobreposições. Restaurar backup continua sendo uma operação separada de substituição integral.
+A revisão conhecida anterior recebe a correção automaticamente, conforme a seção Correção do cronograma. Para estados ainda sem cronograma ou de outra revisão, use **Incorporar cronograma** no aviso do aplicativo. A incorporação acrescenta o plano uma vez, mantém atividades já existentes com o mesmo ID ou nome/dia, preserva orçamento, arquivos, reservas, hotel já informado e campos já preenchidos. As despesas previstas ficam desmarcadas por padrão quando já houver gastos locais, para evitar duplicidade. Faça um backup antes e revise eventuais sobreposições. Restaurar backup continua sendo uma operação separada de substituição integral.
 
-O total original sem hotel, alimentação e guias é €361,81; ingressos somam €107. Alimentação é uma única previsão global de €80–120, sem adicionar novamente cada refeição. Hotel a €240 é apenas simulação, não lançado como preço real ou limite de orçamento. Ao registrar gastos realizados, ajuste/substitua as previsões correspondentes. A captura do anúncio da Booking.com permanece fora do Git e não comprova reserva, preço final ou café incluído.
+O total original sem hotel, alimentação e guias é €361,81; ingressos somam €107. Alimentação é uma única previsão global de €80–120, sem adicionar novamente cada refeição. Hotel por três noites e dois guias têm valor a confirmar. Não há preço de hotel ou guia presumido. Ao registrar gastos realizados, ajuste/substitua as previsões correspondentes. A captura do anúncio da Booking.com permanece fora do Git e não comprova reserva, preço final ou café incluído.
 
 ## Estrutura
 
@@ -136,7 +144,7 @@ vite.config.ts               # Base path, PWA, cache e escopo
 
 ## Limites conhecidos
 
-Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. A contagem até a partida permanece em dias de calendário de Atenas. A próxima atividade e conflitos convertem os horários locais usando os fusos IANA Europe/Rome e Europe/Athens; o aparelho pode estar em outro fuso. Intervalos que cruzam meia-noite devem ser divididos por dia. A detecção não infere deslocamentos. Há aviso da janela de check-in sobreposta ao deslocamento de sexta e da escavação com última entrada no fim do tour de domingo. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
+Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. A contagem até a partida permanece em dias de calendário de Atenas. A próxima atividade e conflitos convertem os horários locais usando os fusos IANA Europe/Rome e Europe/Athens; o aparelho pode estar em outro fuso. Intervalos que cruzam meia-noite devem ser divididos por dia. A detecção não infere deslocamentos. A correção elimina a sobreposição do check-in de sexta; o roteiro padrão não apresenta sobreposições detectadas. A escavação de domingo deve ser coordenada com o operador e não tem um bloco extra garantido após o guia. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
 
 Implementação alinhada à [documentação do Vite PWA](https://vite-pwa-org.netlify.app/guide/), à [integração Tailwind/Vite](https://tailwindcss.com/docs/installation/using-vite) e ao [workflow oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 

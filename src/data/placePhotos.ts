@@ -3,7 +3,6 @@ import type { Activity } from './schema';
 
 // Presentation assets only: never replace itinerary facts or personal photos.
 const activityPlaces: Record<string, keyof typeof photos> = {
-  'plan-2-02': 'monastiraki',
   'plan-2-03': 'hadrian-library',
   'plan-2-05': 'kotsanas',
   'plan-2-08': 'anafiotika',

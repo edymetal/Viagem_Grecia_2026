@@ -16,7 +16,7 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await page.getByRole('button', { name: /Dia 2 · sábado/ }).click();
   await expect(page.getByRole('tab', { selected: true })).toContainText('21/11');
   await expect(page.getByRole('tab', { selected: true })).not.toContainText('Dia');
-  await expect(page.locator('.activity')).toHaveCount(14);
+  await expect(page.locator('.activity')).toHaveCount(24);
   const library = page
     .locator('.activity')
     .filter({ has: page.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }) });
@@ -115,7 +115,7 @@ test('detalhes e dias funcionam em links diretos, teclado e diferentes larguras'
   await expect(page.getByRole('tab', { selected: true })).toBeFocused();
   await page.goto('./#roteiro/2026-11-21/nao-existe');
   await expect(page.getByText('Atividade não encontrada.', { exact: false })).toBeVisible();
-  await expect(page.locator('.activity')).toHaveCount(14);
+  await expect(page.locator('.activity')).toHaveCount(24);
   await page.goto('./#roteiro/2026-11-20/plan-1-01');
   await expect(page.getByText('Sem foto adicionada', { exact: true })).toBeVisible();
   await expect(page.locator('.detail-hero img')).toHaveCount(0);
@@ -191,7 +191,7 @@ test('fotos dos locais e horários fornecidos permanecem disponíveis offline', 
     await expect(page.locator('.detail-photo-credit')).toContainText('CC BY');
     await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
     await expect(
-      page.locator('.activity').filter({ has: page.getByRole('img', { name: alt, exact: true }) }),
+      page.locator('.activity').filter({ has: page.locator(`a[href$="/${id}"]`) }),
     ).toContainText(hours);
   }
 });

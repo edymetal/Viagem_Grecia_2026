@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AppState, LocalDocument } from '../data/schema';
+import { correctItinerary } from '../lib/itinerary';
 import {
   loadState,
   saveState,
@@ -85,9 +86,10 @@ export function useTravel() {
       }),
     restore: (next: AppState, docs?: LocalDocument[]) =>
       run(async () => {
-        await restoreState(next, docs);
-        current.current = next;
-        setState(next);
+        const corrected = correctItinerary(next);
+        await restoreState(corrected, docs);
+        current.current = corrected;
+        setState(corrected);
         setDocuments(await listDocuments());
       }),
   };

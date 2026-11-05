@@ -7,12 +7,12 @@ import { createBackup, parseBackup } from '../src/lib/backup';
 import { expenseSchema, stateSchema } from '../src/data/schema';
 
 describe('cronograma fornecido de 20 a 23/11', () => {
-  it('preserva os 60 blocos e horários, sem compras ou reservas inventadas', () => {
+  it('preserva as 89 etapas corrigidas e horários, sem compras ou reservas inventadas', () => {
     const s = suppliedItinerary();
     expect(stateSchema.parse(s)).toEqual(s);
-    expect(s.activities).toHaveLength(60);
+    expect(s.activities).toHaveLength(89);
     expect(s.days.map((d) => s.activities.filter((a) => a.date === d.date).length)).toEqual([
-      15, 14, 17, 14,
+      19, 24, 27, 19,
     ]);
     expect(s.reservations).toEqual([]);
     expect(s.expenses.every((e) => e.status === 'Previsto' && !e.paid)).toBe(true);
@@ -50,7 +50,7 @@ describe('cronograma fornecido de 20 a 23/11', () => {
       priceMax: 20,
       priceCertainty: 'Estimativa',
     });
-    expect(s.hotel.notes).toContain('simulação');
+    expect(s.hotel.notes).toContain('Preço final');
   });
   it('compara corretamente Itália e Atenas para próxima atividade e conflitos', () => {
     const train = suppliedItinerary().activities.find((a) => a.id === 'plan-1-02')!;
@@ -73,8 +73,7 @@ describe('cronograma fornecido de 20 a 23/11', () => {
       timeZone: 'Europe/Rome' as const,
     };
     expect(conflicts([italy, greece])).toHaveLength(1);
-    expect(conflicts(suppliedItinerary().activities)).toHaveLength(1);
-    expect(conflicts(suppliedItinerary().activities)[0]).toContain('Check-in');
+    expect(conflicts(suppliedItinerary().activities)).toHaveLength(0);
   });
   it('incorpora uma vez e preserva edições, orçamento e despesas já cadastradas', () => {
     const current = emptyState();
@@ -95,7 +94,7 @@ describe('cronograma fornecido de 20 a 23/11', () => {
       paid: true,
     });
     const merged = mergeItinerary(current);
-    expect(merged.activities).toHaveLength(61);
+    expect(merged.activities).toHaveLength(90);
     expect(merged.expenses).toEqual(current.expenses);
     expect(merged.budget).toBe(800);
     expect(merged.days[0].notes).toBe('Anotação local');

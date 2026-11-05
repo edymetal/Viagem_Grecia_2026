@@ -68,9 +68,10 @@ export function PlanningNotice({ store }: { store: TravelStore }) {
   const museum = s.activities.find((a) => a.id === 'plan-3-13');
   return (
     <details className="notice planning-notice">
-      <summary>Planejamento recebido · confira as pendências</summary>
+      <summary>Cronograma corrigido · confira as pendências</summary>
       <p>
-        Horários, valores e fontes transcritos do texto fornecido, sem nova consulta de
+        Correção de 20 a 23/11 incorporada em 89 etapas, com acesso e saída das atrações separados.
+        Edições locais são mantidas. Horários, valores e fontes transcritos sem nova consulta de
         disponibilidade. “Consultado” não significa comprado ou reservado.
       </p>
       <ul>
@@ -88,13 +89,15 @@ export function PlanningNotice({ store }: { store: TravelStore }) {
         )}
         {museum && !museum.completed && (!museum.end || museum.end >= '16:30') && (
           <li>
-            A escavação tem última entrada informada às 16h30. No texto original, o tour termina
-            nesse limite. Verificar visita antes do guia ou reorganizar.
+            A escavação tem última entrada informada às 16h30 no cronograma anterior. Coordenar com
+            o operador; não há visita extra garantida depois do tour. O bloco 16h30–16h40 é somente
+            para finalizar e sair.
           </li>
         )}
         <li>
-          No texto recebido, hotel e dois guias têm preço pendente. A simulação de hotel por €240
-          não foi lançada como despesa ou orçamento.
+          Hotel e dois guias continuam com preço pendente. Trens e voos precisam ser reconferidos
+          antes da compra. As janelas do metrô incluem margem e não são partidas confirmadas.
+          Percursos casa → estação e estação → casa ainda não foram definidos.
         </li>
       </ul>
     </details>

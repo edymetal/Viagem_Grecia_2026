@@ -8,11 +8,11 @@ test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis 
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('./#roteiro');
-  await expect(page.locator('.activity')).toHaveCount(15);
+  await expect(page.locator('.activity')).toHaveCount(19);
   await expect(page.locator('.activity').first()).toContainText('Itália');
-  await expect(page.getByText('Revise os horários', { exact: true })).toBeVisible();
+  await expect(page.getByText('Revise os horários', { exact: true })).toHaveCount(0);
   await page.getByRole('tab', { name: /21\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(14);
+  await expect(page.locator('.activity')).toHaveCount(24);
   const acropolis = page.locator('.activity').filter({
     has: page.getByRole('heading', {
       name: 'Acrópole e Partenon com guia em português',
@@ -27,10 +27,10 @@ test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis 
   );
   await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
   await page.getByRole('tab', { name: /22\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(17);
+  await expect(page.locator('.activity')).toHaveCount(27);
   await expect(page.locator('.planning-notice')).toContainText('última entrada informada às 16h30');
   await page.getByRole('tab', { name: /23\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(14);
+  await expect(page.locator('.activity')).toHaveCount(19);
   await expect(page.locator('.activity').last()).toContainText('22:59');
   await expect(page.locator('.activity').last()).toContainText('Itália');
   await page.goto('./#gastos');
@@ -49,7 +49,7 @@ test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis 
   await context.setOffline(true);
   await page.goto('./#roteiro');
   await page.getByRole('tab', { name: /22\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(17);
+  await expect(page.locator('.activity')).toHaveCount(27);
   await page.goto('./#mapa');
   await expect(
     page.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }),
@@ -122,7 +122,7 @@ test('instalação anterior incorpora o cronograma uma vez sem perder notas, gas
     page.getByRole('button', { name: 'Incorporar cronograma', exact: true }),
   ).toHaveCount(0);
   await page.goto('./#roteiro');
-  await expect(page.locator('.activity')).toHaveCount(15);
+  await expect(page.locator('.activity')).toHaveCount(19);
   await expect(page.getByText('Anotação anterior', { exact: true })).toBeVisible();
   await page.goto('./#gastos');
   await expect(page.locator('.expense')).toHaveCount(1);

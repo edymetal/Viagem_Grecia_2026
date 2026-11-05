@@ -12,6 +12,8 @@ import {
 } from '../src/lib/storage';
 import { createBackup, parseBackup } from '../src/lib/backup';
 import type { LocalDocument } from '../src/data/schema';
+import { previousItinerary } from '../src/lib/itinerary';
+import { ITINERARY_REVISION } from '../src/data/itinerary';
 
 const doc = (): LocalDocument => {
   const blob = new Blob(['%PDF-1.4\n%%EOF'], { type: 'application/pdf' });
@@ -32,6 +34,21 @@ afterEach(async () => {
   await deleteDB('atenas-2026');
 });
 describe('armazenamento e backup', () => {
+  it('migra o cronograma antigo uma vez e mantém o arquivo pessoal no IndexedDB', async () => {
+    const old = previousItinerary();
+    old.activities[0].photoDocumentId = 'teste-local';
+    old.activities[0].notes = 'Nota particular';
+    await saveState(old);
+    await addDocument(doc());
+    const corrected = await loadState();
+    expect(corrected.itineraryRevision).toBe(ITINERARY_REVISION);
+    expect(corrected.activities).toHaveLength(89);
+    expect(corrected.activities[0].photoDocumentId).toBe('teste-local');
+    expect(corrected.activities[0].notes).toBe('Nota particular');
+    expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:55');
+    expect(await loadState()).toEqual(corrected);
+    expect(await (await listDocuments())[0].blob.text()).toContain('%PDF');
+  });
   it('reverte estado e coleção inteira se uma restauração falha no meio', async () => {
     const previous = initialState();
     previous.budget = 60;
