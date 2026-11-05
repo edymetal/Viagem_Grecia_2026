@@ -1,0 +1,474 @@
+/* Roteiro compacto e tela de detalhes. Todos os dados vêm do armazenamento local. */
+.itinerary-screen,
+.activity-screen {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.route-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 55px;
+  margin-bottom: 18px;
+}
+.route-heading h1 {
+  flex: 1;
+  font-size: 24px;
+  text-align: center;
+}
+.route-heading .icon-button {
+  color: var(--text);
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+}
+.route-heading .favorite-toggle {
+  color: var(--danger);
+}
+.compact-day-tabs {
+  gap: 8px;
+  margin-bottom: 15px;
+}
+.compact-day-tabs button {
+  text-align: center;
+  padding: 10px 6px;
+  min-height: 72px;
+}
+.compact-day-tabs strong {
+  font-size: 16px;
+}
+.compact-day-tabs span {
+  font-size: 12px;
+  letter-spacing: 0;
+  margin: 3px 0 0;
+}
+.compact-day-tabs small {
+  font-size: 10px;
+  margin-top: 2px;
+}
+.day-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: linear-gradient(110deg, var(--primary-soft), var(--surface));
+}
+.day-section-heading h2 {
+  font-size: 17px;
+  text-transform: capitalize;
+}
+.day-section-heading > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.itinerary-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 7px 0;
+}
+.itinerary-tools .text-button {
+  min-height: 44px;
+  font-size: 12px;
+  padding: 7px 4px;
+}
+.itinerary-tools .selected-tool {
+  color: var(--danger);
+}
+.itinerary-tools > :last-child {
+  margin-left: auto;
+}
+.schedule-warning {
+  margin: 6px 0 12px;
+  padding: 0 12px;
+}
+.schedule-warning summary {
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+.schedule-warning[open] {
+  padding-bottom: 12px;
+}
+.compact-timeline {
+  gap: 0;
+}
+.compact-timeline::before {
+  display: none;
+}
+.compact-activity {
+  display: block;
+  padding: 0 0 0 19px;
+  min-width: 0;
+}
+.compact-activity::before {
+  top: 31px;
+  width: 10px;
+  height: 10px;
+  left: 1px;
+}
+.compact-activity::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background: #0071eb;
+  left: 5px;
+  top: 40px;
+  bottom: -31px;
+}
+.compact-activity:last-child::after {
+  display: none;
+}
+.timeline-row {
+  display: grid;
+  grid-template-columns: 66px 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 92px;
+  padding: 12px 8px 12px 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  position: relative;
+}
+.timeline-row:hover,
+.timeline-row:focus-visible {
+  background: var(--primary-soft);
+}
+.timeline-row .activity-time {
+  padding: 0;
+  gap: 1px;
+}
+.timeline-row .activity-time strong {
+  font-size: 14px;
+}
+.timeline-row .activity-time small {
+  font-size: 10px;
+}
+.timeline-identity {
+  min-width: 0;
+}
+.timeline-identity h3 {
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.timeline-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 5px;
+}
+.timeline-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.timeline-meta .required-mark {
+  color: var(--coral);
+}
+.row-chevron {
+  grid-column: 4;
+}
+.row-favorite {
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
+  color: var(--danger);
+}
+.organize-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 5px 5px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.organize-actions .icon-button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  color: var(--primary);
+}
+.organize-actions .danger {
+  color: var(--danger);
+}
+.trip-date-picker {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+.trip-date-picker button {
+  text-align: left;
+  justify-content: flex-start;
+  min-height: 60px;
+}
+.trip-date-picker button > span {
+  flex: 1;
+}
+.trip-date-picker button[aria-pressed='true'] {
+  border-color: var(--primary);
+}
+.activity-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 26px;
+}
+.activity-detail-primary,
+.activity-detail-secondary {
+  min-width: 0;
+}
+.detail-hero {
+  height: 290px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--primary-soft);
+}
+.detail-hero > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-hero.without-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+  background: linear-gradient(135deg, var(--primary-soft), var(--surface));
+}
+.without-photo .activity-symbol {
+  width: 80px;
+  height: 80px;
+  border-radius: 22px;
+}
+.without-photo .activity-symbol svg {
+  width: 45px;
+  height: 45px;
+}
+.without-photo > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.detail-name {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 14px 0 10px;
+  overflow-wrap: anywhere;
+}
+.detail-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.detail-location svg {
+  color: var(--danger);
+  flex-shrink: 0;
+}
+.detail-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 12px 0;
+}
+.detail-description {
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre-line;
+  margin-top: 10px;
+}
+.visit-facts {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+.visit-facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(100deg, var(--surface), var(--primary-soft));
+}
+.visit-facts > div:last-child {
+  border-bottom: 0;
+}
+.visit-facts dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: 12px;
+  margin: 0;
+}
+.visit-facts dt svg {
+  flex-shrink: 0;
+  color: var(--coral);
+}
+.visit-facts dd {
+  text-align: right;
+  font-size: 12px;
+}
+.visit-facts dd small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+.visit-facts > div:first-child dd strong {
+  background: var(--warm);
+  padding: 3px 6px;
+  border-radius: 5px;
+  display: inline-block;
+}
+.detail-time-note {
+  margin-top: 10px;
+}
+.detail-map-button {
+  width: 100%;
+  margin-top: 16px;
+  min-height: 46px;
+  justify-content: center;
+}
+.detail-visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+}
+.detail-visit-actions > :first-child {
+  flex: 1;
+}
+.internet-note {
+  margin-top: 9px;
+}
+.detail-section {
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.detail-section .transport-detail {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.detail-section .notes {
+  font-size: 12px;
+}
+.detail-external-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0;
+}
+.detail-external-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--primary);
+  font-size: 13px;
+}
+@media (max-width: 700px) {
+  .itinerary-page .topbar {
+    display: none;
+  }
+  .itinerary-page main {
+    padding-top: 0;
+  }
+  .route-heading {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    margin: 0 -14px 10px;
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .route-heading h1 {
+    font-size: 19px;
+  }
+  .compact-day-tabs {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .compact-day-tabs button {
+    padding: 8px 4px;
+    min-height: 67px;
+  }
+  .compact-day-tabs strong {
+    font-size: 15px;
+  }
+  .compact-day-tabs span {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .compact-day-tabs small {
+    font-size: 9px;
+  }
+  .day-section-heading {
+    padding: 9px 10px;
+  }
+  .day-section-heading h2 {
+    font-size: 14px;
+  }
+  .day-section-heading > span {
+    font-size: 10px;
+  }
+  .itinerary-tools {
+    gap: 1px 6px;
+    margin: 3px 0;
+  }
+  .itinerary-tools .text-button {
+    font-size: 10px;
+    gap: 4px;
+  }
+  .timeline-row {
+    grid-template-columns: 49px 36px minmax(0, 1fr) 15px;
+    gap: 8px;
+    min-height: 83px;
+    padding-right: 0;
+  }
+  .timeline-row .activity-time strong {
+    font-size: 12px;
+  }
+  .timeline-row .activity-time small {
+    font-size: 9px;
+  }
+  .timeline-identity h3 {
+    font-size: 13px;
+  }
+  .timeline-meta {
+    font-size: 9px;
+    gap: 3px 6px;
+    margin-top: 4px;
+  }
+  .activity-detail-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .detail-hero {
+    height: 180px;
+    border-radius: 10px;
+  }
+  .detail-name {
+    font-size: 23px;
+    margin-top: 11px;
+  }
+  .detail-description {
+    font-size: 12px;
+  }
+  .detail-section {
+    padding: 16px;
+  }
+}

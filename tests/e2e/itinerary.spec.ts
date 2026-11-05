@@ -20,11 +20,12 @@ test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis 
     }),
   });
   await expect(acropolis).toContainText('Proposto');
-  await acropolis.locator('summary').click();
-  await expect(acropolis.getByRole('link', { name: 'Reservar somente guia' })).toHaveAttribute(
+  await acropolis.getByRole('link').click();
+  await expect(page.getByRole('link', { name: 'Reservar somente guia' })).toHaveAttribute(
     'href',
     /getyourguide/,
   );
+  await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
   await page.getByRole('tab', { name: /22\/11/ }).click();
   await expect(page.locator('.activity')).toHaveCount(17);
   await expect(page.locator('.planning-notice')).toContainText('última entrada informada às 16h30');

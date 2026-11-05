@@ -37,6 +37,15 @@ npm run test:e2e
 
 Os testes de navegador usam a versão já compilada em `dist`, com viewport e toque equivalentes a Android/Chromium; não substituem um teste em aparelho físico. O projeto não depende de conexão com aparelhos pessoais.
 
+## Usar o roteiro
+
+- Escolha um dos quatro dias nas abas ou no ícone de calendário. As datas e os fusos reais da viagem são mantidos.
+- Toque em qualquer atividade da linha do tempo para abrir **Detalhes**: fotografia local quando disponível, preço e sua natureza, programação, funcionamento, duração, transporte, links e observações. Nenhuma avaliação turística ou foto de outro local é criada para preencher campos ausentes.
+- Use o coração para favoritar e o filtro **Favoritos** para ver os salvos no dia selecionado. Favoritos, visitas concluídas e edições ficam no IndexedDB e também são incluídos nos backups. Backups anteriores sem favoritos continuam compatíveis.
+- Em **Detalhes**, use **Concluir visita**, **Editar** ou **Editar observações**. Para reordenar ou excluir atividades opcionais, ative **Organizar** na lista; as obrigatórias não têm botão de exclusão. A reordenação é desativada enquanto o filtro de favoritos está ativo para não ocultar atividades intermediárias.
+- O botão de voltar e o gesto de voltar do Android retornam à lista. Links como `#roteiro/2026-11-21/plan-2-11` abrem diretamente os detalhes e funcionam ao recarregar, inclusive offline após o cache inicial.
+- As fotos fornecidas com o app e os documentos locais ficam disponíveis offline. Google Maps, sites oficiais e compra de ingressos continuam dependendo de internet.
+
 ## Publicar no GitHub Pages
 
 O código está preparado para publicação; enviar para `main` dispara o workflow. **Não envie para `main` antes de autorizar a publicação.**

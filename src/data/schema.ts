@@ -83,6 +83,7 @@ export const activitySchema = z
     required: z.boolean(),
     confirmation: z.enum(['Confirmada', 'Planejada', 'Sugestão']),
     completed: z.boolean(),
+    favorite: z.boolean().optional(),
     photoDocumentId: id.nullable(),
   })
   .refine((v) => !v.start || !v.end || v.end >= v.start, {

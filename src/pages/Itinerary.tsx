@@ -1,42 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowDown,
-  CalendarDays,
-  Landmark,
+  ArrowLeft,
   ArrowUp,
+  CalendarDays,
   Check,
-  Clock3,
+  ChevronRight,
   Edit3,
   Flag,
-  MapPin,
+  Heart,
   Plus,
+  SlidersHorizontal,
   Trash2,
-  TrainFront,
 } from 'lucide-react';
 import type { Activity } from '../data/schema';
 import { activitySchema, tripDates } from '../data/schema';
 import { emptyActivity } from '../data/initial';
 import type { TravelStore } from '../hooks/useTravel';
-import {
-  athensNow,
-  conflicts,
-  dateLabel,
-  euro,
-  mapDestination,
-  moneyRange,
-  zoneLabel,
-} from '../lib/domain';
+import { athensNow, conflicts, dateLabel, euro, zoneLabel } from '../lib/domain';
+import { itineraryHref, itineraryRoute } from '../lib/itineraryRoute';
 import { PlanningNotice } from '../components/Planning';
-import { ActivityVisual, athensPhoto, parthenonPhoto } from '../components/ActivityVisual';
+import { ActivityVisual } from '../components/ActivityVisual';
+import { ActivityDetails } from './ActivityDetails';
 import {
   AsyncForm,
   Empty,
   Field,
   LocalImage,
-  MapsLinks,
   Modal,
   optionalNumber,
-  PageHeading,
   ValidationError,
   value,
 } from '../components/ui';
@@ -297,9 +289,9 @@ export function ActivityEditor({
     </Modal>
   );
 }
-export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
+export function Itinerary({ store, now, route }: { store: TravelStore; now: Date; route: string }) {
   const state = store.state!;
-  const [day, setDay] = useState(() => {
+  const [initialDay] = useState(() => {
     const requested = sessionStorage.getItem('selected-day');
     sessionStorage.removeItem('selected-day');
     return (
@@ -308,13 +300,37 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
       tripDates[0]
     );
   });
+  const { day: routeDay, activityId } = itineraryRoute(route);
+  const day = routeDay || initialDay;
+  const selected = state.activities.find((a) => a.id === activityId);
   const [editing, setEditing] = useState<Activity | null>(null);
   const [removing, setRemoving] = useState<Activity | null>(null);
   const [dayNotes, setDayNotes] = useState(false);
+  const [calendar, setCalendar] = useState(false);
+  const [organizing, setOrganizing] = useState(false);
+  const [favoritesOnly, setFavoritesOnly] = useState(false);
+  const lastOpened = useRef('');
   const activities = state.activities.filter((a) => a.date === day);
+  const visible = favoritesOnly ? activities.filter((a) => a.favorite) : activities;
   const warnings = conflicts(activities);
+  const dayIndex = state.days.findIndex((d) => d.date === day);
   const act = (fn: Parameters<TravelStore['update']>[0]) => {
     void store.update(fn).catch(() => undefined);
+  };
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (activityId) {
+        lastOpened.current = activityId;
+        document.querySelector<HTMLElement>('.activity-screen h1')?.focus();
+      } else if (lastOpened.current) {
+        document.getElementById(`open-${lastOpened.current}`)?.focus();
+        lastOpened.current = '';
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activityId]);
+  const setDay = (date: string) => {
+    location.hash = itineraryHref(date);
   };
   const move = (id: string, delta: number) =>
     act((s) => {
@@ -328,294 +344,305 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
     });
   return (
     <>
-      <PageHeading
-        eyebrow="CADA DIA, UMA DESCOBERTA"
-        title="Meu roteiro"
-        description="Quatro dias para viver Atenas. Organize tudo no seu ritmo."
-        action={
-          <button className="button" onClick={() => setEditing(emptyActivity(day))}>
-            <Plus size={18} />
-            Nova atividade
-          </button>
-        }
-      />
-      <section className="itinerary-banner">
-        <img src={athensPhoto} alt="" />
-        <div>
-          <Landmark size={24} />
-          <strong>Viagem a Atenas</strong>
-          <span>
-            <CalendarDays size={14} />
-            20–23 novembro · 4 dias
-          </span>
-        </div>
-      </section>
-      <PlanningNotice store={store} />
-      <div className="day-tabs" role="tablist" aria-label="Dias da viagem">
-        {state.days.map((d, i) => (
-          <button
-            role="tab"
-            aria-selected={d.date === day}
-            key={d.date}
-            className={d.date === day ? 'active' : ''}
-            onClick={() => setDay(d.date)}
-          >
-            <span>
-              DIA 0{i + 1}
-              {athensNow(now).date === d.date ? ' · HOJE' : ''}
-            </span>
-            <strong>{dateLabel(d.date, { day: '2-digit', month: '2-digit' })}</strong>
-            <small>{dateLabel(d.date, { weekday: 'long' })}</small>
-          </button>
-        ))}
-      </div>
-      <div className="section-title">
-        <h2>
-          {dateLabel(day, { weekday: 'long' })}
-          <span className="count-badge">{activities.length}</span>
-        </h2>
-        <span className="small muted">Horários locais · fuso em cada atividade</span>
-      </div>
-      {warnings.length > 0 && (
-        <div className="notice warning" role="status">
-          <strong>Revise os horários</strong>
-          {warnings.map((w) => (
-            <p key={w}>{w}</p>
-          ))}
-        </div>
-      )}
-      {activities.length === 0 ? (
-        <section className="card">
-          <Empty
-            title="Um dia de possibilidades"
-            action={
-              <button className="button secondary" onClick={() => setEditing(emptyActivity(day))}>
-                <Plus size={17} />
-                Adicionar primeira atividade
-              </button>
-            }
-          >
-            Nenhuma atividade neste dia. Adicione uma atividade ou incorpore o cronograma recebido
-            quando a opção estiver disponível.
-          </Empty>
-        </section>
+      {selected ? (
+        <ActivityDetails activity={selected} store={store} onEdit={() => setEditing(selected)} />
       ) : (
-        <div className="timeline">
-          {activities.map((a, i) => (
-            <article className={`activity card ${a.completed ? 'completed' : ''}`} key={a.id}>
-              <div className="activity-time">
-                <Clock3 size={15} />
-                <strong>{a.start || 'A definir'}</strong>
-                {a.end && <small>até {a.end}</small>}
-                <small>{zoneLabel(a)}</small>
-              </div>
-              <div className="activity-main">
-                <div className="activity-badges">
-                  <span className={`badge ${a.confirmation === 'Sugestão' ? 'neutral' : ''}`}>
-                    {a.confirmation}
-                  </span>
-                  {a.timeCertainty && (
-                    <span
-                      className={`badge ${a.timeCertainty === 'Proposto' ? 'warm' : 'neutral'}`}
+        <section className="itinerary-screen">
+          <header className="route-heading">
+            <a href="#inicio" className="icon-button" aria-label="Voltar ao início">
+              <ArrowLeft size={23} />
+            </a>
+            <h1>Roteiro</h1>
+            <button
+              className="icon-button"
+              aria-label="Escolher dia do roteiro"
+              onClick={() => setCalendar(true)}
+            >
+              <CalendarDays size={23} />
+            </button>
+          </header>
+          {activityId && (
+            <p className="notice" role="status">
+              Atividade não encontrada. Escolha uma atividade do roteiro.
+            </p>
+          )}
+          <div className="day-tabs compact-day-tabs" role="tablist" aria-label="Dias da viagem">
+            {state.days.map((d, i) => (
+              <button
+                role="tab"
+                id={`day-${d.date}`}
+                aria-controls="day-panel"
+                aria-selected={d.date === day}
+                tabIndex={d.date === day ? 0 : -1}
+                key={d.date}
+                className={d.date === day ? 'active' : ''}
+                onClick={() => setDay(d.date)}
+                onKeyDown={(e) => {
+                  let next = i;
+                  if (e.key === 'ArrowRight') next = (i + 1) % state.days.length;
+                  else if (e.key === 'ArrowLeft')
+                    next = (i + state.days.length - 1) % state.days.length;
+                  else if (e.key === 'Home') next = 0;
+                  else if (e.key === 'End') next = state.days.length - 1;
+                  else return;
+                  e.preventDefault();
+                  setDay(state.days[next].date);
+                  document.getElementById(`day-${state.days[next].date}`)?.focus();
+                }}
+              >
+                <strong>Dia {i + 1}</strong>
+                <span>{dateLabel(d.date)}</span>
+                <small>
+                  {athensNow(now).date === d.date
+                    ? 'Hoje'
+                    : dateLabel(d.date, { weekday: 'short' })}
+                </small>
+              </button>
+            ))}
+          </div>
+          <div id="day-panel" role="tabpanel" aria-labelledby={`day-${day}`}>
+            <div className="day-section-heading">
+              <h2>
+                Dia {dayIndex + 1} · {dateLabel(day, { weekday: 'long' })}
+              </h2>
+              <span>
+                {activities.filter((a) => a.completed).length}/{activities.length} concluídas
+              </span>
+            </div>
+            <div className="itinerary-tools">
+              <button
+                className={`text-button ${favoritesOnly ? 'selected-tool' : ''}`}
+                aria-pressed={favoritesOnly}
+                onClick={() => setFavoritesOnly(!favoritesOnly)}
+              >
+                <Heart size={16} fill={favoritesOnly ? 'currentColor' : 'none'} /> Favoritos
+              </button>
+              <button
+                className="text-button"
+                aria-pressed={organizing}
+                onClick={() => setOrganizing(!organizing)}
+              >
+                <SlidersHorizontal size={16} /> {organizing ? 'Finalizar organização' : 'Organizar'}
+              </button>
+              <button className="text-button" onClick={() => setEditing(emptyActivity(day))}>
+                <Plus size={17} /> Nova atividade
+              </button>
+            </div>
+            {warnings.length > 0 && (
+              <details className="notice warning schedule-warning">
+                <summary>Revise os horários</summary>
+                {warnings.map((w) => (
+                  <p key={w}>{w}</p>
+                ))}
+              </details>
+            )}
+            {visible.length === 0 ? (
+              <section className="card">
+                <Empty
+                  title={favoritesOnly ? 'Nenhum favorito neste dia' : 'Um dia de possibilidades'}
+                  action={
+                    !favoritesOnly && (
+                      <button
+                        className="button secondary"
+                        onClick={() => setEditing(emptyActivity(day))}
+                      >
+                        <Plus size={17} /> Adicionar primeira atividade
+                      </button>
+                    )
+                  }
+                >
+                  {favoritesOnly
+                    ? 'Toque no coração nos detalhes de uma atividade para salvá-la aqui.'
+                    : 'Nenhuma atividade neste dia. Adicione uma atividade quando quiser.'}
+                </Empty>
+              </section>
+            ) : (
+              <div className="timeline compact-timeline">
+                {visible.map((a) => {
+                  const i = activities.findIndex((x) => x.id === a.id);
+                  const photo = store.documents.find(
+                    (d) => d.id === a.photoDocumentId && d.type.startsWith('image/'),
+                  );
+                  return (
+                    <article
+                      className={`activity compact-activity ${a.completed ? 'completed' : ''}`}
+                      key={a.id}
                     >
-                      {a.timeCertainty}
-                    </span>
-                  )}
-                  {a.required && (
-                    <span className="badge warm">
-                      <Flag size={12} />
-                      Obrigatória
-                    </span>
-                  )}
-                  {a.completed && (
-                    <span className="badge">
-                      <Check size={12} />
-                      Concluída
-                    </span>
-                  )}
-                </div>
-                <div className="activity-identity">
-                  <ActivityVisual activity={a} />
-                  <h3>{a.title}</h3>
-                </div>
-                <details>
-                  <summary>Detalhes, transporte e observações</summary>
-                  <div className="activity-details">
-                    {a.timeNote && <p className="small muted">{a.timeNote}</p>}
-                    {(a.address || a.location) && (
-                      <p className="muted small inline">
-                        <MapPin size={14} />
-                        {a.address || a.location}
-                      </p>
-                    )}
-                    {a.description && <p>{a.description}</p>}
-                    {a.photoDocumentId &&
-                      store.documents.find((d) => d.id === a.photoDocumentId) && (
-                        <LocalImage
-                          blob={store.documents.find((d) => d.id === a.photoDocumentId)!.blob}
-                          alt={`Fotografia de ${a.title}`}
-                          className="activity-photo"
-                        />
+                      <a
+                        className="timeline-row"
+                        id={`open-${a.id}`}
+                        href={itineraryHref(day, a.id)}
+                        aria-label={`Ver detalhes: ${a.title}`}
+                      >
+                        <span className="activity-time">
+                          <strong>{a.start || 'A definir'}</strong>
+                          {a.end && <small>até {a.end}</small>}
+                          <small>{zoneLabel(a)}</small>
+                        </span>
+                        {photo ? (
+                          <LocalImage blob={photo.blob} alt="" className="activity-thumb" />
+                        ) : (
+                          <ActivityVisual activity={a} />
+                        )}
+                        <div className="timeline-identity">
+                          <h3>{a.title}</h3>
+                          <div className="timeline-meta">
+                            <span>{a.confirmation}</span>
+                            {a.timeCertainty && a.timeCertainty !== 'Planejado' && (
+                              <span>{a.timeCertainty}</span>
+                            )}
+                            {a.required && (
+                              <span className="required-mark">
+                                <Flag size={10} />
+                                Obrigatória
+                              </span>
+                            )}
+                            {a.completed && (
+                              <span>
+                                <Check size={11} />
+                                Concluída
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        {a.favorite && (
+                          <Heart
+                            size={13}
+                            className="row-favorite"
+                            fill="currentColor"
+                            aria-label="Favorita"
+                          />
+                        )}
+                        <ChevronRight className="row-chevron" size={18} />
+                      </a>
+                      {organizing && (
+                        <div className="organize-actions">
+                          <button
+                            className="icon-button"
+                            aria-label={`Editar ${a.title}`}
+                            onClick={() => setEditing(a)}
+                          >
+                            <Edit3 size={17} />
+                          </button>
+                          <button
+                            className="icon-button"
+                            disabled={i === 0 || store.busy || favoritesOnly}
+                            aria-label={`Mover ${a.title} para cima`}
+                            onClick={() => move(a.id, -1)}
+                          >
+                            <ArrowUp size={17} />
+                          </button>
+                          <button
+                            className="icon-button"
+                            disabled={i === activities.length - 1 || store.busy || favoritesOnly}
+                            aria-label={`Mover ${a.title} para baixo`}
+                            onClick={() => move(a.id, 1)}
+                          >
+                            <ArrowDown size={17} />
+                          </button>
+                          {!a.required && (
+                            <button
+                              className="icon-button danger"
+                              aria-label={`Excluir ${a.title}`}
+                              onClick={() => setRemoving(a)}
+                            >
+                              <Trash2 size={17} />
+                            </button>
+                          )}
+                        </div>
                       )}
-                    {!a.photoDocumentId && a.id === 'plan-2-11' && (
-                      <img
-                        className="activity-photo"
-                        src={parthenonPhoto}
-                        alt="Acrópole de Atenas"
-                        loading="lazy"
-                      />
-                    )}
-                    <dl className="detail-grid">
-                      <div>
-                        <dt>Preço</dt>
-                        <dd>
-                          {a.price === null
-                            ? 'Não informado'
-                            : `${moneyRange(a.price, a.priceMax)} · ${a.priceCertainty}`}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>Duração estimada</dt>
-                        <dd>{a.duration === null ? 'Não informada' : `${a.duration} min`}</dd>
-                      </div>
-                      <div>
-                        <dt>Funcionamento</dt>
-                        <dd>{a.openingHours || 'Não informado'}</dd>
-                      </div>
-                    </dl>
-                    <TransportDetails activity={a} />
-                    <MapsLinks address={mapDestination(a)} origin={a.transport.origin} />
-                    {(a.website || a.ticketUrl || a.guideUrl) && (
-                      <p className="external-links">
-                        {a.website && (
-                          <a href={a.website} target="_blank" rel="noreferrer">
-                            Site oficial ↗
-                          </a>
-                        )}
-                        {a.ticketUrl && (
-                          <a href={a.ticketUrl} target="_blank" rel="noreferrer">
-                            Comprar ingresso ↗
-                          </a>
-                        )}
-                        {a.guideUrl && (
-                          <a href={a.guideUrl} target="_blank" rel="noreferrer">
-                            Reservar somente guia ↗
-                          </a>
-                        )}
-                        <small>Requer internet</small>
-                      </p>
-                    )}
-                    <p className="notes">
-                      {a.notes || 'Nenhuma observação. Use Editar para adicionar.'}
-                    </p>
-                  </div>
-                </details>
-                <div className="activity-actions">
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          {organizing && favoritesOnly && (
+            <p className="small muted">
+              Desative o filtro Favoritos para reordenar o dia completo.
+            </p>
+          )}
+          <PlanningNotice store={store} />
+          {!!state.alternatives?.length && (
+            <section className="card alternatives">
+              <h2>Alternativas para acrescentar ou trocar</h2>
+              <p className="small muted">
+                Ficam fora da linha do tempo e dos gastos até você escolher. Revise o bloco a
+                substituir e a despesa correspondente.
+              </p>
+              {state.alternatives.map((a) => (
+                <article key={a.id}>
+                  <h3>{a.title}</h3>
+                  <p>{a.description}</p>
+                  <p className="muted small">
+                    {a.notes}{' '}
+                    {a.price === null
+                      ? 'Sem preço adicional informado.'
+                      : `Ingresso: ${euro(a.price)}.`}
+                  </p>
                   <button
-                    className={`button small-button ${a.completed ? 'secondary' : ''}`}
-                    title={a.completed ? 'Desmarcar visita' : 'Concluir visita'}
-                    disabled={store.busy}
+                    className="text-button"
                     onClick={() =>
-                      act((s) => {
-                        s.activities.find((x) => x.id === a.id)!.completed = !a.completed;
-                        return s;
+                      setEditing({
+                        ...emptyActivity(day),
+                        title: a.title,
+                        description: a.description,
+                        notes: a.notes,
+                        price: a.price,
+                        priceCertainty: a.price === null ? 'Não informado' : 'Consultado',
+                        location: a.location,
+                        website: a.website,
+                        ticketUrl: a.ticketUrl,
                       })
                     }
                   >
-                    <Check size={15} />
-                    {a.completed ? 'Desmarcar visita' : 'Concluir visita'}
+                    <Plus size={15} />
+                    Preparar para {dateLabel(day)}
                   </button>
-                  <button
-                    className="icon-button"
-                    aria-label={`Editar ${a.title}`}
-                    onClick={() => setEditing(a)}
-                  >
-                    <Edit3 size={17} />
-                  </button>
-                  <button
-                    className="icon-button"
-                    disabled={i === 0 || store.busy}
-                    aria-label={`Mover ${a.title} para cima`}
-                    onClick={() => move(a.id, -1)}
-                  >
-                    <ArrowUp size={17} />
-                  </button>
-                  <button
-                    className="icon-button"
-                    disabled={i === activities.length - 1 || store.busy}
-                    aria-label={`Mover ${a.title} para baixo`}
-                    onClick={() => move(a.id, 1)}
-                  >
-                    <ArrowDown size={17} />
-                  </button>
-                  {!a.required && (
-                    <button
-                      className="icon-button danger"
-                      aria-label={`Excluir ${a.title}`}
-                      onClick={() => setRemoving(a)}
-                    >
-                      <Trash2 size={17} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      )}
-      {!!state.alternatives?.length && (
-        <section className="card alternatives">
-          <h2>Alternativas para acrescentar ou trocar</h2>
-          <p className="small muted">
-            Ficam fora da linha do tempo e dos gastos até você escolher. Revise o bloco a substituir
-            e a despesa correspondente.
-          </p>
-          {state.alternatives.map((a) => (
-            <article key={a.id}>
-              <h3>{a.title}</h3>
-              <p>{a.description}</p>
-              <p className="muted small">
-                {a.notes}{' '}
-                {a.price === null
-                  ? 'Sem preço adicional informado.'
-                  : `Ingresso: ${euro(a.price)}.`}
+                </article>
+              ))}
+            </section>
+          )}
+          <section className="card day-notes">
+            <div>
+              <h3>Anotações do dia</h3>
+              <p className="muted notes">
+                {state.days.find((d) => d.date === day)!.notes ||
+                  'Um espaço para suas ideias e lembretes.'}
               </p>
-              <button
-                className="text-button"
-                onClick={() =>
-                  setEditing({
-                    ...emptyActivity(day),
-                    title: a.title,
-                    description: a.description,
-                    notes: a.notes,
-                    price: a.price,
-                    priceCertainty: a.price === null ? 'Não informado' : 'Consultado',
-                    location: a.location,
-                    website: a.website,
-                    ticketUrl: a.ticketUrl,
-                  })
-                }
-              >
-                <Plus size={15} />
-                Preparar para {dateLabel(day)}
-              </button>
-            </article>
-          ))}
+            </div>
+            <button className="button secondary" onClick={() => setDayNotes(true)}>
+              <Edit3 size={16} />
+              Editar
+            </button>
+          </section>
         </section>
       )}
-      <section className="card day-notes">
-        <div>
-          <h3>Anotações do dia</h3>
-          <p className="muted notes">
-            {state.days.find((d) => d.date === day)!.notes ||
-              'Um espaço para suas ideias e lembretes.'}
-          </p>
-        </div>
-        <button className="button secondary" onClick={() => setDayNotes(true)}>
-          <Edit3 size={16} />
-          Editar
-        </button>
-      </section>
+      {calendar && (
+        <Modal title="Escolher dia do roteiro" onClose={() => setCalendar(false)}>
+          <p className="muted small">Atenas · 20 a 23 de novembro de 2026</p>
+          <div className="trip-date-picker">
+            {state.days.map((d, i) => (
+              <button
+                key={d.date}
+                className="button secondary"
+                aria-pressed={d.date === day}
+                onClick={() => {
+                  setDay(d.date);
+                  setCalendar(false);
+                }}
+              >
+                <CalendarDays size={19} />
+                <span>
+                  Dia {i + 1} ·{' '}
+                  {dateLabel(d.date, { day: '2-digit', month: 'long', weekday: 'long' })}
+                </span>
+                <ChevronRight size={17} />
+              </button>
+            ))}
+          </div>
+        </Modal>
+      )}
       {editing && (
         <ActivityEditor activity={editing} store={store} onClose={() => setEditing(null)} />
       )}
@@ -658,45 +685,5 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
         </Modal>
       )}
     </>
-  );
-}
-export function TransportDetails({ activity: a }: { activity: Activity }) {
-  const t = a.transport;
-  return (
-    <div className="transport-detail">
-      <h4>
-        <TrainFront size={16} />
-        Deslocamento
-      </h4>
-      <dl className="detail-grid">
-        <div>
-          <dt>Transporte</dt>
-          <dd>{t.mode}</dd>
-        </div>
-        <div>
-          <dt>Origem → destino</dt>
-          <dd>
-            {t.origin || 'A informar'} → {t.destination || a.address || 'A informar'}
-          </dd>
-        </div>
-        <div>
-          <dt>Estação / linhas</dt>
-          <dd>
-            {t.station || 'A informar'} / {t.lines || 'A informar'}
-          </dd>
-        </div>
-        <div>
-          <dt>Tempo / valor</dt>
-          <dd>
-            {t.minutes === null
-              ? 'A informar'
-              : `${t.minutes}${t.minutesMax != null && t.minutesMax !== t.minutes ? `–${t.minutesMax}` : ''} min`}{' '}
-            · {t.price === null ? 'A informar' : euro(t.price)}
-            {t.certainty !== 'Não informado' && ` (${t.certainty})`}
-          </dd>
-        </div>
-      </dl>
-      {t.notes && <p className="notes">{t.notes}</p>}
-    </div>
   );
 }

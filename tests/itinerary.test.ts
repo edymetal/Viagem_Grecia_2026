@@ -117,6 +117,7 @@ describe('cronograma fornecido de 20 a 23/11', () => {
   });
   it('restaura fusos, faixas, alternativas e pendências pelo backup', async () => {
     const s = suppliedItinerary();
+    s.activities[0].favorite = true;
     const backup = await createBackup(s, { theme: 'dark' });
     const restored = await parseBackup(JSON.stringify(backup));
     expect(restored.data).toEqual(s);

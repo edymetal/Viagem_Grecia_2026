@@ -52,8 +52,10 @@ const morePages = [
   'preferencias',
 ];
 const validPages = [...nav.map((n) => n.id), ...morePages];
-const getPage = () =>
-  validPages.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'inicio';
+const getPage = (route: string) => {
+  const page = route.split('/')[0];
+  return validPages.includes(page) ? page : 'inicio';
+};
 interface InstallPrompt extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: string }>;
@@ -61,7 +63,8 @@ interface InstallPrompt extends Event {
 
 export default function App() {
   const store = useTravel();
-  const [page, setPage] = useState(getPage);
+  const [route, setRoute] = useState(() => location.hash.slice(1));
+  const page = getPage(route);
   const [now, setNow] = useState(new Date());
   const [preferences, setPref] = useState(readPreferences);
   const [isDark, setIsDark] = useState(false);
@@ -81,7 +84,7 @@ export default function App() {
     },
   });
   useEffect(() => {
-    const change = () => setPage(getPage());
+    const change = () => setRoute(location.hash.slice(1));
     const tick = setInterval(() => setNow(new Date()), 30_000);
     const connection = () => setOnline(navigator.onLine);
     const prompt = (e: Event) => {
@@ -108,8 +111,12 @@ export default function App() {
   }, []);
   useEffect(() => {
     window.scrollTo({ top: 0 });
-    document.title = `${nav.find((n) => n.id === page)?.label || 'Mais'} · Atenas 2026`;
-  }, [page]);
+    const title =
+      page === 'roteiro' && route.split('/')[2]
+        ? 'Detalhes'
+        : nav.find((n) => n.id === page)?.label || 'Mais';
+    document.title = `${title} · Atenas 2026`;
+  }, [page, route]);
   useEffect(() => {
     const media = matchMedia('(prefers-color-scheme: dark)');
     const apply = () => {
@@ -148,7 +155,7 @@ export default function App() {
     }
   };
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${page === 'roteiro' ? 'itinerary-page' : ''}`}>
       <a
         href="#conteudo"
         className="skip-link"
@@ -356,7 +363,7 @@ export default function App() {
           ) : page === 'inicio' ? (
             <Home store={store} navigate={navigate} now={now} />
           ) : page === 'roteiro' ? (
-            <Itinerary store={store} now={now} />
+            <Itinerary store={store} now={now} route={route} />
           ) : page === 'mapa' ? (
             <MapPage store={store} navigate={navigate} />
           ) : page === 'gastos' ? (

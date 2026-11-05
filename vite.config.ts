@@ -44,6 +44,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,jpg,webp,woff2}'],
         navigateFallback: `${base}index.html`,
         cleanupOutdatedCaches: true,
+        // After the user accepts an update, take control so the open tab reloads.
+        // Activation still waits for the explicit update action (prompt mode).
+        clientsClaim: true,
         // No third-party caching: personal files live exclusively in IndexedDB.
         runtimeCaching: [],
       },

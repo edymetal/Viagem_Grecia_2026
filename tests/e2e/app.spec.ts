@@ -42,6 +42,7 @@ test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias
     await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
     await expect(page.getByRole('dialog')).not.toBeVisible();
   }
+  await page.getByRole('button', { name: 'Organizar', exact: true }).click();
   await expect(
     page.getByRole('button', { name: 'Excluir Primeira atividade', exact: true }),
   ).toHaveCount(0);
@@ -53,8 +54,10 @@ test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.reload();
   await expect(page.locator('.activity h3').first()).toHaveText('Segunda atividade');
-  await page.locator('.activity').first().locator('summary').click();
+  await page.getByRole('link', { name: 'Ver detalhes: Segunda atividade', exact: true }).click();
   await expect(page.getByText('Anotação preservada no dispositivo')).toBeVisible();
+  await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
+  await page.getByRole('button', { name: 'Organizar', exact: true }).click();
   await page.getByRole('button', { name: 'Excluir Segunda atividade', exact: true }).click();
   await page
     .getByRole('dialog')
@@ -134,6 +137,9 @@ test('roteiro, despesas, checklist, documentos e backup persistem offline', asyn
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(page.getByRole('heading', { name: 'Atividade de teste local' })).toBeVisible();
+  await page
+    .getByRole('link', { name: 'Ver detalhes: Atividade de teste local', exact: true })
+    .click();
   await page.getByRole('button', { name: 'Concluir visita', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Desmarcar visita' })).toBeVisible();
   await page.reload();
@@ -203,6 +209,9 @@ test('roteiro, despesas, checklist, documentos e backup persistem offline', asyn
   await expect(page.getByRole('dialog').getByRole('img')).toHaveJSProperty('naturalWidth', 1);
   await page.getByRole('button', { name: 'Fechar janela' }).click();
   await page.goto('./#roteiro');
+  await page
+    .getByRole('link', { name: 'Ver detalhes: Atividade de teste local', exact: true })
+    .click();
   await expect(page.getByRole('button', { name: 'Desmarcar visita' })).toBeVisible();
   await page.goto('./#gastos');
   await expect(page.locator('.balance strong')).toContainText('137,50');

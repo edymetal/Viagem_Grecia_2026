@@ -4,7 +4,7 @@ import { ActivityVisual } from '../components/ActivityVisual';
 import type { TravelStore } from '../hooks/useTravel';
 import { dateLabel, mapDestination, zoneLabel } from '../lib/domain';
 import { Empty, MapsLinks, PageHeading } from '../components/ui';
-import { TransportDetails } from './Itinerary';
+import { TransportDetails } from './ActivityDetails';
 
 export function MapPage({
   store,
