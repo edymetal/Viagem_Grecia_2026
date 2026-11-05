@@ -96,7 +96,7 @@ Google Maps, compra de ingressos e sites externos precisam de internet. O app n�
 
 ## Dados locais e privacidade
 
-IndexedDB `atenas-2026` guarda o estado da viagem e os arquivos. LocalStorage guarda **somente o tema**. SessionStorage guarda temporariamente o dia escolhido no dashboard. Não há analytics, transmissão de documentos, sincronização ou armazenamento remoto.
+IndexedDB `atenas-2026` guarda o estado da viagem e os arquivos. Um banco independente, `atenas-weather`, guarda somente o último boletim meteorológico validado; esse cache descartável não entra nos backups da viagem. LocalStorage guarda **somente o tema**. SessionStorage guarda temporariamente o dia escolhido no dashboard. Não há analytics, transmissão de documentos, sincronização ou armazenamento remoto.
 
 Arquivos aceitos: PDF, PNG, JPEG e WebP, incluindo imagens/PDF com códigos QR. Limite por arquivo: 10 MB; documentos totais: 50 MB e 100 arquivos, sujeito à cota do navegador. O tipo e a assinatura básica são verificados; isso não é análise antivírus. O leitor de PDF depende do navegador; há download para abrir num leitor local. QR é visualizado como imagem/PDF, sem geração ou leitura automática.
 
@@ -153,3 +153,12 @@ Implementação alinhada à [documentação do Vite PWA](https://vite-pwa-org.ne
 O `glob` transitivo do Workbox é atualizado por `overrides` para uma versão corrigida. Na auditoria de 05/11/2026, restam quatro avisos de severidade baixa na cadeia de build do Workbox decorrentes de `deepmerge`, [ainda sem versão corrigida publicada](https://github.com/advisories/GHSA-gcqx-w48m-w2h4). Essas dependências não são enviadas no código do navegador e não recebem backups ou documentos do usuário. `npm audit --omit=dev` não apontou vulnerabilidades nas dependências de produção. Reavalie a auditoria ao atualizar as ferramentas; não aplique `npm audit fix --force` sem revisar compatibilidade.
 
 O mapa online segue a [política de tiles OpenStreetMap](https://operations.osmfoundation.org/policies/tiles/), com atribuição visível e carregamento apenas da região visualizada. O provedor recebe requisições de tiles (IP e referência do site), sem documentos, reservas ou estado pessoal. As coordenadas são referências de locais, não confirmação de entradas ou pontos de encontro dos guias.
+
+
+## Tempo e temperatura de Atenas
+
+Ao lado do relógio aparece a temperatura em °C e a condição do tempo, com ícone e descrição em português. No celular, a faixa também é exibida nas telas de Roteiro e Gastos. Toque na temperatura para ver a condição atual, referência dos dados e previsão datada de até quatro dias com mínimas, máximas e chance de chuva. O fuso utilizado é sempre `Europe/Athens`, sem usar a localização do aparelho. Essa previsão corresponde às datas exibidas, não automaticamente aos dias da viagem.
+
+O [Open-Meteo](https://open-meteo.com/en/docs) fornece os dados sem chave para este uso pessoal não comercial, sob [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). O app consulta apenas coordenadas fixas do centro de Atenas, sem documentos ou dados pessoais. O provedor recebe a requisição meteorológica e informações normais de conexão, como IP. A disponibilidade depende do serviço e da internet. A atribuição é acessível na janela de previsão.
+
+A consulta é compartilhada entre as versões desktop/mobile, com cache de 15 minutos, atualização ao retomar o aplicativo e intervalo de 15 minutos enquanto visível. Respostas são validadas quanto a unidades, valores e séries. Em falha ou offline, os dados existentes são identificados como **Salvo**, com data e hora; sem cache, aparece **Tempo indisponível**, sem inventar temperatura. As requisições têm limite de espera de dez segundos e não bloqueiam as telas da viagem. O service worker não armazena respostas meteorológicas remotas; a última consulta é mantida separadamente no IndexedDB.

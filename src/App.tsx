@@ -30,6 +30,8 @@ import { Expenses } from './pages/Expenses';
 import { MapPage } from './pages/Map';
 import { More } from './pages/More';
 import { ItineraryImport } from './components/Planning';
+import { AthensConditions, AthensWeatherDetails } from './components/AthensConditions';
+import { useAthensWeather } from './hooks/useAthensWeather';
 
 const nav: {
   id: string;
@@ -69,6 +71,8 @@ export default function App() {
   const [preferences, setPref] = useState(readPreferences);
   const [isDark, setIsDark] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
+  const forecast = useAthensWeather(online);
+  const [weatherOpen, setWeatherOpen] = useState(false);
   const [install, setInstall] = useState<InstallPrompt | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
   const [notice, setNotice] = useState('');
@@ -239,10 +243,13 @@ export default function App() {
             <strong>Atenas 2026</strong>
           </div>
           <div className="topbar-actions">
-            <span className="athens-clock">
-              {time}
-              <span> em Atenas</span>
-            </span>
+            <div className="desktop-conditions">
+              <AthensConditions
+                time={time}
+                forecast={forecast}
+                onOpen={() => setWeatherOpen(true)}
+              />
+            </div>
             <span
               className={`connection ${online ? '' : 'offline'}`}
               title={
@@ -271,6 +278,12 @@ export default function App() {
             </button>
           </div>
         </header>
+        <div className="mobile-conditions">
+          <AthensConditions time={time} forecast={forecast} onOpen={() => setWeatherOpen(true)} />
+        </div>
+        {weatherOpen && (
+          <AthensWeatherDetails forecast={forecast} onClose={() => setWeatherOpen(false)} />
+        )}
         <main id="conteudo" tabIndex={-1}>
           {store.state && <ItineraryImport store={store} />}
           {!online && (

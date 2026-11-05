@@ -118,7 +118,11 @@ test('roteiro, despesas, checklist, documentos e backup persistem offline', asyn
   const remoteRequests: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('request', (r) => {
-    if (/^https?:/.test(r.url()) && !r.url().startsWith('http://127.0.0.1:4173/'))
+    if (
+      /^https?:/.test(r.url()) &&
+      !r.url().startsWith('http://127.0.0.1:4173/') &&
+      new URL(r.url()).hostname !== 'api.open-meteo.com'
+    )
       remoteRequests.push(r.url());
   });
   await page.goto('./');
