@@ -32,15 +32,6 @@
   font-size: 22px;
   line-height: 28px;
 }
-.online-trip-map .leaflet-popup-content a {
-  display: block;
-  margin-top: 12px;
-  min-height: 32px;
-  color: #0066df;
-}
-.online-trip-map .leaflet-popup-content {
-  color: #14233d;
-}
 .online-trip-map .leaflet-control-attribution {
   font-size: 10px;
 }
@@ -48,37 +39,6 @@
   .online-trip-map {
     height: 320px;
   }
-}
-.map-screen .map-intro {
-  padding: 18px;
-  gap: 18px;
-  align-items: center;
-}
-.map-screen .map-pattern {
-  width: 78px;
-  min-width: 78px;
-  height: 78px;
-  border-radius: 16px;
-}
-.map-screen .map-pin {
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-}
-.map-screen .map-pin svg {
-  width: 27px;
-}
-.map-screen .map-intro .eyebrow {
-  display: none;
-}
-.map-screen .map-intro h2 {
-  font-size: 21px;
-  margin-bottom: 5px;
-}
-.map-screen .map-intro p {
-  font-size: 12px;
-  line-height: 1.6;
-  max-width: 680px;
 }
 .map-screen .location-grid {
   gap: 20px;
@@ -354,27 +314,6 @@
   border-color: #3e6c54;
 }
 @media (max-width: 700px) {
-  .map-screen .map-intro {
-    flex-direction: row;
-    padding: 14px;
-    gap: 12px;
-  }
-  .map-screen .map-pattern {
-    min-width: 57px;
-    width: 57px;
-    height: 64px;
-  }
-  .map-screen .map-pin {
-    width: 43px;
-    height: 43px;
-    border-radius: 13px;
-  }
-  .map-screen .map-intro h2 {
-    font-size: 17px;
-  }
-  .map-screen .map-intro p {
-    font-size: 11px;
-  }
   .map-screen .section-title {
     flex-wrap: wrap;
     gap: 5px 10px;
@@ -411,4 +350,33 @@
   .hotel-map-card {
     padding: 16px;
   }
+}
+
+.modal:has(.map-point-preview) {
+  width: min(480px, calc(100vw - 24px));
+  padding: 14px;
+  border-radius: 19px;
+}
+.modal:has(.map-point-preview) .modal-heading {
+  margin-bottom: 12px;
+}
+.map-point-preview .destination-card {
+  border: 0;
+  box-shadow: none;
+  border-radius: 12px;
+  margin: 0;
+}
+.map-point-preview .destination-content {
+  padding: 14px 4px 0;
+}
+.map-point-preview > p {
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 8px 4px 0;
+}
+.map-point-preview .destination-cover {
+  height: 175px;
+}
+.map-point-preview .destination-placeholder {
+  height: 90px;
 }

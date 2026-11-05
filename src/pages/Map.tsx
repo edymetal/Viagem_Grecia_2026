@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  ArrowUpRight,
-  BedDouble,
-  ChevronRight,
-  MapPin,
-  MapPinned,
-  Wifi,
-  Search,
-} from 'lucide-react';
+import { ArrowUpRight, BedDouble, ChevronRight, MapPin, Wifi, Search } from 'lucide-react';
 import { DestinationLinks, MapDestinationCard } from '../components/MapDestinationCard';
 import type { TravelStore } from '../hooks/useTravel';
 import { mapDestination } from '../lib/domain';
@@ -38,24 +30,7 @@ export function MapPage({
         title="Mapa e caminhos"
         description="Seus destinos e deslocamentos, reunidos em um lugar."
       />
-      <div className="map-intro card">
-        <div className="map-pattern" aria-hidden="true">
-          <div className="map-pin">
-            <MapPinned size={40} strokeWidth={1.5} />
-          </div>
-          <span className="map-road r1" />
-          <span className="map-road r2" />
-          <span className="map-road r3" />
-        </div>
-        <div>
-          <span className="eyebrow">CAMINHAR. DESCOBRIR. REPETIR.</span>
-          <h2>Seus lugares em Atenas</h2>
-          <p className="muted">
-            Veja os pontos do roteiro no mapa online. Para percursos a pé ou de transporte público,
-            abra as rotas no Google Maps.
-          </p>
-        </div>
-      </div>
+      <OnlineMap activities={locations} documents={store.documents} />
       <p className="notice inline">
         <Wifi size={18} />
         Google Maps e sites externos precisam de internet. Este aplicativo guarda apenas os
@@ -79,7 +54,6 @@ export function MapPage({
           aria-label="Buscar destinos do roteiro"
         />
       </label>
-      <OnlineMap activities={locations} />
       {!locations.length ? (
         <section className="card">
           <Empty title={search ? 'Nenhum destino encontrado' : 'Seus caminhos começam no roteiro'}>
