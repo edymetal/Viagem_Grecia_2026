@@ -1,4 +1,54 @@
 /* Destination cards use only local photos and the travel data already supplied. */
+.online-map-card {
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.online-map-card h2 {
+  font-size: 18px;
+}
+.online-trip-map {
+  height: 370px;
+  border-radius: 12px;
+  margin: 12px 0;
+  isolation: isolate;
+  z-index: 0;
+  background: #e7edf3;
+}
+.online-map-card > p {
+  font-size: 11px;
+  line-height: 1.6;
+}
+.trip-map-marker {
+  background: #0066df;
+  border: 3px solid white;
+  border-radius: 50% 50% 50% 0;
+  transform-origin: center;
+  color: white;
+  text-align: center;
+  box-shadow: 0 2px 8px #112d5360;
+}
+.trip-map-marker span {
+  display: block;
+  font-size: 22px;
+  line-height: 28px;
+}
+.online-trip-map .leaflet-popup-content a {
+  display: block;
+  margin-top: 12px;
+  min-height: 32px;
+  color: #0066df;
+}
+.online-trip-map .leaflet-popup-content {
+  color: #14233d;
+}
+.online-trip-map .leaflet-control-attribution {
+  font-size: 10px;
+}
+@media (max-width: 700px) {
+  .online-trip-map {
+    height: 320px;
+  }
+}
 .map-screen .map-intro {
   padding: 18px;
   gap: 18px;

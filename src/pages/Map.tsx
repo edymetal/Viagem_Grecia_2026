@@ -12,6 +12,7 @@ import { DestinationLinks, MapDestinationCard } from '../components/MapDestinati
 import type { TravelStore } from '../hooks/useTravel';
 import { mapDestination } from '../lib/domain';
 import { Empty, PageHeading } from '../components/ui';
+import { OnlineMap } from '../components/OnlineMap';
 
 export function MapPage({
   store,
@@ -48,10 +49,10 @@ export function MapPage({
         </div>
         <div>
           <span className="eyebrow">CAMINHAR. DESCOBRIR. REPETIR.</span>
-          <h2>Explore com o Google Maps</h2>
+          <h2>Seus lugares em Atenas</h2>
           <p className="muted">
-            Abra um destino ou peça um percurso a pé e de transporte público. As rotas são
-            calculadas pelo Google Maps ao abrir o link.
+            Veja os pontos do roteiro no mapa online. Para percursos a pé ou de transporte público,
+            abra as rotas no Google Maps.
           </p>
         </div>
       </div>
@@ -78,6 +79,7 @@ export function MapPage({
           aria-label="Buscar destinos do roteiro"
         />
       </label>
+      <OnlineMap activities={locations} />
       {!locations.length ? (
         <section className="card">
           <Empty title={search ? 'Nenhum destino encontrado' : 'Seus caminhos começam no roteiro'}>

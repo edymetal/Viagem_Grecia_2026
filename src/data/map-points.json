@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Museu da Acrópole",
+    "latitude": 37.969108,
+    "longitude": 23.728299,
+    "activityIds": ["plan-3-13"],
+    "source": "https://en.wikipedia.org/?curid=10944017"
+  },
+  {
+    "name": "Acrópole e Partenon",
+    "latitude": 37.97166667,
+    "longitude": 23.72611111,
+    "activityIds": ["plan-2-11"],
+    "source": "https://en.wikipedia.org/?curid=2076"
+  },
+  {
+    "name": "Anafiotika",
+    "latitude": 37.97222222,
+    "longitude": 23.72777778,
+    "activityIds": ["plan-2-08"],
+    "source": "https://en.wikipedia.org/?curid=16885889"
+  },
+  {
+    "name": "Ágora Antiga",
+    "latitude": 37.975,
+    "longitude": 23.7225,
+    "activityIds": ["plan-3-03"],
+    "source": "https://en.wikipedia.org/?curid=507380"
+  },
+  {
+    "name": "Arco de Adriano",
+    "latitude": 37.97018,
+    "longitude": 23.73203,
+    "activityIds": ["plan-3-10"],
+    "source": "https://en.wikipedia.org/?curid=1997906"
+  },
+  {
+    "name": "Biblioteca de Adriano",
+    "latitude": 37.97555556,
+    "longitude": 23.72611111,
+    "activityIds": ["plan-2-03"],
+    "source": "https://en.wikipedia.org/?curid=21605399"
+  },
+  {
+    "name": "Parlamento / Syntagma",
+    "latitude": 37.97527778,
+    "longitude": 23.73694444,
+    "activityIds": ["plan-3-05", "plan-3-06"],
+    "source": "https://en.wikipedia.org/?curid=2449826"
+  },
+  {
+    "name": "Jardim Nacional",
+    "latitude": 37.97416667,
+    "longitude": 23.73833333,
+    "activityIds": ["plan-3-07"],
+    "source": "https://en.wikipedia.org/?curid=5911297"
+  },
+  {
+    "name": "Templo de Zeus Olímpico",
+    "latitude": 37.96937222,
+    "longitude": 23.73307778,
+    "activityIds": ["plan-3-09"],
+    "source": "https://en.wikipedia.org/?curid=22189"
+  },
+  {
+    "name": "Museu Kotsanas",
+    "latitude": 37.9776839,
+    "longitude": 23.738217,
+    "activityIds": ["plan-2-05"],
+    "source": "https://www.openstreetmap.org/node/11377308267"
+  }
+]
