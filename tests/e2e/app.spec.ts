@@ -50,6 +50,7 @@ test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias
   await page.getByRole('button', { name: 'Editar Segunda atividade', exact: true }).click();
   await page.getByLabel('Observações pessoais').fill('Anotação preservada no dispositivo');
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.reload();
   await expect(page.locator('.activity h3').first()).toHaveText('Segunda atividade');
   await page.locator('.activity').first().locator('summary').click();
@@ -66,6 +67,7 @@ test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias
   await page.getByLabel('Nome do hotel').fill('Hospedagem de teste');
   await page.getByLabel('Endereço', { exact: true }).fill('Endereço local de teste');
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.goto('./#informacoes');
   await page.getByRole('button', { name: 'Editar informações' }).click();
   await page.getByLabel('Frases em grego', { exact: true }).fill('Texto fornecido para teste');

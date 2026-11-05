@@ -1,14 +1,17 @@
 import {
-  ArrowRight,
-  ArrowUpRight,
   CalendarDays,
   CheckCheck,
+  ChevronRight,
+  ClipboardCheck,
+  Coins,
   FileText,
   Hotel,
   MapPin,
   Plane,
   Wallet,
   Clock3,
+  Navigation,
+  Map,
 } from 'lucide-react';
 import type { TravelStore } from '../hooks/useTravel';
 import {
@@ -22,8 +25,8 @@ import {
   zoneLabel,
 } from '../lib/domain';
 import { PlanningNotice } from '../components/Planning';
-import { Scenery } from '../components/Scenery';
 import { MapsLinks } from '../components/ui';
+import { parthenonPhoto } from '../components/ActivityVisual';
 
 export function Home({
   store,
@@ -35,65 +38,121 @@ export function Home({
   now: Date;
 }) {
   const state = store.state!;
-  const days = countdown(now);
-  const current = athensNow(now);
-  const next = nextActivity(state.activities, now);
-  const total = totals(state);
+  const days = countdown(now),
+    current = athensNow(now),
+    next = nextActivity(state.activities, now),
+    total = totals(state);
   const dayIndex = state.days.findIndex((d) => d.date === current.date);
+  const shortcuts = [
+    {
+      label: 'Planejar viagem',
+      detail: 'Preparativos e confirmações',
+      page: 'checklist',
+      icon: CalendarDays,
+      color: 'red',
+    },
+    {
+      label: 'Ver roteiro',
+      detail: 'Sua programação, dia a dia',
+      page: 'roteiro',
+      icon: Map,
+      color: 'blue',
+    },
+    {
+      label: 'Explorar mapa',
+      detail: 'Destinos e deslocamentos',
+      page: 'mapa',
+      icon: MapPin,
+      color: 'red',
+    },
+    {
+      label: 'Meus documentos',
+      detail: 'Bilhetes e reservas offline',
+      page: 'documentos',
+      icon: FileText,
+      color: 'amber',
+    },
+  ];
   return (
     <>
       <div className="home-heading">
         <div>
-          <p className="eyebrow">SUA PRÓXIMA HISTÓRIA</p>
           <h1>
             Olá, viajante<span className="coral">.</span>
           </h1>
-          <p className="muted">Um pouco de organização. Muito para descobrir.</p>
+          <p className="muted">Sua viagem a Atenas, em um só lugar.</p>
         </div>
         <span className="pill">
-          <CalendarDays size={14} />
-          20–23 NOV, 2026
+          <Plane size={14} />
+          Palermo → Atenas
         </span>
       </div>
-      <section className="hero">
-        <Scenery />
+      <section className="hero photo-hero">
+        <img
+          className="hero-photo"
+          src={parthenonPhoto}
+          alt="Vista da Acrópole e do Partenon em Atenas"
+          fetchPriority="high"
+        />
         <div className="hero-content">
-          <span className="hero-tag">
-            <span /> GRÉCIA · 4 DIAS · 1 PESSOA
-          </span>
-          <h2>
-            Atenas
-            <br />
-            <em>nos espera.</em>
-          </h2>
-          <p>
-            Seu companheiro de viagem,
-            <br />
-            do planejamento às boas memórias.
-          </p>
-          <button className="button cream" onClick={() => navigate('roteiro')}>
-            Explorar meu roteiro <ArrowUpRight size={18} />
-          </button>
-          <div className="hero-route">
-            <Plane size={17} />
+          <span className="hero-tag">MINHA VIAGEM · GRÉCIA</span>
+          <h2>Atenas</h2>
+          <p>Sua viagem a Atenas</p>
+          <div className="hero-meta">
             <span>
-              Palermo <ArrowRight size={14} /> Atenas
+              <CalendarDays size={16} />
+              20–23 nov 2026
+            </span>
+            <span>
+              <Clock3 size={16} />4 dias
             </span>
           </div>
         </div>
         <div className="countdown">
-          <span>{days > 0 ? 'FALTAM' : dayIndex >= 0 ? 'APROVEITE' : 'ATÉ A PRÓXIMA'}</span>
+          <span>{days > 0 ? 'FALTAM' : dayIndex >= 0 ? 'DIA' : 'VIAGEM'}</span>
           <strong>{days > 0 ? days : dayIndex >= 0 ? `${dayIndex + 1}/4` : '✓'}</strong>
-          <span>
-            {days > 0 ? 'DIAS PARA EMBARCAR' : dayIndex >= 0 ? 'DIA DA VIAGEM' : 'VIAGEM ENCERRADA'}
-          </span>
+          <span>{days > 0 ? 'DIAS' : dayIndex >= 0 ? 'EM ATENAS' : 'CONCLUÍDA'}</span>
+        </div>
+      </section>
+      <nav className="home-shortcuts" aria-label="Atalhos da viagem">
+        {shortcuts.map((s) => (
+          <button key={s.page} onClick={() => navigate(s.page)}>
+            <span className={`shortcut-icon ${s.color}`}>
+              <s.icon size={26} strokeWidth={1.9} />
+            </span>
+            <span>
+              <strong>{s.label}</strong>
+              <small>{s.detail}</small>
+            </span>
+            <ChevronRight size={20} />
+          </button>
+        ))}
+      </nav>
+      <section className="trip-summary card">
+        <h2>Resumo da viagem</h2>
+        <div className="summary-cells">
+          <button onClick={() => navigate('roteiro')}>
+            <CalendarDays className="blue" size={24} />
+            <strong>4 dias</strong>
+            <span>20 a 23 de novembro</span>
+          </button>
+          <button onClick={() => navigate('roteiro')}>
+            <MapPin className="red" size={24} />
+            <strong>{state.activities.length} atividades</strong>
+            <span>{state.activities.filter((a) => a.completed).length} concluídas</span>
+          </button>
+          <button onClick={() => navigate('gastos')}>
+            <Coins className="amber" size={24} />
+            <strong>{euro(total.actual)}</strong>
+            <span>Gastos realizados</span>
+          </button>
         </div>
       </section>
       <PlanningNotice store={store} />
       <div className="section-title">
-        <h2>Uma viagem, quatro capítulos</h2>
+        <h2>Seus dias em Atenas</h2>
         <button className="text-button" onClick={() => navigate('roteiro')}>
-          Ver roteiro <ArrowRight size={15} />
+          Ver todos <ChevronRight size={16} />
         </button>
       </div>
       <div className="day-overview">
@@ -106,7 +165,7 @@ export function Home({
               navigate('roteiro');
             }}
           >
-            <span className="day-num">0{i + 1}</span>
+            <span className="day-num">{i + 1}</span>
             <div>
               <strong>{dateLabel(d.date, { weekday: 'long' })}</strong>
               <span>{dateLabel(d.date, { day: '2-digit', month: 'long' })}</span>
@@ -123,7 +182,7 @@ export function Home({
         <section className="card next-card">
           <div className="card-heading">
             <span className="icon-tile">
-              <Clock3 size={20} />
+              <Navigation size={20} />
             </span>
             <h2>Próxima parada</h2>
             {next && <span className="badge">{next.confirmation}</span>}
@@ -147,13 +206,13 @@ export function Home({
             </div>
           ) : (
             <div className="next-content">
-              <h3>O melhor ainda está por vir</h3>
+              <h3>Consulte sua programação</h3>
               <p className="muted">
                 Nenhuma atividade planejada ou confirmada com horário está por vir. Consulte os dias
                 e as sugestões no roteiro.
               </p>
               <button className="text-button" onClick={() => navigate('roteiro')}>
-                Organizar atividades <ArrowRight size={16} />
+                Organizar atividades <ChevronRight size={16} />
               </button>
             </div>
           )}
@@ -163,7 +222,7 @@ export function Home({
             <span className="icon-tile warm">
               <Wallet size={20} />
             </span>
-            <h2>De olho nos gastos</h2>
+            <h2>Controle de gastos</h2>
           </div>
           <span className="small muted">Total realizado</span>
           <strong className="money-large">{euro(total.actual)}</strong>
@@ -181,26 +240,12 @@ export function Home({
                 : `de ${euro(state.budget)} de orçamento`}
             </span>
             <button className="text-button" onClick={() => navigate('gastos')}>
-              Detalhes <ArrowUpRight size={15} />
+              Detalhes <ChevronRight size={15} />
             </button>
           </div>
         </section>
       </div>
       <div className="quick-grid">
-        <button className="quick-card" onClick={() => navigate('documentos')}>
-          <span className="icon-tile">
-            <FileText />
-          </span>
-          <div>
-            <strong>Meus documentos</strong>
-            <span>
-              {store.documents.length
-                ? `${store.documents.length} arquivos neste dispositivo`
-                : 'Tudo à mão, mesmo offline'}
-            </span>
-          </div>
-          <ArrowUpRight size={18} />
-        </button>
         <button className="quick-card" onClick={() => navigate('hotel')}>
           <span className="icon-tile warm">
             <Hotel />
@@ -209,7 +254,20 @@ export function Home({
             <strong>Minha hospedagem</strong>
             <span>{state.hotel.name || 'Adicione os dados do hotel'}</span>
           </div>
-          <ArrowUpRight size={18} />
+          <ChevronRight size={18} />
+        </button>
+        <button className="quick-card" onClick={() => navigate('checklist')}>
+          <span className="icon-tile">
+            <ClipboardCheck />
+          </span>
+          <div>
+            <strong>Checklist da viagem</strong>
+            <span>
+              {state.checklist.filter((c) => c.done).length} de {state.checklist.length}{' '}
+              preparativos concluídos
+            </span>
+          </div>
+          <ChevronRight size={18} />
         </button>
         <div className="quick-card visited">
           <span className="icon-tile">
@@ -224,7 +282,9 @@ export function Home({
           </div>
         </div>
       </div>
-      <p className="footnote">Planeje no seu ritmo. Seus dados ficam apenas neste dispositivo.</p>
+      <p className="footnote">
+        Seu roteiro, suas contas e seus documentos ficam neste dispositivo.
+      </p>
     </>
   );
 }

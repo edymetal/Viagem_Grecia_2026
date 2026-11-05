@@ -6,6 +6,8 @@ O cronograma enviado foi incorporado: **60 blocos nos quatro dias**, hotel escol
 
 ## Instalar e executar
 
+O visual segue a referência mobile enviada: azul e branco, cabeçalho compacto, atalhos com ícones coloridos, fotos, resumo em cartões e linha do tempo azul. O tema visual está em `src/native.css`, sobre os estilos compartilhados de layout/formulários em `src/styles.css`. Os dados da viagem e o armazenamento são preservados. As fotos são arquivos locais e entram no cache da PWA; autoria e licenças estão em [public/images/CREDITS.md](public/images/CREDITS.md). O mapa permite buscar os destinos já cadastrados sem conexão e continua abrindo as rotas por links do Google Maps.
+
 **No Windows, clique duas vezes em `Abrir Atenas.cmd`, na pasta do projeto.** O iniciador prepara os arquivos quando necessário, inicia o aplicativo em segundo plano e abre o navegador. Nos próximos usos, basta abrir o mesmo arquivo novamente. É necessário Node.js 22.12 ou superior; se as dependências ainda não estiverem instaladas, a primeira abertura usa a internet para instalá-las.
 
 O iniciador mantém `http://127.0.0.1:5173/Viagem_Grecia_2026/`, preservando o endereço dos dados locais usados durante o desenvolvimento. Se o aplicativo já estiver aberto nesse endereço, o servidor é reutilizado. Não abra `index.html` diretamente. Você também pode criar um atalho do arquivo `.cmd` na Área de Trabalho.

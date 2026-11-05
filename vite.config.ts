@@ -32,8 +32,8 @@ export default defineConfig({
         start_url: base,
         scope: base,
         display: 'standalone',
-        background_color: '#f6f5ef',
-        theme_color: '#174f4b',
+        background_color: '#f3f7fd',
+        theme_color: '#0066df',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
@@ -41,7 +41,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,jpg,webp,woff2}'],
         navigateFallback: `${base}index.html`,
         cleanupOutdatedCaches: true,
         // No third-party caching: personal files live exclusively in IndexedDB.

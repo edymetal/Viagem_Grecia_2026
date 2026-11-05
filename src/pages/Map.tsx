@@ -1,4 +1,6 @@
-import { ArrowUpRight, Footprints, MapPinned, TrainFront, Wifi } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowUpRight, Footprints, MapPinned, TrainFront, Wifi, Search } from 'lucide-react';
+import { ActivityVisual } from '../components/ActivityVisual';
 import type { TravelStore } from '../hooks/useTravel';
 import { dateLabel, mapDestination, zoneLabel } from '../lib/domain';
 import { Empty, MapsLinks, PageHeading } from '../components/ui';
@@ -11,7 +13,16 @@ export function MapPage({
   store: TravelStore;
   navigate: (page: string) => void;
 }) {
-  const locations = store.state!.activities.filter((a) => mapDestination(a));
+  const [search, setSearch] = useState('');
+  const normalize = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('pt-BR');
+  const locations = store.state!.activities.filter(
+    (a) =>
+      mapDestination(a) && normalize(`${a.title} ${mapDestination(a)}`).includes(normalize(search)),
+  );
   return (
     <>
       <PageHeading
@@ -56,11 +67,22 @@ export function MapPage({
           Editar roteiro <ArrowUpRight size={15} />
         </button>
       </div>
+      <label className="map-search">
+        <Search size={20} />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar atrações e lugares"
+          aria-label="Buscar destinos do roteiro"
+        />
+      </label>
       {!locations.length ? (
         <section className="card">
-          <Empty title="Seus caminhos começam no roteiro">
-            Adicione uma atividade com endereço ou destino para ver os links de navegação aqui.
-            Nenhuma rota foi presumida.
+          <Empty title={search ? 'Nenhum destino encontrado' : 'Seus caminhos começam no roteiro'}>
+            {search
+              ? 'Tente outro nome ou limpe a busca para ver os destinos do roteiro.'
+              : 'Adicione uma atividade com endereço ou destino para ver os links de navegação aqui. Nenhuma rota foi presumida.'}
           </Empty>
         </section>
       ) : (
@@ -72,7 +94,10 @@ export function MapPage({
                 {a.start && ` · ${a.start}`}
                 {` · ${zoneLabel(a)}`}
               </span>
-              <h3>{a.title}</h3>
+              <div className="location-identity">
+                <ActivityVisual activity={a} />
+                <h3>{a.title}</h3>
+              </div>
               <p className="muted">{mapDestination(a)}</p>
               <MapsLinks address={mapDestination(a)} origin={a.transport.origin} />
               <TransportDetails activity={a} />

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import {
   ArrowDown,
+  CalendarDays,
+  Landmark,
   ArrowUp,
   Check,
   Clock3,
@@ -25,6 +27,7 @@ import {
   zoneLabel,
 } from '../lib/domain';
 import { PlanningNotice } from '../components/Planning';
+import { ActivityVisual, athensPhoto, parthenonPhoto } from '../components/ActivityVisual';
 import {
   AsyncForm,
   Empty,
@@ -336,6 +339,17 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
           </button>
         }
       />
+      <section className="itinerary-banner">
+        <img src={athensPhoto} alt="" />
+        <div>
+          <Landmark size={24} />
+          <strong>Viagem a Atenas</strong>
+          <span>
+            <CalendarDays size={14} />
+            20–23 novembro · 4 dias
+          </span>
+        </div>
+      </section>
       <PlanningNotice store={store} />
       <div className="day-tabs" role="tablist" aria-label="Dias da viagem">
         {state.days.map((d, i) => (
@@ -420,18 +434,21 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                     </span>
                   )}
                 </div>
-                <h3>{a.title}</h3>
-                {a.timeNote && <p className="small muted">{a.timeNote}</p>}
-                {(a.address || a.location) && (
-                  <p className="muted small inline">
-                    <MapPin size={14} />
-                    {a.address || a.location}
-                  </p>
-                )}
-                {a.description && <p>{a.description}</p>}
+                <div className="activity-identity">
+                  <ActivityVisual activity={a} />
+                  <h3>{a.title}</h3>
+                </div>
                 <details>
                   <summary>Detalhes, transporte e observações</summary>
                   <div className="activity-details">
+                    {a.timeNote && <p className="small muted">{a.timeNote}</p>}
+                    {(a.address || a.location) && (
+                      <p className="muted small inline">
+                        <MapPin size={14} />
+                        {a.address || a.location}
+                      </p>
+                    )}
+                    {a.description && <p>{a.description}</p>}
                     {a.photoDocumentId &&
                       store.documents.find((d) => d.id === a.photoDocumentId) && (
                         <LocalImage
@@ -440,6 +457,14 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                           className="activity-photo"
                         />
                       )}
+                    {!a.photoDocumentId && a.id === 'plan-2-11' && (
+                      <img
+                        className="activity-photo"
+                        src={parthenonPhoto}
+                        alt="Acrópole de Atenas"
+                        loading="lazy"
+                      />
+                    )}
                     <dl className="detail-grid">
                       <div>
                         <dt>Preço</dt>
@@ -488,6 +513,7 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                 <div className="activity-actions">
                   <button
                     className={`button small-button ${a.completed ? 'secondary' : ''}`}
+                    title={a.completed ? 'Desmarcar visita' : 'Concluir visita'}
                     disabled={store.busy}
                     onClick={() =>
                       act((s) => {

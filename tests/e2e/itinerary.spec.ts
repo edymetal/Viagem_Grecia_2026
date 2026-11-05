@@ -55,6 +55,17 @@ test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis 
   ).toBeVisible();
   await page.goto('./#gastos');
   await expect(page.locator('.planned-range')).toContainText('481,81');
+  await page.goto('./#inicio');
+  await expect(
+    page.getByRole('img', { name: 'Vista da Acrópole e do Partenon em Atenas' }),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator('.hero-photo')
+        .evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+    )
+    .toBe(true);
   expect(errors).toEqual([]);
 });
 

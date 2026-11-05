@@ -12,6 +12,7 @@ import {
   LoaderCircle,
   MapPinned,
   Moon,
+  Menu,
   ShieldCheck,
   Sun,
   Wallet,
@@ -63,6 +64,7 @@ export default function App() {
   const [page, setPage] = useState(getPage);
   const [now, setNow] = useState(new Date());
   const [preferences, setPref] = useState(readPreferences);
+  const [isDark, setIsDark] = useState(false);
   const [online, setOnline] = useState(navigator.onLine);
   const [install, setInstall] = useState<InstallPrompt | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
@@ -113,6 +115,7 @@ export default function App() {
     const apply = () => {
       document.documentElement.dataset.theme =
         preferences.theme === 'system' ? (media.matches ? 'dark' : 'light') : preferences.theme;
+      setIsDark(document.documentElement.dataset.theme === 'dark');
     };
     apply();
     media.addEventListener('change', apply);
@@ -200,10 +203,27 @@ export default function App() {
       </aside>
       <div className="app-body">
         <header className="topbar">
-          <a className="mobile-brand" href="#inicio">
-            <Landmark size={22} />
-            atenas <span>2026</span>
-          </a>
+          <button
+            className="mobile-menu icon-button"
+            onClick={() => navigate('mais')}
+            aria-label="Abrir menu"
+          >
+            <Menu size={23} />
+          </button>
+          <strong className="mobile-page-title">
+            {nav.find((n) => n.id === page)?.label ||
+              (
+                {
+                  documentos: 'Documentos',
+                  hotel: 'Hotel e reservas',
+                  checklist: 'Checklist',
+                  informacoes: 'Informações úteis',
+                  backup: 'Backup',
+                  preferencias: 'Preferências',
+                } as Record<string, string>
+              )[page] ||
+              'Mais'}
+          </strong>
           <div className="breadcrumb">
             <span>Minha viagem</span>
             <ChevronRight size={14} />
@@ -230,15 +250,11 @@ export default function App() {
               aria-label="Alternar tema claro ou escuro"
               onClick={() =>
                 setPreferences({
-                  theme: document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark',
+                  theme: isDark ? 'light' : 'dark',
                 })
               }
             >
-              {document.documentElement.dataset.theme === 'dark' ? (
-                <Sun size={19} />
-              ) : (
-                <Moon size={19} />
-              )}
+              {isDark ? <Sun size={19} /> : <Moon size={19} />}
             </button>
             <button className="install-button" onClick={() => void installApp()}>
               <Download size={16} />
@@ -360,6 +376,14 @@ export default function App() {
           <span>Atenas 2026</span>
           <span>Feito para explorar, com tudo por perto.</span>
           <span>Europe/Athens · €</span>
+          <a
+            className="photo-credit"
+            href={`${import.meta.env.BASE_URL}images/CREDITS.md`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Créditos das fotos · CC0
+          </a>
         </footer>
       </div>
       <nav className="bottom-nav" aria-label="Navegação inferior">

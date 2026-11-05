@@ -38,6 +38,8 @@ Verificação local em 05/11/2026, com Node 22.23.4 e Chromium do Playwright. O 
 
 ## Limites da validação
 
-A instalação pelo menu do Chrome em Android físico, o leitor de PDF do aparelho, a abertura do aplicativo Google Maps e o deploy real no GitHub Pages dependem do dispositivo/ambiente final e ainda não foram executados. O workflow foi preparado segundo as ações oficiais, mas não foi disparado: publicação e push para o repositório público aguardam autorização. A emulação do Playwright não equivale a teste físico.
+A atualização visual em azul/branco foi conferida em 320, 390 e 1440 px, com temas claro/escuro, fotos reais servidas localmente, controles de edição/reordenação preservados e busca local de destinos. O teste offline também confirma que a fotografia principal continua carregada após perder a conexão. Nenhum horário, valor, data, status de compra ou reserva foi alterado pelo redesign.
+
+A instalação pelo menu do Chrome em Android físico, o leitor de PDF do aparelho e a abertura do aplicativo Google Maps dependem do dispositivo final e ainda não foram executados. O GitHub Pages já foi publicado e validado na etapa anterior, com build, testes e deploy pelo GitHub Actions. Alterações enviadas para `main` passam novamente por esse workflow. A emulação do Playwright não equivale a teste físico.
 
 Os arquivos de build, relatórios, capturas e quaisquer backups baixados durante testes ficam fora do Git. O build final em `dist` usa o caminho padrão do repositório.
