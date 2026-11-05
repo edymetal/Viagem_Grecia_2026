@@ -160,6 +160,12 @@ test('foto pessoal anexada permanece nos detalhes e na linha do tempo offline', 
     'naturalWidth',
     1,
   );
+  await page.goto('./#mapa');
+  await expect(
+    page
+      .getByRole('article', { name: 'Chegar à estação de Santo Stefano', exact: true })
+      .locator('.destination-cover img'),
+  ).toHaveJSProperty('naturalWidth', 1);
 });
 
 test('fotos dos locais e horários fornecidos permanecem disponíveis offline', async ({

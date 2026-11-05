@@ -1,10 +1,17 @@
 import { useState } from 'react';
-import { ArrowUpRight, Footprints, MapPinned, TrainFront, Wifi, Search } from 'lucide-react';
-import { ActivityVisual } from '../components/ActivityVisual';
+import {
+  ArrowUpRight,
+  BedDouble,
+  ChevronRight,
+  MapPin,
+  MapPinned,
+  Wifi,
+  Search,
+} from 'lucide-react';
+import { DestinationLinks, MapDestinationCard } from '../components/MapDestinationCard';
 import type { TravelStore } from '../hooks/useTravel';
-import { dateLabel, mapDestination, zoneLabel } from '../lib/domain';
-import { Empty, MapsLinks, PageHeading } from '../components/ui';
-import { TransportDetails } from './ActivityDetails';
+import { mapDestination } from '../lib/domain';
+import { Empty, PageHeading } from '../components/ui';
 
 export function MapPage({
   store,
@@ -24,7 +31,7 @@ export function MapPage({
       mapDestination(a) && normalize(`${a.title} ${mapDestination(a)}`).includes(normalize(search)),
   );
   return (
-    <>
+    <section className="map-screen">
       <PageHeading
         eyebrow="A CIDADE NO SEU RITMO"
         title="Mapa e caminhos"
@@ -46,12 +53,6 @@ export function MapPage({
             Abra um destino ou peça um percurso a pé e de transporte público. As rotas são
             calculadas pelo Google Maps ao abrir o link.
           </p>
-          <div className="inline small">
-            <Footprints size={17} />
-            Caminhadas <span>·</span>
-            <TrainFront size={17} />
-            Metrô
-          </div>
         </div>
       </div>
       <p className="notice inline">
@@ -88,31 +89,35 @@ export function MapPage({
       ) : (
         <div className="location-grid">
           {locations.map((a) => (
-            <article className="card location-card" key={a.id}>
-              <span className="eyebrow">
-                {dateLabel(a.date)}
-                {a.start && ` · ${a.start}`}
-                {` · ${zoneLabel(a)}`}
-              </span>
-              <div className="location-identity">
-                <ActivityVisual activity={a} />
-                <h3>{a.title}</h3>
-              </div>
-              <p className="muted">{mapDestination(a)}</p>
-              <MapsLinks address={mapDestination(a)} origin={a.transport.origin} />
-              <TransportDetails activity={a} />
-            </article>
+            <MapDestinationCard activity={a} documents={store.documents} key={a.id} />
           ))}
         </div>
       )}
       {store.state!.hotel.address && (
-        <section className="card location-card">
-          <span className="eyebrow">SUA BASE EM ATENAS</span>
-          <h3>{store.state!.hotel.name || 'Hospedagem'}</h3>
-          <p className="muted">{store.state!.hotel.address}</p>
-          <MapsLinks address={store.state!.hotel.address} />
+        <section className="card hotel-map-card" aria-label="Hospedagem no mapa">
+          <div className="hotel-map-heading">
+            <span className="icon-tile pink">
+              <BedDouble size={26} />
+            </span>
+            <div>
+              <span className="eyebrow">SUA BASE EM ATENAS</span>
+              <h3>{store.state!.hotel.name || 'Hospedagem'}</h3>
+            </div>
+          </div>
+          <p className="destination-address">
+            <MapPin size={16} />
+            <span>{store.state!.hotel.address}</span>
+          </p>
+          <DestinationLinks
+            destination={store.state!.hotel.address}
+            title={store.state!.hotel.name || 'Hospedagem'}
+          />
+          <a href="#hotel" className="destination-details-link">
+            Ver hospedagem
+            <ChevronRight size={17} />
+          </a>
         </section>
       )}
-    </>
+    </section>
   );
 }

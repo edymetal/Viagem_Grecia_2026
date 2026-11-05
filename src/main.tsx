@@ -5,6 +5,7 @@ import './styles.css';
 import './native.css';
 import './itinerary.css';
 import './expenses.css';
+import './map.css';
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: boolean }> {
   state = { error: false };
