@@ -155,7 +155,9 @@ export default function App() {
     }
   };
   return (
-    <div className={`app-shell ${page === 'roteiro' ? 'itinerary-page' : ''}`}>
+    <div
+      className={`app-shell ${page === 'roteiro' ? 'itinerary-page' : page === 'gastos' ? 'finance-page' : ''}`}
+    >
       <a
         href="#conteudo"
         className="skip-link"

@@ -1,0 +1,302 @@
+/* Financial screens share the native header with the itinerary. */
+.expenses-screen {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.expenses-screen .new-expense {
+  color: var(--primary);
+}
+.expense-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.expense-tabs button {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  min-height: 44px;
+  background: linear-gradient(var(--surface), var(--surface-2));
+  font-size: 14px;
+  font-weight: 650;
+}
+.expense-tabs button[aria-selected='true'] {
+  color: white;
+  background: linear-gradient(#0785ff, #005bcf);
+  border-color: #0066df;
+  box-shadow: 0 2px 6px #0066df20;
+}
+.trip-total-card {
+  text-align: center;
+  border: 1px solid #b8ddd5;
+  border-radius: 14px;
+  padding: 20px 20px 4px;
+  background: linear-gradient(115deg, #eaf8ee, #d9f1ee);
+  color: #132f36;
+}
+.trip-total-card h2 {
+  font-size: 16px;
+}
+.trip-total-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+.trip-total-value svg {
+  color: #ea8900;
+  flex-shrink: 0;
+}
+.trip-total-value strong {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.trip-total-card > p {
+  font-size: 11px;
+  color: #3e6662;
+}
+.budget-progress {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin-top: 16px;
+  appearance: none;
+  border: none;
+  background: #bfd9d0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.budget-progress::-webkit-progress-bar {
+  background: #bfd9d0;
+  border-radius: 10px;
+}
+.budget-progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #00aa3a, #45c762);
+  border-radius: 10px;
+}
+.budget-progress::-moz-progress-bar {
+  background: #00aa3a;
+  border-radius: 10px;
+}
+.budget-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  text-align: left;
+  margin-top: 5px;
+}
+.trip-total-card .text-button {
+  min-height: 44px;
+  justify-content: center;
+  font-size: 11px;
+  color: #165c63;
+}
+.budget-exceeded {
+  border-color: var(--danger);
+}
+.budget-exceeded .budget-progress::-webkit-progress-value {
+  background: var(--danger);
+}
+.budget-exceeded .budget-progress::-moz-progress-bar {
+  background: var(--danger);
+}
+.trip-total-card .budget-alert {
+  color: #a12732;
+  margin-top: 8px;
+  font-weight: 650;
+}
+.category-summary {
+  margin: 15px 0 20px;
+}
+.category-summary-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.category-summary-heading h2 {
+  font-size: 14px;
+}
+.category-kind {
+  display: flex;
+  gap: 4px;
+}
+.category-kind button {
+  font-size: 11px;
+  padding: 6px 9px;
+  min-height: 44px;
+  border-radius: 8px;
+  color: var(--muted);
+  border: 1px solid transparent;
+}
+.category-kind button[aria-pressed='true'] {
+  color: var(--primary);
+  border-color: var(--line);
+  background: var(--primary-soft);
+}
+.category-rows {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(115deg, var(--surface), var(--bg));
+}
+.category-row {
+  color: var(--text);
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) minmax(70px, auto);
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  min-height: 47px;
+  padding: 8px 13px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.category-row:last-child {
+  border-bottom: 0;
+}
+.category-row:hover {
+  background: var(--primary-soft);
+}
+.category-row strong {
+  font-size: 13px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.category-hint {
+  margin-top: 8px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.expenses-screen .finance-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 16px;
+  gap: 9px;
+}
+.expenses-screen .stat {
+  padding: 14px;
+}
+.expenses-screen .stat > strong {
+  font-size: 24px;
+  margin: 8px 0;
+}
+.expenses-screen .stat > strong.planned-range {
+  font-size: 19px;
+  letter-spacing: -0.5px;
+  line-height: 1.5;
+}
+.expenses-screen .charts-grid {
+  display: block;
+  margin-top: 20px;
+}
+.finance-reference {
+  margin: 15px 0;
+}
+.finance-reference summary {
+  font-weight: 600;
+  font-size: 11px;
+}
+.finance-reference p {
+  font-size: 11px;
+  margin-top: 10px;
+}
+.entries-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+.entries-toolbar .button {
+  font-size: 12px;
+}
+.expenses-screen .expense {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) minmax(75px, auto);
+  gap: 10px;
+  padding: 14px;
+}
+.expenses-screen .expense > .icon-tile {
+  display: grid;
+  width: 36px;
+  height: 40px;
+  min-width: 0;
+  border-radius: 9px;
+  background: var(--surface-2);
+}
+.expenses-screen .expense-description {
+  grid-column: 2;
+}
+.expenses-screen .expense > strong {
+  grid-column: 3;
+  max-width: 140px;
+  font-size: 14px;
+}
+.expenses-screen .expense-actions {
+  grid-column: 2 / 4;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  padding-top: 5px;
+}
+.expenses-screen .expense-actions .icon-button {
+  width: 44px;
+  height: 44px;
+}
+[data-theme='dark'] .trip-total-card {
+  background: linear-gradient(120deg, #153b3b, #1c3846);
+  color: #e9fff8;
+  border-color: #365d61;
+}
+[data-theme='dark'] .trip-total-card > p,
+[data-theme='dark'] .trip-total-card .text-button {
+  color: #bce6df;
+}
+[data-theme='dark'] .trip-total-card .budget-alert {
+  color: var(--danger);
+}
+[data-theme='dark'] .budget-progress,
+[data-theme='dark'] .budget-progress::-webkit-progress-bar {
+  background: #375851;
+}
+@media (max-width: 700px) {
+  .finance-page .topbar {
+    display: none;
+  }
+  .finance-page main {
+    padding-top: 0;
+  }
+  .expense-tabs {
+    margin-bottom: 10px;
+  }
+  .trip-total-card {
+    padding: 15px 13px 2px;
+    border-radius: 12px;
+  }
+  .trip-total-value strong {
+    font-size: 34px;
+  }
+  .trip-total-card h2 {
+    font-size: 15px;
+  }
+  .category-row {
+    gap: 8px;
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+  .category-row strong {
+    font-size: 12px;
+  }
+  .expenses-screen .section-title {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
