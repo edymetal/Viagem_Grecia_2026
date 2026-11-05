@@ -6,6 +6,10 @@ O cronograma enviado foi incorporado: **60 blocos nos quatro dias**, hotel escol
 
 ## Instalar e executar
 
+**No Windows, clique duas vezes em `Abrir Atenas.cmd`, na pasta do projeto.** O iniciador prepara os arquivos quando necessário, inicia o aplicativo em segundo plano e abre o navegador. Nos próximos usos, basta abrir o mesmo arquivo novamente. É necessário Node.js 22.12 ou superior; se as dependências ainda não estiverem instaladas, a primeira abertura usa a internet para instalá-las.
+
+O iniciador mantém `http://127.0.0.1:5173/Viagem_Grecia_2026/`, preservando o endereço dos dados locais usados durante o desenvolvimento. Se o aplicativo já estiver aberto nesse endereço, o servidor é reutilizado. Não abra `index.html` diretamente. Você também pode criar um atalho do arquivo `.cmd` na Área de Trabalho.
+
 Requer Node.js **22.12 ou superior** e npm. Versões exatas das dependências são registradas no `package-lock.json`.
 
 ```sh
