@@ -135,7 +135,7 @@ export function More({
                 </div>
                 <div>
                   <dt>Origem</dt>
-                  <dd>Palermo, Itália</dd>
+                  <dd>Santo Stefano di Camastra, via Palermo, Itália</dd>
                 </div>
                 <div>
                   <dt>Período</dt>
@@ -143,7 +143,7 @@ export function More({
                 </div>
                 <div>
                   <dt>Fuso do roteiro</dt>
-                  <dd>Europe/Athens</dd>
+                  <dd>Atenas e Itália identificados por atividade</dd>
                 </div>
                 <div>
                   <dt>Moeda / idioma</dt>
@@ -390,7 +390,8 @@ function RecordEditor({
                 destination: value(f, 'destination'),
                 departure: value(f, 'departure'),
                 arrival: value(f, 'arrival'),
-                confirmation: value(f, 'confirmation') as 'Confirmado' | 'Estimativa',
+                confirmation: value(f, 'confirmation') as
+                  'Confirmado' | 'Consultado' | 'Estimativa',
                 notes: value(f, 'notes'),
               };
               const i = s.flights.findIndex((x) => x.id === record.id);
@@ -434,6 +435,7 @@ function RecordEditor({
               <Field label="Confirmação">
                 <select name="confirmation" defaultValue={flight?.confirmation || 'Estimativa'}>
                   <option>Estimativa</option>
+                  <option>Consultado</option>
                   <option>Confirmado</option>
                 </select>
               </Field>
@@ -494,8 +496,8 @@ function Useful({ store }: { store: TravelStore }) {
         </button>
       </div>
       <p className="notice">
-        Estes espaços serão preenchidos com as informações fornecidas no cronograma. Nenhum
-        telefone, tarifa ou orientação turística foi presumido.
+        Informações transcritas do planejamento fornecido. Campos ausentes permanecem vazios;
+        valores e horários não foram revalidados pelo aplicativo.
       </p>
       <div className="useful-grid">
         {Object.entries(usefulLabels).map(([key, label]) => (

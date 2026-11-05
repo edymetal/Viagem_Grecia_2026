@@ -1,5 +1,64 @@
 @import 'tailwindcss';
 
+.import-plan {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  justify-content: space-between;
+}
+.import-plan strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.planning-notice summary {
+  font-weight: 650;
+  padding: 0 0 8px;
+}
+.planning-notice ul {
+  padding-left: 18px;
+  margin: 12px 0 0;
+  list-style: disc;
+}
+.planning-notice li {
+  margin: 5px 0;
+}
+.alternatives {
+  padding: 22px;
+  margin-top: 22px;
+}
+.alternatives > p {
+  margin-top: 9px;
+}
+.alternatives article {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+.alternatives article p {
+  font-size: 12px;
+  margin-top: 7px;
+}
+.stat > strong.planned-range {
+  font-size: 20px;
+  line-height: 1.5;
+}
+.expense > strong {
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  max-width: 220px;
+}
+@media (max-width: 700px) {
+  .import-plan {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .expense > strong {
+    max-width: 120px;
+  }
+}
+
 @theme {
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }

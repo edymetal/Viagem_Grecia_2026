@@ -1,0 +1,602 @@
+[
+  {
+    "day": 0,
+    "id": "plan-1-01",
+    "title": "Chegar à estação de Santo Stefano",
+    "start": "06:45",
+    "end": "",
+    "timeNote": "06h45",
+    "details": "Margem de aproximadamente 20 minutos",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-02",
+    "title": "Trem para Palermo Centrale",
+    "start": "07:04",
+    "end": "08:51",
+    "timeNote": "07h04–08h51",
+    "details": "Regional 12863",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-03",
+    "title": "Troca de trem",
+    "start": "08:51",
+    "end": "09:12",
+    "timeNote": "08h51–09h12",
+    "details": "21 minutos em Palermo Centrale",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-04",
+    "title": "Trem para Palermo Aeroporto",
+    "start": "09:12",
+    "end": "10:14",
+    "timeNote": "09h12–10h14",
+    "details": "Regional 21721",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-05",
+    "title": "Caminhar da estação aos embarques",
+    "start": "10:14",
+    "end": "10:30",
+    "timeNote": "10h14–10h30",
+    "details": "Seguir as placas do terminal",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-06",
+    "title": "Segurança e preparação para embarcar",
+    "start": "10:30",
+    "end": "11:45",
+    "timeNote": "10h30–11h45",
+    "details": "Fazer o check-in online quando disponível",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-07",
+    "title": "Voo ITA saindo de Palermo",
+    "start": "12:35",
+    "end": "",
+    "timeNote": "12h35",
+    "details": "Conexão em Roma",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-08",
+    "title": "Conexão em Roma–Fiumicino",
+    "start": "",
+    "end": "",
+    "timeNote": "Durante a viagem",
+    "details": "1h45 de espera",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-09",
+    "title": "Chegada prevista a Atenas",
+    "start": "18:35",
+    "end": "",
+    "timeNote": "18h35",
+    "details": "Duração total da viagem aérea: 5h",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-10",
+    "title": "Desembarque e saída para a estação",
+    "start": "18:35",
+    "end": "19:20",
+    "timeNote": "18h35–19h20",
+    "details": "Estimativa, dependendo do desembarque e bagagem",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-11",
+    "title": "Comprar o passe turístico de €20",
+    "start": "",
+    "end": "",
+    "timeNote": "Antes de embarcar no metrô",
+    "details": "Guichê ou máquina oficial da estação do aeroporto",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-12",
+    "title": "Metrô e caminhada até o hotel",
+    "start": "19:20",
+    "end": "20:40",
+    "timeNote": "Aproximadamente 19h20–20h40",
+    "details": "Intervalo com margem para espera do trem",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-13",
+    "title": "Check-in no Adam’s Hotel",
+    "start": "20:30",
+    "end": "21:00",
+    "timeNote": "Por volta de 20h30–21h",
+    "details": "Horário estimado",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-14",
+    "title": "Jantar próximo ao hotel, em Plaka",
+    "start": "21:00",
+    "end": "22:00",
+    "timeNote": "21h–22h",
+    "details": "Refeição simples, estimativa €12–20",
+    "cost": ""
+  },
+  {
+    "day": 0,
+    "id": "plan-1-15",
+    "title": "Descanso",
+    "start": "",
+    "end": "",
+    "timeNote": "Depois",
+    "details": "Sábado terá caminhadas e subida à Acrópole",
+    "cost": ""
+  },
+  {
+    "day": 1,
+    "id": "plan-2-01",
+    "title": "Café da manhã",
+    "start": "07:45",
+    "end": "08:20",
+    "timeNote": "07h45–08h20",
+    "details": "No hotel, se incluído, ou padaria próxima",
+    "cost": "€5–8, se pago à parte"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-02",
+    "title": "Caminhada até Monastiraki",
+    "start": "08:40",
+    "end": "09:00",
+    "timeNote": "08h40–09h",
+    "details": "Saindo do hotel, aproximadamente 15–20 min",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-03",
+    "title": "Biblioteca de Adriano",
+    "start": "09:00",
+    "end": "09:45",
+    "timeNote": "09h–09h45",
+    "details": "Visita por conta própria",
+    "cost": "€10"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-04",
+    "title": "Caminhada até o Museu Kotsanas",
+    "start": "09:45",
+    "end": "10:20",
+    "timeNote": "09h45–10h20",
+    "details": "Aproximadamente 25–35 min, com margem",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-05",
+    "title": "Museu da Tecnologia da Grécia Antiga — Kotsanas",
+    "start": "10:20",
+    "end": "11:30",
+    "timeNote": "10h20–11h30",
+    "details": "Mecanismos, automação e invenções antigas",
+    "cost": "€7"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-06",
+    "title": "Retorno a Plaka",
+    "start": "11:30",
+    "end": "12:05",
+    "timeNote": "11h30–12h05",
+    "details": "Caminhada de aproximadamente 25–35 min",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-07",
+    "title": "Almoço",
+    "start": "12:05",
+    "end": "13:00",
+    "timeNote": "12h05–13h",
+    "details": "Plaka ou arredores do hotel",
+    "cost": "€12–18"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-08",
+    "title": "Anafiotika e ruas de Plaka",
+    "start": "13:00",
+    "end": "13:30",
+    "timeNote": "13h–13h30",
+    "details": "Caminhada curta, com escadas; reduzir se estiver cansado",
+    "cost": "Grátis"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-09",
+    "title": "Pausa no hotel",
+    "start": "13:30",
+    "end": "14:00",
+    "timeNote": "13h30–14h",
+    "details": "Água, banheiro e preparação para a subida",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-10",
+    "title": "Encontro com o guia",
+    "start": "14:10",
+    "end": "",
+    "timeNote": "Por volta de 14h10",
+    "details": "Local exato depende do voucher da Carlimar",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-11",
+    "title": "Acrópole e Partenon com guia em português",
+    "start": "14:30",
+    "end": "16:30",
+    "timeNote": "14h30–16h30 — proposto",
+    "details": "Reservar somente o guia e comprar ingresso oficial correspondente",
+    "cost": "€30 + guia"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-12",
+    "title": "Descida e retorno a Plaka",
+    "start": "16:30",
+    "end": "17:00",
+    "timeNote": "16h30–17h",
+    "details": "Com calma, antes de escurecer",
+    "cost": "—"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-13",
+    "title": "Descanso e passeio leve",
+    "start": "17:00",
+    "end": "19:00",
+    "timeNote": "17h–19h",
+    "details": "Plaka ou Monastiraki, conforme disposição",
+    "cost": "Grátis"
+  },
+  {
+    "day": 1,
+    "id": "plan-2-14",
+    "title": "Jantar",
+    "start": "19:00",
+    "end": "20:30",
+    "timeNote": "19h–20h30",
+    "details": "Próximo ao hotel",
+    "cost": "€15–22"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-01",
+    "title": "Café da manhã",
+    "start": "07:15",
+    "end": "07:45",
+    "timeNote": "07h15–07h45",
+    "details": "Sair preparado para caminhar",
+    "cost": "€5–8, se pago à parte"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-02",
+    "title": "Hotel → Ágora Antiga",
+    "start": "07:50",
+    "end": "08:15",
+    "timeNote": "07h50–08h15",
+    "details": "Aproximadamente 20–25 min a pé",
+    "cost": "—"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-03",
+    "title": "Ágora Antiga, sem guia humano",
+    "start": "08:15",
+    "end": "10:00",
+    "timeNote": "08h15–10h",
+    "details": "Incluir Templo de Hefesto e Museu da Ágora, na Estoa de Átalo",
+    "cost": "€20"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-04",
+    "title": "Ágora → Praça Syntagma",
+    "start": "10:00",
+    "end": "10:40",
+    "timeNote": "10h–10h40",
+    "details": "Reservar 30–40 min, incluindo saída do sítio",
+    "cost": "—"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-05",
+    "title": "Posicionar-se para a cerimônia",
+    "start": "10:40",
+    "end": "11:00",
+    "timeNote": "10h40–11h",
+    "details": "Em frente ao Parlamento",
+    "cost": "Grátis"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-06",
+    "title": "Troca solene da guarda",
+    "start": "11:00",
+    "end": "11:30",
+    "timeNote": "11h–11h30",
+    "details": "Cerimônia dominical",
+    "cost": "Grátis"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-07",
+    "title": "Jardim Nacional e exterior do Zappeion",
+    "start": "11:30",
+    "end": "12:15",
+    "timeNote": "11h30–12h15",
+    "details": "Caminhada leve em direção ao Templo de Zeus",
+    "cost": "Grátis"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-08",
+    "title": "Deslocamento ao templo",
+    "start": "12:15",
+    "end": "12:30",
+    "timeNote": "12h15–12h30",
+    "details": "Aproximadamente 10–15 min",
+    "cost": "—"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-09",
+    "title": "Templo de Zeus Olímpico",
+    "start": "12:30",
+    "end": "13:15",
+    "timeNote": "12h30–13h15",
+    "details": "Visita por conta própria",
+    "cost": "€20"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-10",
+    "title": "Arco de Adriano",
+    "start": "13:15",
+    "end": "13:25",
+    "timeNote": "13h15–13h25",
+    "details": "Ao lado do templo; parada para fotos",
+    "cost": "Grátis"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-11",
+    "title": "Almoço rápido",
+    "start": "13:25",
+    "end": "14:05",
+    "timeNote": "13h25–14h05",
+    "details": "Próximo de Akropoli/museu",
+    "cost": "€12–18"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-12",
+    "title": "Chegar ao encontro do guia",
+    "start": "14:05",
+    "end": "14:10",
+    "timeNote": "14h05–14h10",
+    "details": "Ponto exato a conferir no voucher",
+    "cost": "—"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-13",
+    "title": "Museu da Acrópole com guia em português",
+    "start": "14:30",
+    "end": "16:30",
+    "timeNote": "14h30–16h30 — proposto",
+    "details": "Carlimar/GetYourGuide, somente guia",
+    "cost": "€20 + guia"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-14",
+    "title": "Tempo adicional no museu, se desejar",
+    "start": "16:30",
+    "end": "17:00",
+    "timeNote": "16h30–17h",
+    "details": "Verificar acesso à escavação antes do fechamento",
+    "cost": "Incluído no ingresso"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-15",
+    "title": "Hotel e descanso",
+    "start": "17:00",
+    "end": "19:00",
+    "timeNote": "17h–19h",
+    "details": "Cerca de 5–10 min a pé, conforme a saída usada",
+    "cost": "—"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-16",
+    "title": "Último jantar em Atenas",
+    "start": "19:00",
+    "end": "20:30",
+    "timeNote": "19h–20h30",
+    "details": "Plaka",
+    "cost": "€15–22"
+  },
+  {
+    "day": 2,
+    "id": "plan-3-17",
+    "title": "Organizar bagagem e documentos",
+    "start": "",
+    "end": "",
+    "timeNote": "Depois",
+    "details": "Preparar a saída da manhã seguinte",
+    "cost": "—"
+  },
+  {
+    "day": 3,
+    "id": "plan-4-01",
+    "title": "Café da manhã e conferir bagagem",
+    "start": "07:00",
+    "end": "07:40",
+    "timeNote": "07h–07h40",
+    "details": "Documentos, celular, carregadores e bilhetes",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-02",
+    "title": "Check-out",
+    "start": "08:00",
+    "end": "08:15",
+    "timeNote": "08h–08h15",
+    "details": "Sairemos antes do limite de 11h do hotel",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-03",
+    "title": "Caminhar até Akropoli",
+    "start": "08:15",
+    "end": "08:30",
+    "timeNote": "08h15–08h30",
+    "details": "Com margem para bagagem e acesso à estação",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-04",
+    "title": "Metrô até o aeroporto",
+    "start": "08:30",
+    "end": "10:00",
+    "timeNote": "08h30–10h",
+    "details": "Linha 2 para Syntagma; linha 3 com destino Airport",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-05",
+    "title": "Chegar ao aeroporto",
+    "start": "10:00",
+    "end": "",
+    "timeNote": "Até aproximadamente 10h",
+    "details": "Meta de cerca de 2h45 antes do voo",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-06",
+    "title": "Voo ITA Atenas → Roma",
+    "start": "12:45",
+    "end": "",
+    "timeNote": "12h45",
+    "details": "Início da volta",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-07",
+    "title": "Conexão em Roma",
+    "start": "",
+    "end": "",
+    "timeNote": "Durante a viagem",
+    "details": "3h20",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-08",
+    "title": "Chegada prevista a Palermo",
+    "start": "18:20",
+    "end": "",
+    "timeNote": "18h20",
+    "details": "Horário italiano",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-09",
+    "title": "Desembarque e saída",
+    "start": "18:20",
+    "end": "19:15",
+    "timeNote": "18h20–19h15",
+    "details": "Margem estimada",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-10",
+    "title": "Lanche e espera",
+    "start": "19:15",
+    "end": "20:10",
+    "timeNote": "19h15–20h10",
+    "details": "Perto do terminal/estação",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-11",
+    "title": "Trem aeroporto → Palermo Centrale",
+    "start": "20:26",
+    "end": "21:17",
+    "timeNote": "20h26–21h17",
+    "details": "Regional 5628",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-12",
+    "title": "Troca de trem",
+    "start": "21:17",
+    "end": "21:35",
+    "timeNote": "21h17–21h35",
+    "details": "18 minutos",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-13",
+    "title": "Trem para Santo Stefano",
+    "start": "21:35",
+    "end": "22:59",
+    "timeNote": "21h35–22h59",
+    "details": "Regional 12928",
+    "cost": ""
+  },
+  {
+    "day": 3,
+    "id": "plan-4-14",
+    "title": "Chegada a Santo Stefano di Camastra–Mistretta",
+    "start": "22:59",
+    "end": "",
+    "timeNote": "22h59",
+    "details": "Final do percurso ferroviário",
+    "cost": ""
+  }
+]

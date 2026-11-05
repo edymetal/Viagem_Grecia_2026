@@ -1,8 +1,8 @@
 # Atenas 2026
 
-Aplicativo pessoal de viagem para **uma pessoa, de Palermo a Atenas, de 20 a 23/11/2026**. Interface em português brasileiro e valores em euros. React, TypeScript, Vite, Tailwind CSS, Lucide, IndexedDB (`idb`), Zod e PWA (`vite-plugin-pwa` / Workbox). Front-end estático, sem autenticação, back-end, serviços pagos ou chaves privadas.
+Aplicativo pessoal de viagem para **uma pessoa, de Santo Stefano di Camastra a Atenas via Palermo, de 20 a 23/11/2026**. Interface em português brasileiro e valores em euros. React, TypeScript, Vite, Tailwind CSS, Lucide, IndexedDB (`idb`), Zod e PWA (`vite-plugin-pwa` / Workbox). Front-end estático, sem autenticação, back-end, serviços pagos ou chaves privadas.
 
-O cronograma definitivo ainda não foi fornecido. Os quatro dias estão preparados e vazios. Não foram inventados horários, atrações, telefones, preços ou reservas.
+O cronograma enviado foi incorporado: **60 blocos nos quatro dias**, hotel escolhido, voos e trens consultados, transporte, ingressos, alimentação estimada, alternativas e checklist. O texto informa que nenhuma compra ou reserva foi realizada. Guias às 14h30–16h30 são propostas, não vagas garantidas. Os dados e links foram transcritos sem nova consulta de disponibilidade. Não há documentos ou códigos de reserva no código-fonte.
 
 ## Instalar e executar
 
@@ -63,10 +63,10 @@ Google Maps, compra de ingressos e sites externos precisam de internet. O app n�
 
 ## O que funciona
 
-- Início: contagem de dias, dia atual em Atenas, próxima atividade confirmada com horário, gastos, visitas e atalhos.
+- Início: contagem de dias, dia atual em Atenas, próxima atividade planejada/confirmada com horário e fuso local, gastos, visitas, pendências e atalhos. Sugestões não entram como próxima atividade.
 - Roteiro: quatro dias, atividades extras, horários editáveis, descrição, preços, links, transporte, fotos locais, notas, confirmação, obrigatoriedade, conclusão e reordenação por botões acessíveis. Atividades opcionais podem ser excluídas. Aviso de sobreposição quando início e término estão preenchidos.
 - Mapa: lista dos destinos informados, localização e navegação a pé/transporte público por links externos. Nenhuma rota presumida.
-- Gastos: orçamento, CRUD de despesas nas oito categorias, previsto/realizado, pago/não pago, saldo e gráficos por categoria/dia. O saldo usa apenas realizados; o saldo projetado inclui previstos. Valores pagos podem incluir uma despesa ainda classificada como prevista. Preços de atrações e transporte não viram despesas automaticamente.
+- Gastos: orçamento, CRUD de despesas nas oito categorias, previsto/realizado, pago/não pago, saldo e gráficos por categoria/dia. Faixas mínimo/máximo preservam estimativas; despesas pagas ou realizadas exigem valor exato. As 11 previsões iniciais totalizam €441,81–481,81, sem hotel e guias; nenhum gasto realizado ou pago foi criado. O saldo usa apenas realizados; o saldo projetado considera a faixa prevista. Preços de atividades não geram despesas automaticamente.
 - Mais: documentos offline, hotel, voos, referências de reservas, checklist, informações úteis, frases PT/IT/EL, backup e preferências de tema.
 
 ## Dados locais e privacidade
@@ -90,11 +90,13 @@ Em **Mais → Backup e restauração**, baixe um JSON validado com formato `aten
 
 Não existem backups automáticos nem envio a servidores. A escolha do local do arquivo baixado é do navegador/Android.
 
-## Incorporar o cronograma depois
+## Cronograma recebido e instalações anteriores
 
-Consulte [docs/CRONOGRAMA.md](docs/CRONOGRAMA.md). Os dados ficam separados da interface em `src/data/initial.ts` e o contrato validado em `src/data/schema.ts`. Campos ausentes são vazios ou `null`. Confirmações e estimativas são explícitas. Não coloque códigos de reservas, comprovantes ou documentos privados nesses arquivos públicos.
+Consulte [docs/CRONOGRAMA.md](docs/CRONOGRAMA.md). A transcrição está em `src/data/itinerary-activities.json`; os detalhes, preços e demais módulos em `src/data/itinerary.ts`. `src/data/initial.ts` fornece o plano para novas instalações. Os contratos ficam em `src/data/schema.ts`. Campos ausentes são vazios ou `null`. Fusos Itália/Atenas, preços consultados, estimativas e horários propostos são explícitos. Não coloque códigos de reservas, comprovantes ou documentos privados nesses arquivos públicos.
 
-Uma instalação que já tem dados preserva suas edições. Alterar o módulo inicial não sobrescreve esse estado; use um backup completo revisado para restaurar o cronograma no dispositivo, exportando antes a versão atual.
+Se a versão anterior já tem dados salvos, use **Incorporar cronograma** no aviso do aplicativo. A incorporação acrescenta o plano uma vez, mantém atividades já existentes com o mesmo ID ou nome/dia, preserva orçamento, arquivos, reservas, hotel já informado e campos já preenchidos. As despesas previstas ficam desmarcadas por padrão quando já houver gastos locais, para evitar duplicidade. Faça um backup antes e revise eventuais sobreposições. Restaurar backup continua sendo uma operação separada de substituição integral.
+
+O total original sem hotel, alimentação e guias é €361,81; ingressos somam €107. Alimentação é uma única previsão global de €80–120, sem adicionar novamente cada refeição. Hotel a €240 é apenas simulação, não lançado como preço real ou limite de orçamento. Ao registrar gastos realizados, ajuste/substitua as previsões correspondentes. A captura do anúncio da Booking.com permanece fora do Git e não comprova reserva, preço final ou café incluído.
 
 ## Estrutura
 
@@ -117,7 +119,7 @@ vite.config.ts               # Base path, PWA, cache e escopo
 
 ## Limites conhecidos
 
-Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. A contagem até a partida considera dias de calendário em Atenas, pois o horário do voo ainda não foi fornecido. A detecção de conflito usa intervalos no mesmo dia e não infere deslocamentos. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas; o gráfico diário inclui essas datas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
+Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. A contagem até a partida permanece em dias de calendário de Atenas. A próxima atividade e conflitos convertem os horários locais usando os fusos IANA Europe/Rome e Europe/Athens; o aparelho pode estar em outro fuso. Intervalos que cruzam meia-noite devem ser divididos por dia. A detecção não infere deslocamentos. Há aviso da janela de check-in sobreposta ao deslocamento de sexta e da escavação com última entrada no fim do tour de domingo. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
 
 Implementação alinhada à [documentação do Vite PWA](https://vite-pwa-org.netlify.app/guide/), à [integração Tailwind/Vite](https://tailwindcss.com/docs/installation/using-vite) e ao [workflow oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialState, emptyActivity } from '../src/data/initial';
+import { emptyState as initialState, emptyActivity } from '../src/data/initial';
 import { activitySchema, stateSchema } from '../src/data/schema';
 import { athensNow, conflicts, countdown, mapsLink, nextActivity, totals } from '../src/lib/domain';
 

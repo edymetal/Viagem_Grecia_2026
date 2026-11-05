@@ -15,7 +15,16 @@ import type { Activity } from '../data/schema';
 import { activitySchema, tripDates } from '../data/schema';
 import { emptyActivity } from '../data/initial';
 import type { TravelStore } from '../hooks/useTravel';
-import { athensNow, conflicts, dateLabel, euro } from '../lib/domain';
+import {
+  athensNow,
+  conflicts,
+  dateLabel,
+  euro,
+  mapDestination,
+  moneyRange,
+  zoneLabel,
+} from '../lib/domain';
+import { PlanningNotice } from '../components/Planning';
 import {
   AsyncForm,
   Empty,
@@ -53,14 +62,20 @@ export function ActivityEditor({
             title: value(f, 'title'),
             start: value(f, 'start'),
             end: value(f, 'end'),
+            timeZone: value(f, 'timeZone'),
+            timeCertainty: value(f, 'timeCertainty'),
+            timeNote: value(f, 'timeNote'),
+            location: value(f, 'location'),
             description: value(f, 'description'),
             address: value(f, 'address'),
             price: optionalNumber(f, 'price'),
+            priceMax: optionalNumber(f, 'priceMax'),
             priceCertainty: value(f, 'priceCertainty'),
             duration: optionalNumber(f, 'duration'),
             openingHours: value(f, 'openingHours'),
             website: value(f, 'website'),
             ticketUrl: value(f, 'ticketUrl'),
+            guideUrl: value(f, 'guideUrl'),
             notes: value(f, 'notes'),
             required: f.has('required'),
             confirmation: value(f, 'confirmation'),
@@ -72,6 +87,7 @@ export function ActivityEditor({
               station: value(f, 'station'),
               lines: value(f, 'lines'),
               minutes: optionalNumber(f, 'minutes'),
+              minutesMax: optionalNumber(f, 'minutesMax'),
               price: optionalNumber(f, 'transportPrice'),
               certainty: value(f, 'certainty'),
               notes: value(f, 'transportNotes'),
@@ -104,11 +120,28 @@ export function ActivityEditor({
           <Field label="Confirmação">
             <select name="confirmation" defaultValue={a.confirmation}>
               <option>Sugestão</option>
+              <option>Planejada</option>
               <option>Confirmada</option>
             </select>
           </Field>
-          <Field label="Início · horário de Atenas">
+          <Field label="Início · horário local">
             <input type="time" name="start" defaultValue={a.start} />
+          </Field>
+          <Field label="Fuso dos horários">
+            <select name="timeZone" defaultValue={a.timeZone || 'Europe/Athens'}>
+              <option value="Europe/Athens">Atenas · Europe/Athens</option>
+              <option value="Europe/Rome">Itália · Europe/Rome</option>
+            </select>
+          </Field>
+          <Field label="Natureza dos horários">
+            <select name="timeCertainty" defaultValue={a.timeCertainty || 'Planejado'}>
+              {['Planejado', 'Consultado', 'Estimativa', 'Proposto'].map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="Observação do horário" wide>
+            <input name="timeNote" defaultValue={a.timeNote} maxLength={10000} />
           </Field>
           <Field label="Término · mesmo dia">
             <input type="time" name="end" defaultValue={a.end} />
@@ -118,6 +151,9 @@ export function ActivityEditor({
           </Field>
           <Field label="Endereço" wide>
             <input name="address" defaultValue={a.address} />
+          </Field>
+          <Field label="Local para buscar no mapa (se endereço não informado)" wide>
+            <input name="location" defaultValue={a.location} maxLength={10000} />
           </Field>
           <Field label="Preço (€)">
             <input
@@ -133,8 +169,19 @@ export function ActivityEditor({
             <select name="priceCertainty" defaultValue={a.priceCertainty}>
               <option>Não informado</option>
               <option>Confirmado</option>
+              <option>Consultado</option>
               <option>Estimativa</option>
             </select>
+          </Field>
+          <Field label="Preço máximo (€), somente se for uma faixa">
+            <input
+              name="priceMax"
+              type="number"
+              step="0.01"
+              min="0"
+              max="1000000"
+              defaultValue={a.priceMax ?? ''}
+            />
           </Field>
           <Field label="Duração estimada (min)">
             <input
@@ -153,6 +200,9 @@ export function ActivityEditor({
           </Field>
           <Field label="Link de ingresso">
             <input type="url" name="ticketUrl" defaultValue={a.ticketUrl} placeholder="https://" />
+          </Field>
+          <Field label="Link para reservar somente o guia" wide>
+            <input name="guideUrl" type="url" defaultValue={a.guideUrl} placeholder="https://" />
           </Field>
           <Field label="Fotografia local (adicione em Documentos)" wide>
             <select name="photoDocumentId" defaultValue={a.photoDocumentId || ''}>
@@ -173,7 +223,15 @@ export function ActivityEditor({
           <h3 className="wide form-section">Deslocamento informado no cronograma</h3>
           <Field label="Meio de transporte">
             <select name="mode" defaultValue={a.transport.mode}>
-              {['Não informado', 'A pé', 'Metrô', 'Transporte público', 'Outro'].map((m) => (
+              {[
+                'Não informado',
+                'A pé',
+                'Metrô',
+                'Trem',
+                'Avião',
+                'Transporte público',
+                'Outro',
+              ].map((m) => (
                 <option key={m}>{m}</option>
               ))}
             </select>
@@ -207,6 +265,15 @@ export function ActivityEditor({
               max="1000000"
               step="0.01"
               defaultValue={a.transport.price ?? ''}
+            />
+          </Field>
+          <Field label="Tempo máximo de deslocamento (min), se faixa">
+            <input
+              name="minutesMax"
+              type="number"
+              min="0"
+              max="1440"
+              defaultValue={a.transport.minutesMax ?? ''}
             />
           </Field>
           <Field label="Natureza do transporte">
@@ -269,6 +336,7 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
           </button>
         }
       />
+      <PlanningNotice store={store} />
       <div className="day-tabs" role="tablist" aria-label="Dias da viagem">
         {state.days.map((d, i) => (
           <button
@@ -292,7 +360,7 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
           {dateLabel(day, { weekday: 'long' })}
           <span className="count-badge">{activities.length}</span>
         </h2>
-        <span className="small muted">Europe/Athens</span>
+        <span className="small muted">Horários locais · fuso em cada atividade</span>
       </div>
       {warnings.length > 0 && (
         <div className="notice warning" role="status">
@@ -313,8 +381,8 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
               </button>
             }
           >
-            O cronograma definitivo será adicionado depois. Nenhum horário, reserva ou preço foi
-            preenchido.
+            Nenhuma atividade neste dia. Adicione uma atividade ou incorpore o cronograma recebido
+            quando a opção estiver disponível.
           </Empty>
         </section>
       ) : (
@@ -325,12 +393,20 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                 <Clock3 size={15} />
                 <strong>{a.start || 'A definir'}</strong>
                 {a.end && <small>até {a.end}</small>}
+                <small>{zoneLabel(a)}</small>
               </div>
               <div className="activity-main">
                 <div className="activity-badges">
                   <span className={`badge ${a.confirmation === 'Sugestão' ? 'neutral' : ''}`}>
                     {a.confirmation}
                   </span>
+                  {a.timeCertainty && (
+                    <span
+                      className={`badge ${a.timeCertainty === 'Proposto' ? 'warm' : 'neutral'}`}
+                    >
+                      {a.timeCertainty}
+                    </span>
+                  )}
                   {a.required && (
                     <span className="badge warm">
                       <Flag size={12} />
@@ -345,10 +421,11 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                   )}
                 </div>
                 <h3>{a.title}</h3>
-                {a.address && (
+                {a.timeNote && <p className="small muted">{a.timeNote}</p>}
+                {(a.address || a.location) && (
                   <p className="muted small inline">
                     <MapPin size={14} />
-                    {a.address}
+                    {a.address || a.location}
                   </p>
                 )}
                 {a.description && <p>{a.description}</p>}
@@ -369,7 +446,7 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                         <dd>
                           {a.price === null
                             ? 'Não informado'
-                            : `${euro(a.price)} · ${a.priceCertainty}`}
+                            : `${moneyRange(a.price, a.priceMax)} · ${a.priceCertainty}`}
                         </dd>
                       </div>
                       <div>
@@ -382,11 +459,8 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                       </div>
                     </dl>
                     <TransportDetails activity={a} />
-                    <MapsLinks
-                      address={a.address || a.transport.destination}
-                      origin={a.transport.origin}
-                    />
-                    {(a.website || a.ticketUrl) && (
+                    <MapsLinks address={mapDestination(a)} origin={a.transport.origin} />
+                    {(a.website || a.ticketUrl || a.guideUrl) && (
                       <p className="external-links">
                         {a.website && (
                           <a href={a.website} target="_blank" rel="noreferrer">
@@ -396,6 +470,11 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
                         {a.ticketUrl && (
                           <a href={a.ticketUrl} target="_blank" rel="noreferrer">
                             Comprar ingresso ↗
+                          </a>
+                        )}
+                        {a.guideUrl && (
+                          <a href={a.guideUrl} target="_blank" rel="noreferrer">
+                            Reservar somente guia ↗
                           </a>
                         )}
                         <small>Requer internet</small>
@@ -457,6 +536,46 @@ export function Itinerary({ store, now }: { store: TravelStore; now: Date }) {
             </article>
           ))}
         </div>
+      )}
+      {!!state.alternatives?.length && (
+        <section className="card alternatives">
+          <h2>Alternativas para acrescentar ou trocar</h2>
+          <p className="small muted">
+            Ficam fora da linha do tempo e dos gastos até você escolher. Revise o bloco a substituir
+            e a despesa correspondente.
+          </p>
+          {state.alternatives.map((a) => (
+            <article key={a.id}>
+              <h3>{a.title}</h3>
+              <p>{a.description}</p>
+              <p className="muted small">
+                {a.notes}{' '}
+                {a.price === null
+                  ? 'Sem preço adicional informado.'
+                  : `Ingresso: ${euro(a.price)}.`}
+              </p>
+              <button
+                className="text-button"
+                onClick={() =>
+                  setEditing({
+                    ...emptyActivity(day),
+                    title: a.title,
+                    description: a.description,
+                    notes: a.notes,
+                    price: a.price,
+                    priceCertainty: a.price === null ? 'Não informado' : 'Consultado',
+                    location: a.location,
+                    website: a.website,
+                    ticketUrl: a.ticketUrl,
+                  })
+                }
+              >
+                <Plus size={15} />
+                Preparar para {dateLabel(day)}
+              </button>
+            </article>
+          ))}
+        </section>
       )}
       <section className="card day-notes">
         <div>
@@ -543,8 +662,10 @@ export function TransportDetails({ activity: a }: { activity: Activity }) {
         <div>
           <dt>Tempo / valor</dt>
           <dd>
-            {t.minutes === null ? 'A informar' : `${t.minutes} min`} ·{' '}
-            {t.price === null ? 'A informar' : euro(t.price)}
+            {t.minutes === null
+              ? 'A informar'
+              : `${t.minutes}${t.minutesMax != null && t.minutesMax !== t.minutes ? `–${t.minutesMax}` : ''} min`}{' '}
+            · {t.price === null ? 'A informar' : euro(t.price)}
             {t.certainty !== 'Não informado' && ` (${t.certainty})`}
           </dd>
         </div>

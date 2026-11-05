@@ -32,17 +32,31 @@ const url = z.union([
     .max(2000)
     .refine((v) => /^https?:\/\//.test(v), 'Use um endereço http ou https.'),
 ]);
-export const transportSchema = z.object({
-  mode: z.enum(['Não informado', 'A pé', 'Metrô', 'Transporte público', 'Outro']),
-  origin: text,
-  destination: text,
-  station: text,
-  lines: text,
-  minutes: z.number().int().min(0).max(1440).nullable(),
-  price: money.nullable(),
-  certainty: z.enum(['Não informado', 'Confirmado', 'Estimativa']),
-  notes: text,
-});
+export const transportSchema = z
+  .object({
+    mode: z.enum([
+      'Não informado',
+      'A pé',
+      'Metrô',
+      'Trem',
+      'Avião',
+      'Transporte público',
+      'Outro',
+    ]),
+    origin: text,
+    destination: text,
+    station: text,
+    lines: text,
+    minutes: z.number().int().min(0).max(1440).nullable(),
+    minutesMax: z.number().int().min(0).max(1440).nullable().optional(),
+    price: money.nullable(),
+    certainty: z.enum(['Não informado', 'Confirmado', 'Estimativa']),
+    notes: text,
+  })
+  .refine((v) => v.minutesMax == null || (v.minutes !== null && v.minutesMax >= v.minutes), {
+    message: 'O tempo máximo deve ser maior ou igual ao mínimo.',
+    path: ['minutesMax'],
+  });
 export const activitySchema = z
   .object({
     id,
@@ -50,34 +64,69 @@ export const activitySchema = z
     title: z.string().trim().min(1).max(200),
     start: time,
     end: time,
+    timeZone: z.enum(['Europe/Athens', 'Europe/Rome']).optional(),
+    timeCertainty: z.enum(['Planejado', 'Consultado', 'Estimativa', 'Proposto']).optional(),
+    timeNote: text.optional(),
+    location: text.optional(),
     description: text,
     address: text,
     price: money.nullable(),
-    priceCertainty: z.enum(['Não informado', 'Confirmado', 'Estimativa']),
+    priceMax: money.nullable().optional(),
+    priceCertainty: z.enum(['Não informado', 'Confirmado', 'Consultado', 'Estimativa']),
     duration: z.number().int().min(0).max(1440).nullable(),
     openingHours: text,
     website: url,
     ticketUrl: url,
+    guideUrl: url.optional(),
     notes: text,
     transport: transportSchema,
     required: z.boolean(),
-    confirmation: z.enum(['Confirmada', 'Sugestão']),
+    confirmation: z.enum(['Confirmada', 'Planejada', 'Sugestão']),
     completed: z.boolean(),
     photoDocumentId: id.nullable(),
   })
   .refine((v) => !v.start || !v.end || v.end >= v.start, {
     message: 'O término deve ser posterior ao início (no mesmo dia).',
     path: ['end'],
+  })
+  .refine((v) => v.priceMax == null || (v.price !== null && v.priceMax >= v.price), {
+    message: 'O preço máximo deve ser maior ou igual ao mínimo.',
+    path: ['priceMax'],
   });
-export const expenseSchema = z.object({
+export const expenseSchema = z
+  .object({
+    id,
+    title: z.string().trim().min(1).max(200),
+    category: z.enum(categories),
+    amount: money,
+    amountMax: money.nullable().optional(),
+    certainty: z.enum(['Não informado', 'Consultado', 'Estimativa', 'Confirmado']).optional(),
+    date: z.iso.date(),
+    status: z.enum(['Previsto', 'Realizado']),
+    paid: z.boolean(),
+    notes: text,
+  })
+  .refine((v) => v.amountMax == null || v.amountMax >= v.amount, {
+    message: 'O valor máximo deve ser maior ou igual ao mínimo.',
+    path: ['amountMax'],
+  })
+  .refine(
+    (v) => (v.status !== 'Realizado' && !v.paid) || v.amountMax == null || v.amountMax === v.amount,
+    {
+      message:
+        'Uma despesa paga ou realizada precisa ter um valor exato. Remova a faixa antes de salvar.',
+      path: ['amountMax'],
+    },
+  );
+export const alternativeSchema = z.object({
   id,
-  title: z.string().trim().min(1).max(200),
-  category: z.enum(categories),
-  amount: money,
-  date: z.iso.date(),
-  status: z.enum(['Previsto', 'Realizado']),
-  paid: z.boolean(),
+  title: text,
+  description: text,
+  price: money.nullable(),
   notes: text,
+  location: text,
+  website: url,
+  ticketUrl: url,
 });
 export const hotelSchema = z.object({
   name: text,
@@ -102,6 +151,8 @@ export const usefulSchema = z.object({
 export const stateSchema = z
   .object({
     tripId: z.literal('atenas-2026'),
+    itineraryRevision: z.string().max(100).optional(),
+    alternatives: z.array(alternativeSchema).max(30).optional(),
     days: z.array(z.object({ date, notes: text })).length(4),
     activities: z.array(activitySchema).max(500),
     expenses: z.array(expenseSchema).max(5000),
@@ -120,7 +171,7 @@ export const stateSchema = z
           departure: text,
           arrival: text,
           notes: text,
-          confirmation: z.enum(['Confirmado', 'Estimativa']),
+          confirmation: z.enum(['Confirmado', 'Consultado', 'Estimativa']),
         }),
       )
       .max(30),
@@ -137,6 +188,11 @@ export const stateSchema = z
       v.days.map((d) => d.date),
       'days',
     );
+    if (v.alternatives)
+      unique(
+        v.alternatives.map((a) => a.id),
+        'alternatives',
+      );
     for (const key of ['activities', 'expenses', 'checklist', 'flights', 'reservations'] as const)
       unique(
         v[key].map((x) => x.id),

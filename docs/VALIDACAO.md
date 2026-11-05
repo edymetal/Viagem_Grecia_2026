@@ -1,15 +1,15 @@
-# Validação da estrutura inicial
+# Validação do aplicativo e cronograma
 
-Verificação local em 05/11/2026, com Node 22.23.4 e Chromium do Playwright. O cronograma definitivo ainda não foi inserido. Nenhum teste usou documentos pessoais ou aparelhos físicos.
+Verificação local em 05/11/2026, com Node 22.23.4 e Chromium do Playwright. O cronograma fornecido foi inserido com 60 blocos e quatro alternativas. A captura da Booking.com permanece fora do código. Nenhum teste usou documentos pessoais ou aparelhos físicos.
 
 | Verificação                     | Resultado                                                                                                |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `npm run check`                 | TypeScript sem erros                                                                                     |
-| `npm test`                      | 13 testes aprovados, em 2 arquivos                                                                       |
+| `npm test`                      | 19 testes aprovados, em 3 arquivos                                                                       |
 | `npm run build`                 | Build aprovado, manifest e service worker gerados                                                        |
-| `npm run test:e2e`              | 6 testes aprovados em Chromium com emulação Android                                                      |
+| `npm run test:e2e`              | 9 testes aprovados em Chromium com emulação Android                                                      |
 | Subdiretório padrão             | `/Viagem_Grecia_2026/` aprovado, inclusive recarga offline                                               |
-| Nome alternativo do repositório | Build e 6 testes de navegador aprovados com `/teste-pages/`                                              |
+| Nome alternativo do repositório | Build e 9 testes de navegador aprovados com `/teste-pages/`                                              |
 | Layout                          | 11 telas verificadas sem rolagem horizontal em 320, 390 e 1440 px; capturas clara e escura inspecionadas |
 | Auditoria de produção           | `npm audit --omit=dev`: nenhuma vulnerabilidade                                                          |
 | Auditoria das ferramentas       | 4 avisos baixos transitivos de `deepmerge` via Workbox; detalhes no README                               |
@@ -26,6 +26,15 @@ Verificação local em 05/11/2026, com Node 22.23.4 e Chromium do Playwright. O 
 - Rejeição de backups inválidos, versões incompatíveis, identificadores duplicados e arquivos adulterados.
 - Restauração atômica: uma falha no meio não altera os dados ou a coleção de documentos anteriores.
 - Falha de acesso ao IndexedDB exibe recuperação; falha de escrita por cota mantém o valor anterior e informa o usuário.
+
+## Cronograma incorporado
+
+- 60 blocos (15/14/17/14 por dia), sem compras, reservas ou visitas marcadas como realizadas.
+- Fusos locais Itália/Atenas e comparação cronológica entre países; horários intermediários ausentes continuam vazios.
+- 11 previsões totalizam €441,81–481,81, com alimentação em faixa e ingressos de €107; hotel e guias não recebem preços inventados.
+- Incorporação em instalação anterior preserva notas, orçamento, gastos e arquivo local; a versão impede aplicação duplicada.
+- Guias propostos, janela de check-in sobreposta e limite de entrada na escavação continuam sinalizados.
+- Faixas de preço, fusos e alternativas sobrevivem à exportação/restauração de backup.
 
 ## Limites da validação
 

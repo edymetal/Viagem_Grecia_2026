@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { deleteDB } from 'idb';
-import { initialState } from '../src/data/initial';
+import { emptyState as initialState } from '../src/data/initial';
 import {
   addDocument,
   deleteDocument,
@@ -25,6 +25,9 @@ const doc = (): LocalDocument => {
     blob,
   };
 };
+beforeEach(async () => {
+  await saveState(initialState());
+});
 afterEach(async () => {
   await deleteDB('atenas-2026');
 });

@@ -11,7 +11,17 @@ import {
   Clock3,
 } from 'lucide-react';
 import type { TravelStore } from '../hooks/useTravel';
-import { athensNow, countdown, dateLabel, euro, nextActivity, totals } from '../lib/domain';
+import {
+  athensNow,
+  countdown,
+  dateLabel,
+  euro,
+  nextActivity,
+  totals,
+  mapDestination,
+  zoneLabel,
+} from '../lib/domain';
+import { PlanningNotice } from '../components/Planning';
 import { Scenery } from '../components/Scenery';
 import { MapsLinks } from '../components/ui';
 
@@ -79,6 +89,7 @@ export function Home({
           </span>
         </div>
       </section>
+      <PlanningNotice store={store} />
       <div className="section-title">
         <h2>Uma viagem, quatro capítulos</h2>
         <button className="text-button" onClick={() => navigate('roteiro')}>
@@ -115,26 +126,31 @@ export function Home({
               <Clock3 size={20} />
             </span>
             <h2>Próxima parada</h2>
-            {next && <span className="badge">Confirmada</span>}
+            {next && <span className="badge">{next.confirmation}</span>}
           </div>
           {next ? (
             <div className="next-content">
               <p className="eyebrow">
-                {dateLabel(next.date)} · {next.start} · ATENAS
+                {dateLabel(next.date)} · {next.start} · {zoneLabel(next)}
               </p>
               <h3>{next.title}</h3>
               <p className="muted">
                 <MapPin size={15} />
-                {next.address || 'Endereço ainda não informado'}
+                {mapDestination(next) || 'Endereço ainda não informado'}
               </p>
-              <MapsLinks address={next.address} />
+              {next.timeCertainty && (
+                <p className="small muted">
+                  Horário: {next.timeCertainty}. {next.timeNote}
+                </p>
+              )}
+              <MapsLinks address={mapDestination(next)} />
             </div>
           ) : (
             <div className="next-content">
               <h3>O melhor ainda está por vir</h3>
               <p className="muted">
-                Seu cronograma está a caminho. Assim que houver uma atividade confirmada com
-                horário, ela aparecerá aqui.
+                Nenhuma atividade planejada ou confirmada com horário está por vir. Consulte os dias
+                e as sugestões no roteiro.
               </p>
               <button className="text-button" onClick={() => navigate('roteiro')}>
                 Organizar atividades <ArrowRight size={16} />

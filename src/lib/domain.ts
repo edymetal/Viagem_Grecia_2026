@@ -32,16 +32,52 @@ export function countdown(now = new Date()) {
   );
 }
 export function nextActivity(activities: Activity[], now = new Date()) {
-  const current = athensNow(now);
   return activities
     .filter(
       (a) =>
         !a.completed &&
-        a.confirmation === 'Confirmada' &&
+        a.confirmation !== 'Sugestão' &&
         a.start &&
-        (a.date > current.date || (a.date === current.date && (a.end || a.start) >= current.time)),
+        activityInstant(a, a.end ? 'end' : 'start') >= now.getTime(),
     )
-    .sort((a, b) => `${a.date}${a.start}`.localeCompare(`${b.date}${b.start}`))[0];
+    .sort((a, b) => activityInstant(a) - activityInstant(b))[0];
+}
+export function zoneLabel(a: Activity) {
+  return a.timeZone === 'Europe/Rome' ? 'Itália' : 'Atenas';
+}
+export function mapDestination(a: Activity) {
+  return a.address || a.location || a.transport.destination;
+}
+// Derive the offset from IANA rules rather than assuming the traveler's device timezone.
+export function activityInstant(a: Activity, part: 'start' | 'end' = 'start') {
+  const time = a[part];
+  if (!time) return NaN;
+  const guess = Date.parse(`${a.date}T${time}:00Z`);
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: a.timeZone || 'Europe/Athens',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(guess));
+  const n = (key: string) => Number(parts.find((p) => p.type === key)!.value);
+  const local = Date.UTC(n('year'), n('month') - 1, n('day'), n('hour'), n('minute'), n('second'));
+  return guess - (local - guess);
+}
+export function moneyRange(min: number, max?: number | null) {
+  return max == null || max === min ? euro(min) : `${euro(min)} – ${euro(max)}`;
+}
+export function plannedRange(state: AppState) {
+  return {
+    min: totals(state).planned,
+    max:
+      state.expenses
+        .filter((e) => e.status === 'Previsto')
+        .reduce((n, e) => n + Math.round((e.amountMax ?? e.amount) * 100), 0) / 100,
+  };
 }
 export function conflicts(activities: Activity[]) {
   const timed = activities.filter((a) => a.start && a.end && !a.completed);
@@ -50,7 +86,10 @@ export function conflicts(activities: Activity[]) {
     for (let j = i + 1; j < timed.length; j++) {
       const a = timed[i],
         b = timed[j];
-      if (a.date === b.date && a.start < b.end && b.start < a.end)
+      if (
+        activityInstant(a) < activityInstant(b, 'end') &&
+        activityInstant(b) < activityInstant(a, 'end')
+      )
         result.push(`${a.title} e ${b.title}: horários sobrepostos em ${dateLabel(a.date)}.`);
     }
   return result;

@@ -28,6 +28,7 @@ import { Itinerary } from './pages/Itinerary';
 import { Expenses } from './pages/Expenses';
 import { MapPage } from './pages/Map';
 import { More } from './pages/More';
+import { ItineraryImport } from './components/Planning';
 
 const nav: {
   id: string;
@@ -246,6 +247,7 @@ export default function App() {
           </div>
         </header>
         <main id="conteudo" tabIndex={-1}>
+          {store.state && <ItineraryImport store={store} />}
           {!online && (
             <div className="notice inline offline-banner" role="status">
               <CloudOff size={18} />

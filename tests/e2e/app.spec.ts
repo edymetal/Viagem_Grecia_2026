@@ -1,4 +1,35 @@
 import { test, expect } from '@playwright/test';
+import { emptyState } from '../../src/data/factories';
+import { ITINERARY_REVISION } from '../../src/data/itinerary';
+
+// Existing CRUD regressions run against an intentionally empty local user state.
+test.beforeEach(async ({ page }) => {
+  await page.goto('./');
+  await page.evaluate(
+    async (state) => {
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.open('atenas-2026', 1);
+        request.onupgradeneeded = () => {
+          request.result.createObjectStore('state');
+          request.result.createObjectStore('documents', { keyPath: 'id' });
+        };
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const db = request.result;
+          const tx = db.transaction('state', 'readwrite');
+          tx.objectStore('state').put(state, 'current');
+          tx.oncomplete = () => {
+            db.close();
+            resolve();
+          };
+          tx.onerror = () => reject(tx.error);
+        };
+      });
+    },
+    { ...emptyState(), itineraryRevision: ITINERARY_REVISION },
+  );
+  await page.reload();
+});
 
 test('editar, reordenar e excluir atividades opcionais preserva as obrigatórias', async ({
   page,
@@ -93,7 +124,7 @@ test('roteiro, despesas, checklist, documentos e backup persistem offline', asyn
   await expect(page.getByText('Um dia de possibilidades')).toBeVisible();
   await page.getByRole('button', { name: 'Nova atividade', exact: true }).click();
   await page.getByLabel('Nome da atividade *').fill('Atividade de teste local');
-  await page.getByLabel('Início · horário de Atenas').fill('10:00');
+  await page.getByLabel('Início · horário local').fill('10:00');
   await page.getByLabel('Término · mesmo dia').fill('11:00');
   await page.getByLabel('Confirmação', { exact: true }).selectOption('Confirmada');
   await page.getByLabel('Endereço', { exact: true }).fill('Endereço de teste, Atenas');

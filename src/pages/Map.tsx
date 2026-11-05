@@ -1,6 +1,6 @@
 import { ArrowUpRight, Footprints, MapPinned, TrainFront, Wifi } from 'lucide-react';
 import type { TravelStore } from '../hooks/useTravel';
-import { dateLabel } from '../lib/domain';
+import { dateLabel, mapDestination, zoneLabel } from '../lib/domain';
 import { Empty, MapsLinks, PageHeading } from '../components/ui';
 import { TransportDetails } from './Itinerary';
 
@@ -11,7 +11,7 @@ export function MapPage({
   store: TravelStore;
   navigate: (page: string) => void;
 }) {
-  const locations = store.state!.activities.filter((a) => a.address || a.transport.destination);
+  const locations = store.state!.activities.filter((a) => mapDestination(a));
   return (
     <>
       <PageHeading
@@ -70,13 +70,11 @@ export function MapPage({
               <span className="eyebrow">
                 {dateLabel(a.date)}
                 {a.start && ` · ${a.start}`}
+                {` · ${zoneLabel(a)}`}
               </span>
               <h3>{a.title}</h3>
-              <p className="muted">{a.address || a.transport.destination}</p>
-              <MapsLinks
-                address={a.address || a.transport.destination}
-                origin={a.transport.origin}
-              />
+              <p className="muted">{mapDestination(a)}</p>
+              <MapsLinks address={mapDestination(a)} origin={a.transport.origin} />
               <TransportDetails activity={a} />
             </article>
           ))}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Check, Edit3, Plus, Trash2, Wallet } from 'lucide-react';
 import { categories, expenseSchema, tripDates, type Expense } from '../data/schema';
 import type { TravelStore } from '../hooks/useTravel';
-import { athensNow, dateLabel, euro, totals } from '../lib/domain';
+import { athensNow, dateLabel, euro, totals, moneyRange, plannedRange } from '../lib/domain';
 import {
   AsyncForm,
   Empty,
@@ -34,6 +34,8 @@ function ExpenseEditor({
             ...e,
             title: value(f, 'title'),
             amount: optionalNumber(f, 'amount'),
+            amountMax: optionalNumber(f, 'amountMax'),
+            certainty: value(f, 'certainty'),
             category: value(f, 'category'),
             date: value(f, 'date'),
             status: value(f, 'status'),
@@ -72,6 +74,27 @@ function ExpenseEditor({
               ))}
             </select>
           </Field>
+          <Field label="Valor máximo (€), se estimativa em faixa">
+            <input
+              name="amountMax"
+              type="number"
+              min="0"
+              max="1000000"
+              step="0.01"
+              defaultValue={e.amountMax ?? ''}
+            />
+          </Field>
+          <Field label="Natureza do valor">
+            <select name="certainty" defaultValue={e.certainty || 'Não informado'}>
+              {['Não informado', 'Consultado', 'Estimativa', 'Confirmado'].map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+          </Field>
+          <p className="small muted wide">
+            O campo Valor é o mínimo quando houver uma faixa. Para marcar como realizado ou pago,
+            informe o valor exato e remova o máximo.
+          </p>
           <Field label="Data da despesa *">
             <input type="date" name="date" defaultValue={e.date} required />
           </Field>
@@ -96,6 +119,7 @@ function ExpenseEditor({
 export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
   const state = store.state!;
   const total = totals(state);
+  const planned = plannedRange(state);
   const [editing, setEditing] = useState<Expense | null>(null);
   const [budget, setBudget] = useState(false);
   const [removing, setRemoving] = useState<Expense | null>(null);
@@ -157,7 +181,7 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
         </section>
         <section className="card stat">
           <span>Gastos previstos</span>
-          <strong>{euro(total.planned)}</strong>
+          <strong className="planned-range">{moneyRange(planned.min, planned.max)}</strong>
           <small>Além dos valores realizados</small>
         </section>
         <section
@@ -172,14 +196,30 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
         Saldo após todos os gastos previstos:{' '}
         {state.budget === null
           ? 'defina um orçamento.'
-          : euro(
-              (Math.round(state.budget * 100) -
-                Math.round(total.actual * 100) -
-                Math.round(total.planned * 100)) /
-                100,
+          : moneyRange(
+              Math.round((state.budget - total.actual - planned.max) * 100) / 100,
+              Math.round((state.budget - total.actual - planned.min) * 100) / 100,
             )}{' '}
         Atividades e transportes não geram despesas automaticamente.
       </p>
+      {state.itineraryRevision && (
+        <div className="notice">
+          <strong>Referência do cronograma recebido · valores incompletos</strong>
+          <p>
+            Subtotal fornecido: €361,81 sem hotel, alimentação e guias. Alimentação global: €80–120.
+            Com alimentação: €441,81–481,81, ainda sem hotel e dois guias.{' '}
+            {state.budget === null
+              ? 'O orçamento total permanece a definir.'
+              : 'O orçamento definido por você aparece no resumo acima.'}
+          </p>
+          <p>
+            Hotel por €240 era apenas simulação: €681,81–721,81 mais guias e eventuais extras, sem
+            lançamento de hotel a esse preço. As refeições do roteiro e os trajetos cobertos pelo
+            passe não geram despesas extras automaticamente. Ao registrar gastos reais, ajuste as
+            previsões correspondentes para evitar duplicidade.
+          </p>
+        </div>
+      )}
       <div className="charts-grid">
         <Chart title="Por categoria" values={byCategory} />
         <Chart title="Por dia" values={byDay} />
@@ -236,8 +276,11 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
                     {e.status}
                   </span>
                   {e.paid && <span className="badge">Pago</span>}
+                  {e.certainty && e.certainty !== 'Não informado' && (
+                    <span className="badge neutral">{e.certainty}</span>
+                  )}
                 </div>
-                <strong>{euro(e.amount)}</strong>
+                <strong>{moneyRange(e.amount, e.amountMax)}</strong>
                 <div className="expense-actions">
                   <button
                     className={`icon-button ${e.paid ? 'is-paid' : ''}`}
@@ -304,7 +347,7 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
       {removing && (
         <Modal title="Excluir despesa?" onClose={() => setRemoving(null)}>
           <p>
-            “{removing.title}” · {euro(removing.amount)}
+            “{removing.title}” · {moneyRange(removing.amount, removing.amountMax)}
           </p>
           <AsyncForm
             label="Excluir despesa"
