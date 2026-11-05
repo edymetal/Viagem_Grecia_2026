@@ -41,7 +41,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,jpg,webp,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,jpg,webp,woff2,md}'],
         navigateFallback: `${base}index.html`,
         cleanupOutdatedCaches: true,
         // After the user accepts an update, take control so the open tab reloads.

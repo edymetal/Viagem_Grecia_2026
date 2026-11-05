@@ -15,7 +15,13 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await page.getByRole('button', { name: 'Escolher dia do roteiro', exact: true }).click();
   await page.getByRole('button', { name: /Dia 2 · sábado/ }).click();
   await expect(page.getByRole('tab', { selected: true })).toContainText('21/11');
+  await expect(page.getByRole('tab', { selected: true })).not.toContainText('Dia');
   await expect(page.locator('.activity')).toHaveCount(14);
+  const library = page
+    .locator('.activity')
+    .filter({ has: page.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }) });
+  await expect(library).toContainText('Funcionamento: Inverno: 08h–15h');
+  await expect(library.locator('img')).toHaveJSProperty('complete', true);
   await expect(page.getByRole('button', { name: /Mover .* para cima/ })).toHaveCount(0);
   await page.screenshot({ path: 'test-results/roteiro-compacto.png', fullPage: false });
   await page
@@ -154,4 +160,38 @@ test('foto pessoal anexada permanece nos detalhes e na linha do tempo offline', 
     'naturalWidth',
     1,
   );
+});
+
+test('fotos dos locais e horários fornecidos permanecem disponíveis offline', async ({
+  page,
+  context,
+}) => {
+  await page.goto('./#roteiro/2026-11-21');
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller);
+  await context.setOffline(true);
+  for (const [id, alt, hours] of [
+    ['plan-2-03', 'Biblioteca de Adriano', '08h–15h'],
+    ['plan-2-05', 'Exposição do Museu Kotsanas em Atenas', '10h–18h'],
+    ['plan-3-13', 'Edifício do Museu da Acrópole', '09h–20h'],
+  ]) {
+    const day = id.startsWith('plan-2') ? '2026-11-21' : '2026-11-22';
+    await page.goto(`./#roteiro/${day}/${id}`);
+    await expect
+      .poll(() =>
+        page
+          .getByRole('img', { name: alt, exact: true })
+          .evaluate((img: HTMLImageElement) => img.naturalWidth > 0),
+      )
+      .toBe(true);
+    await expect(page.locator('.visit-facts')).toContainText(hours);
+    await expect(page.locator('.detail-photo-credit')).toContainText('CC BY');
+    await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
+    await expect(
+      page.locator('.activity').filter({ has: page.getByRole('img', { name: alt, exact: true }) }),
+    ).toContainText(hours);
+  }
 });

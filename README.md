@@ -39,6 +39,8 @@ Os testes de navegador usam a versão já compilada em `dist`, com viewport e to
 
 ## Usar o roteiro
 
+- As abas mostram apenas data e dia da semana. Os horários da linha do tempo têm maior destaque. Fotos de locais de visitação são arquivos locais (créditos e licenças em `public/images/CREDITS.md`) e os horários de funcionamento fornecidos aparecem também na lista; dados ausentes são indicados sem suposição.
+
 - Escolha um dos quatro dias nas abas ou no ícone de calendário. As datas e os fusos reais da viagem são mantidos.
 - Toque em qualquer atividade da linha do tempo para abrir **Detalhes**: fotografia local quando disponível, preço e sua natureza, programação, funcionamento, duração, transporte, links e observações. Nenhuma avaliação turística ou foto de outro local é criada para preencher campos ausentes.
 - Use o coração para favoritar e o filtro **Favoritos** para ver os salvos no dia selecionado. Favoritos, visitas concluídas e edições ficam no IndexedDB e também são incluídos nos backups. Backups anteriores sem favoritos continuam compatíveis.

@@ -18,6 +18,7 @@ import { dateLabel, euro, mapDestination, mapsLink, moneyRange, zoneLabel } from
 import { itineraryHref } from '../lib/itineraryRoute';
 import { ActivityVisual, parthenonPhoto } from '../components/ActivityVisual';
 import { LocalImage, MapsLinks } from '../components/ui';
+import { activityPhoto } from '../data/placePhotos';
 
 export function ActivityDetails({
   activity: a,
@@ -32,6 +33,7 @@ export function ActivityDetails({
     (d) => d.id === a.photoDocumentId && d.type.startsWith('image/'),
   );
   const destination = mapDestination(a);
+  const placePhoto = activityPhoto(a);
   const toggle = (field: 'favorite' | 'completed') => {
     void store
       .update((s) => {
@@ -60,9 +62,13 @@ export function ActivityDetails({
       </header>
       <div className="activity-detail-layout">
         <div className="activity-detail-primary">
-          <div className={`detail-hero ${!photo && a.id !== 'plan-2-11' ? 'without-photo' : ''}`}>
+          <div
+            className={`detail-hero ${!photo && !placePhoto && a.id !== 'plan-2-11' ? 'without-photo' : ''}`}
+          >
             {photo ? (
               <LocalImage blob={photo.blob} alt={`Fotografia de ${a.title}`} />
+            ) : placePhoto ? (
+              <img src={placePhoto.src} alt={placePhoto.alt} />
             ) : a.id === 'plan-2-11' ? (
               <img src={parthenonPhoto} alt="Acrópole de Atenas e Partenon" />
             ) : (
@@ -74,6 +80,18 @@ export function ActivityDetails({
               </>
             )}
           </div>
+          {!photo && placePhoto && (
+            <p className="detail-photo-credit">
+              Foto: {placePhoto.author} ·{' '}
+              <a href={placePhoto.source} target="_blank" rel="noreferrer">
+                Original
+              </a>{' '}
+              ·{' '}
+              <a href={placePhoto.licenseUrl} target="_blank" rel="noreferrer">
+                {placePhoto.license}
+              </a>
+            </p>
+          )}
           <h2 className="detail-name">{a.title}</h2>
           {destination ? (
             <p className="detail-location">

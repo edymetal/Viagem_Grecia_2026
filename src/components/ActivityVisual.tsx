@@ -10,10 +10,14 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { Activity } from '../data/schema';
+import { activityPhoto } from '../data/placePhotos';
 
 export const athensPhoto = `${import.meta.env.BASE_URL}images/athens-acropolis.jpg`;
 export const parthenonPhoto = `${import.meta.env.BASE_URL}images/parthenon.jpg`;
 export function ActivityVisual({ activity: a }: { activity: Activity }) {
+  const photo = activityPhoto(a);
+  if (photo)
+    return <img className="activity-thumb" src={photo.src} alt={photo.alt} loading="lazy" />;
   if (a.id === 'plan-2-11')
     return (
       <img

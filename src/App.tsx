@@ -389,7 +389,7 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
           >
-            Créditos das fotos · CC0
+            Créditos e licenças das fotos
           </a>
         </footer>
       </div>

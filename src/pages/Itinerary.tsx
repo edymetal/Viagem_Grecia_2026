@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Check,
   ChevronRight,
+  Clock3,
   Edit3,
   Flag,
   Heart,
@@ -21,6 +22,7 @@ import { athensNow, conflicts, dateLabel, euro, zoneLabel } from '../lib/domain'
 import { itineraryHref, itineraryRoute } from '../lib/itineraryRoute';
 import { PlanningNotice } from '../components/Planning';
 import { ActivityVisual } from '../components/ActivityVisual';
+import { hasVisitDetails } from '../data/placePhotos';
 import { ActivityDetails } from './ActivityDetails';
 import {
   AsyncForm,
@@ -390,13 +392,8 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                   document.getElementById(`day-${state.days[next].date}`)?.focus();
                 }}
               >
-                <strong>Dia {i + 1}</strong>
-                <span>{dateLabel(d.date)}</span>
-                <small>
-                  {athensNow(now).date === d.date
-                    ? 'Hoje'
-                    : dateLabel(d.date, { weekday: 'short' })}
-                </small>
+                <strong>{dateLabel(d.date)}</strong>
+                <span>{dateLabel(d.date, { weekday: 'short' })}</span>
               </button>
             ))}
           </div>
@@ -504,6 +501,14 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                               </span>
                             )}
                           </div>
+                          {hasVisitDetails(a) && (
+                            <p className="timeline-opening">
+                              <Clock3 size={13} />
+                              <span>
+                                Funcionamento: {a.openingHours || 'não informado no cronograma'}
+                              </span>
+                            </p>
+                          )}
                         </div>
                         {a.favorite && (
                           <Heart
