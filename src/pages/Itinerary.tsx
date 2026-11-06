@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import {
   ArrowDown,
   ArrowLeft,
@@ -20,6 +20,7 @@ import { emptyActivity } from '../data/initial';
 import type { TravelStore } from '../hooks/useTravel';
 import { athensNow, conflicts, dateLabel, euro, zoneLabel } from '../lib/domain';
 import { itineraryHref, itineraryRoute } from '../lib/itineraryRoute';
+import { timelinePosition } from '../lib/timeline';
 import { PlanningNotice } from '../components/Planning';
 import { ActivityVisual } from '../components/ActivityVisual';
 import { hasVisitDetails } from '../data/placePhotos';
@@ -295,15 +296,17 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
   const state = store.state!;
   const [initialDay] = useState(() => {
     const requested = sessionStorage.getItem('selected-day');
-    sessionStorage.removeItem('selected-day');
-    return (
-      state.days.find((d) => d.date === requested)?.date ||
-      state.days.find((d) => d.date === athensNow(now).date)?.date ||
-      tripDates[0]
-    );
+    return state.days.find((d) => d.date === requested)?.date;
   });
+  useEffect(() => {
+    sessionStorage.removeItem('selected-day');
+  }, []);
   const { day: routeDay, activityId } = itineraryRoute(route);
-  const day = routeDay || initialDay;
+  const day =
+    routeDay ||
+    initialDay ||
+    state.days.find((d) => d.date === athensNow(now).date)?.date ||
+    tripDates[0];
   const selected = state.activities.find((a) => a.id === activityId);
   const [editing, setEditing] = useState<Activity | null>(null);
   const [removing, setRemoving] = useState<Activity | null>(null);
@@ -454,8 +457,9 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                 </Empty>
               </section>
             ) : (
-              <div className="timeline compact-timeline">
-                {visible.map((a) => {
+              <div className="timeline compact-timeline" aria-label="Horários e avanço do tempo">
+                {visible.map((a, index) => {
+                  const position = timelinePosition(a, visible[index + 1], now);
                   const i = activities.findIndex((x) => x.id === a.id);
                   const photo = store.documents.find(
                     (d) => d.id === a.photoDocumentId && d.type.startsWith('image/'),
@@ -463,6 +467,8 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                   return (
                     <article
                       className={`activity compact-activity ${a.completed ? 'completed' : ''}`}
+                      data-time-state={position.state}
+                      style={{ '--time-progress': `${position.progress * 100}%` } as CSSProperties}
                       key={a.id}
                     >
                       <a
@@ -470,11 +476,15 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                         id={`open-${a.id}`}
                         href={itineraryHref(day, a.id)}
                         aria-label={`Ver detalhes: ${a.title}`}
+                        aria-current={position.state === 'current' ? 'step' : undefined}
                       >
                         <span className="activity-time">
                           <strong>{a.start || 'A definir'}</strong>
                           {a.end && <small>até {a.end}</small>}
                           <small>{zoneLabel(a)}</small>
+                          {position.state === 'current' && (
+                            <small className="timeline-now">Agora</small>
+                          )}
                         </span>
                         {photo ? (
                           <LocalImage blob={photo.blob} alt="" className="activity-thumb" />

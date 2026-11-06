@@ -49,7 +49,8 @@ Os horários de funcionamento e links já fornecidos no planejamento anterior s�
 
 - As abas mostram apenas data e dia da semana. Os horários da linha do tempo têm maior destaque. Fotos de locais de visitação são arquivos locais (créditos e licenças em `public/images/CREDITS.md`) e os horários de funcionamento fornecidos aparecem também na lista; dados ausentes são indicados sem suposição.
 
-- Escolha um dos quatro dias nas abas ou no ícone de calendário. As datas e os fusos reais da viagem são mantidos.
+- Entre 20 e 23/11/2026, abrir **Roteiro** seleciona o dia atual pelo calendário de Atenas, inclusive ao virar a meia-noite com a tela aberta. As abas, o calendário, os cartões do início e os links diretos continuam permitindo escolher outro dia.
+- A linha dos horários preenche em azul conforme o tempo passa, respeitando os fusos de cada etapa na Itália e em Atenas. **Agora** indica o trecho atual; horários futuros permanecem sem preenchimento e dias passados aparecem preenchidos. O avanço funciona offline e não marca visitas como concluídas: essa confirmação continua manual.
 - Toque em qualquer atividade da linha do tempo para abrir **Detalhes**: fotografia local quando disponível, preço e sua natureza, programação, funcionamento, duração, transporte, links e observações. Nenhuma avaliação turística ou foto de outro local é criada para preencher campos ausentes.
 - Use o coração para favoritar e o filtro **Favoritos** para ver os salvos no dia selecionado. Favoritos, visitas concluídas e edições ficam no IndexedDB e também são incluídos nos backups. Backups anteriores sem favoritos continuam compatíveis.
 - Em **Detalhes**, use **Concluir visita**, **Editar** ou **Editar observações**. Para reordenar ou excluir atividades opcionais, ative **Organizar** na lista; as obrigatórias não têm botão de exclusão. A reordenação é desativada enquanto o filtro de favoritos está ativo para não ocultar atividades intermediárias.

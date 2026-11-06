@@ -89,7 +89,11 @@ export default function App() {
   });
   useEffect(() => {
     const change = () => setRoute(location.hash.slice(1));
-    const tick = setInterval(() => setNow(new Date()), 30_000);
+    const refreshClock = () => setNow(new Date());
+    const visibleClock = () => {
+      if (document.visibilityState === 'visible') refreshClock();
+    };
+    const tick = setInterval(refreshClock, 30_000);
     const connection = () => setOnline(navigator.onLine);
     const prompt = (e: Event) => {
       e.preventDefault();
@@ -100,6 +104,8 @@ export default function App() {
       setNotice('Aplicativo instalado. Confira o indicador de cache antes de usar offline.');
     };
     window.addEventListener('hashchange', change);
+    window.addEventListener('focus', refreshClock);
+    document.addEventListener('visibilitychange', visibleClock);
     window.addEventListener('online', connection);
     window.addEventListener('offline', connection);
     window.addEventListener('beforeinstallprompt', prompt);
@@ -107,6 +113,8 @@ export default function App() {
     return () => {
       clearInterval(tick);
       window.removeEventListener('hashchange', change);
+      window.removeEventListener('focus', refreshClock);
+      document.removeEventListener('visibilitychange', visibleClock);
       window.removeEventListener('online', connection);
       window.removeEventListener('offline', connection);
       window.removeEventListener('beforeinstallprompt', prompt);
