@@ -151,6 +151,32 @@
 .timeline-row .activity-time small {
   font-size: 10px;
 }
+.itinerary-screen .activity-symbol,
+.activity-screen .activity-symbol {
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, currentColor 7%, var(--surface)),
+    color-mix(in srgb, currentColor 17%, var(--surface))
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--surface) 65%, transparent),
+    0 3px 8px color-mix(in srgb, currentColor 9%, transparent);
+}
+.itinerary-screen .activity-symbol.amber,
+.activity-screen .activity-symbol.amber {
+  color: var(--coral);
+}
+.timeline-row .activity-symbol {
+  width: 64px;
+  min-width: 64px;
+  height: 64px;
+  border-radius: 16px;
+}
+.timeline-row .activity-symbol svg {
+  width: 30px;
+  height: 30px;
+}
 .timeline-identity {
   min-width: 0;
 }
@@ -446,6 +472,16 @@
   }
   .timeline-row .activity-time small {
     font-size: 9px;
+  }
+  .timeline-row .activity-symbol {
+    width: 48px;
+    min-width: 48px;
+    height: 56px;
+    border-radius: 13px;
+  }
+  .timeline-row .activity-symbol svg {
+    width: 26px;
+    height: 26px;
   }
   .timeline-identity h3 {
     font-size: 13px;
