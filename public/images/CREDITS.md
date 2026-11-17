@@ -35,3 +35,24 @@ Fotos do Wikimedia Commons, redimensionadas para 800 px e convertidas para WebP;
 - **brands/trenitalia.png** – Símbolo FS recortado do [logotipo FS Trenitalia](https://commons.wikimedia.org/wiki/File:FS-Trenitalia-Logo.svg), Wikimedia Commons.
 - **brands/metro-atenas.png** – [Símbolo do metrô de Atenas](https://commons.wikimedia.org/wiki/File:Athens_Metro_Logo.svg), de Peeperman. Redimensionado em PNG sob [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
 - **brands/metro-roma.png** – [Símbolo de metrô italiano](https://commons.wikimedia.org/wiki/File:Logo_Metropolitane_Italia.svg), Wikimedia Commons. Redimensionado em PNG para identificar o metrô de Roma.
+
+## Identificação de empresas e serviços no roteiro
+
+As imagens abaixo foram redimensionadas ou recortadas para serem exibidas como ícones.
+
+- **brands/palermo.png** – GESAP. [Aeroporto de Palermo](https://www.aeroportodipalermo.it/).
+- **brands/adr.png** – Aeroporti di Roma. [Site do operador](https://www.adr.it/).
+- **brands/oasa.png** – Marca OASA. [Transport for Athens](https://www.oasa.gr/en/).
+- **brands/ilissos.png** – [Hotel Ilissos](https://ilissos.gr/?lang=en).
+- **brands/kotsanas.png** – [Museu Kotsanas](https://kotsanas.com/athens/).
+- **brands/guide.png** – [GetYourGuide Press Center](https://www.getyourguide.press/download-center).
+- **brands/vatican.png** – [Museus Vaticanos](https://www.museivaticani.va/).
+- **brands/mcdonalds.png** – [Arcos dourados do McDonald’s](https://commons.wikimedia.org/wiki/File:McDonald%27s_Golden_Arches.svg), Wikimedia Commons.
+- **brands/vicus.png** – [Vicus Caprarius](https://www.vicuscaprarius.com/). Letreiro disposto em duas linhas.
+- **brands/gamm.png** – [GAMM Game Museum](https://www.gammuseum.com/en/).
+- **brands/emporio.png** – [Perfil do Empório Brasileiro Roma](https://www.instagram.com/emporiobrasileiroroma/).
+- **brands/borghese.png** – Detalhe do [logotipo da Galleria Borghese](https://commons.wikimedia.org/wiki/File:Galleria_Borghese_-_logo_(Italy,_2022-).svg), Wikimedia Commons.
+- **brands/burger-king.png** – [Logotipo Burger King](https://commons.wikimedia.org/wiki/File:Burger_King_2020.svg), Wikimedia Commons.
+- **brands/oakberry.png** – [Oakberry Itália](https://www.oakberry.com/it-IT).
+- **brands/planetarium.png** – Detalhe da [arte institucional do Planetário de Roma](https://www.planetarioroma.it/it/didattica/esplorare-il-cielo-capire-l-universo).
+- **brands/churrascaria.png** – Churrascaria dos Amigos, [Guia Itália +](https://dev.laviaitalia.com.br/ms/e/churrascaria-dos-amigos-2c0468a8fd0a).

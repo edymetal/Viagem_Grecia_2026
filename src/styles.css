@@ -577,8 +577,13 @@ main:focus {
   margin-left: 9px;
 }
 .app-version {
+  display: block;
+  margin-top: 2px;
   color: var(--muted);
   font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.2;
   white-space: nowrap;
 }
 .bottom-nav,

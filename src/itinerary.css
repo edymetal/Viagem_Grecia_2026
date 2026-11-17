@@ -210,12 +210,24 @@
 .activity-symbol.activity-brand-ryanair {
   background: #073590;
 }
+.activity-symbol.activity-brand-oakberry {
+  background: #411063;
+}
+.activity-symbol.activity-brand-mcdonalds {
+  background: #bb1719;
+}
 .activity-brand .activity-brand-mark {
   display: block;
   width: 72%;
   height: 66%;
   object-fit: contain;
   border-radius: 0;
+}
+.activity-brand-planetarium .activity-brand-mark,
+.activity-brand-churrascaria .activity-brand-mark {
+  width: 84%;
+  height: 84%;
+  border-radius: 7px;
 }
 .timeline-row .activity-symbol {
   width: 64px;
@@ -610,3 +622,7 @@
     text-transform: capitalize;
   }
 }
+.activity-document-item { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; margin-top: 1rem; }
+.activity-document-item small { overflow-wrap: anywhere; }
+.activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }

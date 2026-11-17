@@ -186,7 +186,10 @@ export default function App() {
           <span className="brand-mark">
             <Landmark size={27} strokeWidth={1.5} />
           </span>
-          <span>Atenas e Roma</span>
+          <span>
+            Atenas e Roma
+            <small className="app-version">Versão {appVersion}</small>
+          </span>
         </a>
         <p className="sidebar-label">MINHA VIAGEM</p>
         <nav aria-label="Menu principal">
@@ -230,20 +233,27 @@ export default function App() {
           >
             <Menu size={23} />
           </button>
-          <strong className="mobile-page-title">
-            {nav.find((n) => n.id === page)?.label ||
-              (
-                {
-                  documentos: 'Documentos',
-                  hotel: 'Hotel e reservas',
-                  checklist: 'Checklist',
-                  informacoes: 'Informações úteis',
-                  backup: 'Backup',
-                  preferencias: 'Preferências',
-                } as Record<string, string>
-              )[page] ||
-              'Mais'}
-          </strong>
+          {page === 'inicio' ? (
+            <strong className="mobile-page-title mobile-app-name">
+              Atenas e Roma
+              <small className="app-version">Versão {appVersion}</small>
+            </strong>
+          ) : (
+            <strong className="mobile-page-title">
+              {nav.find((n) => n.id === page)?.label ||
+                (
+                  {
+                    documentos: 'Documentos',
+                    hotel: 'Hotel e reservas',
+                    checklist: 'Checklist',
+                    informacoes: 'Informações úteis',
+                    backup: 'Backup',
+                    preferencias: 'Preferências',
+                  } as Record<string, string>
+                )[page] ||
+                'Mais'}
+            </strong>
+          )}
           <div className="breadcrumb">
             <span>Minha viagem</span>
             <ChevronRight size={14} />
@@ -405,14 +415,13 @@ export default function App() {
           <span>Atenas e Roma 2026</span>
           <span>Feito para explorar, com tudo por perto.</span>
           <span>Europe/Athens · €</span>
-          <small className="app-version">Versão {appVersion}</small>
           <a
             className="photo-credit"
             href={`${import.meta.env.BASE_URL}images/CREDITS.md`}
             target="_blank"
             rel="noreferrer"
           >
-            Créditos e licenças das fotos
+            Créditos de fotos e símbolos
           </a>
         </footer>
       </div>

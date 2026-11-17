@@ -33,15 +33,52 @@ import { activityPhoto } from '../data/placePhotos';
 export const athensPhoto = `${import.meta.env.BASE_URL}images/athens-acropolis.jpg`;
 export const parthenonPhoto = `${import.meta.env.BASE_URL}images/parthenon.jpg`;
 
-const transportBrands = {
+const activityBrands = {
   'ita-airways': 'ITA Airways',
   ryanair: 'Ryanair',
   trenitalia: 'Trenitalia',
   'metro-atenas': 'Metrô de Atenas',
   'metro-roma': 'Metrô de Roma',
+  palermo: 'GESAP · Aeroporto de Palermo',
+  adr: 'Aeroporti di Roma',
+  oasa: 'OASA · Transporte de Atenas',
+  ilissos: 'Ilissos Hotel',
+  kotsanas: 'Museu Kotsanas',
+  guide: 'GetYourGuide',
+  vatican: 'Museus Vaticanos',
+  mcdonalds: "McDonald's",
+  vicus: 'Vicus Caprarius',
+  gamm: 'GAMM Game Museum',
+  emporio: 'Empório Brasileiro',
+  borghese: 'Galleria Borghese',
+  'burger-king': 'Burger King',
+  oakberry: 'Oakberry',
+  planetarium: 'Planetário de Roma',
+  churrascaria: 'Churrascaria dos Amigos',
 };
 
-function transportBrand(a: Activity): keyof typeof transportBrands | null {
+type ActivityBrand = keyof typeof activityBrands;
+
+const venueBrands: [RegExp, ActivityBrand][] = [
+  [/^procedimentos no aeroporto de palermo\b/i, 'palermo'],
+  [/^(?:conexão em roma|procedimentos de embarque em) fiumicino\b/i, 'adr'],
+  [/^bilhete e plataforma em roma termini$/i, 'trenitalia'],
+  [/passe turístico de atenas\b/i, 'oasa'],
+  [/\bilissos\b/i, 'ilissos'],
+  [/^museu kotsanas\b/i, 'kotsanas'],
+  [/^museus vaticanos\b/i, 'vatican'],
+  [/\bmcdonald['’]s\b/i, 'mcdonalds'],
+  [/^vicus caprarius\b/i, 'vicus'],
+  [/^gamm\b/i, 'gamm'],
+  [/\bempório brasileiro\b/i, 'emporio'],
+  [/^galleria borghese\b/i, 'borghese'],
+  [/\bburger king\b/i, 'burger-king'],
+  [/\boakberry\b/i, 'oakberry'],
+  [/^planetário\b/i, 'planetarium'],
+  [/\bchurrascaria dos amigos\b/i, 'churrascaria'],
+];
+
+function activityBrand(a: Activity): ActivityBrand | null {
   const { mode, lines } = a.transport;
   const service = `${a.title} ${lines}`;
 
@@ -54,7 +91,10 @@ function transportBrand(a: Activity): keyof typeof transportBrands | null {
     if (a.timeZone === 'Europe/Athens') return 'metro-atenas';
     if (a.timeZone === 'Europe/Rome') return 'metro-roma';
   }
-  return null;
+  if (/^p1 lunga sosta\b|retirada do carro no p1 lunga sosta\b/i.test(a.title)) return 'palermo';
+  if (mode !== 'Não informado') return null;
+  if (a.id === 'nov-24-meet' && /\btour do vaticano\b/i.test(a.title)) return 'guide';
+  return venueBrands.find(([pattern]) => pattern.test(a.title))?.[1] ?? null;
 }
 
 function activitySymbol(a: Activity): [LucideIcon, string] {
@@ -91,6 +131,18 @@ function activitySymbol(a: Activity): [LucideIcon, string] {
 }
 
 export function ActivityVisual({ activity: a }: { activity: Activity }) {
+  const brand = activityBrand(a);
+  if (brand)
+    return (
+      <span className={`activity-symbol activity-brand activity-brand-${brand}`}>
+        <img
+          className="activity-brand-mark"
+          src={`${import.meta.env.BASE_URL}images/brands/${brand}.png`}
+          alt={activityBrands[brand]}
+          loading="lazy"
+        />
+      </span>
+    );
   const photo = activityPhoto(a);
   if (photo)
     return <img className="activity-thumb" src={photo.src} alt={photo.alt} loading="lazy" />;
@@ -102,18 +154,6 @@ export function ActivityVisual({ activity: a }: { activity: Activity }) {
         alt="Acrópole de Atenas"
         loading="lazy"
       />
-    );
-  const brand = transportBrand(a);
-  if (brand)
-    return (
-      <span className={`activity-symbol activity-brand activity-brand-${brand}`}>
-        <img
-          className="activity-brand-mark"
-          src={`${import.meta.env.BASE_URL}images/brands/${brand}.png`}
-          alt={transportBrands[brand]}
-          loading="lazy"
-        />
-      </span>
     );
   const [Icon, color] = activitySymbol(a);
   return (
