@@ -202,6 +202,21 @@
 .activity-screen .activity-symbol.amber {
   color: var(--coral);
 }
+.activity-symbol.activity-brand {
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--surface));
+  box-shadow: 0 3px 8px rgb(0 0 0 / 8%);
+}
+.activity-symbol.activity-brand-ryanair {
+  background: #073590;
+}
+.activity-brand .activity-brand-mark {
+  display: block;
+  width: 72%;
+  height: 66%;
+  object-fit: contain;
+  border-radius: 0;
+}
 .timeline-row .activity-symbol {
   width: 64px;
   min-width: 64px;

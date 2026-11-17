@@ -27,3 +27,11 @@ Fotos do Wikimedia Commons, redimensionadas para 800 px e convertidas para WebP;
 - **syntagma.webp** — Parlamento e Praça Syntagma. Autor: Annatsach. [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0). [Arquivo original e informações](https://commons.wikimedia.org/wiki/File:Greek_Parliament_and_Syntagma_Square.jpg).
 - **monastiraki.webp** — Praça Monastiraki. Autor: Jakub Hałun. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0). [Arquivo original e informações](https://commons.wikimedia.org/wiki/File:Church_of_the_Virgin_Mary_Pantanassa_-_Monastiraki_Square,_Athens,_20240531_1631_9845.jpg).
 - **kotsanas.webp** — Exposição do Museu Kotsanas em Atenas. Autor: Denexeitelos. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0). [Arquivo original e informações](https://commons.wikimedia.org/wiki/File:Ancient_vending_music,_Kotsanas_Museum_of_Ancient_Technology,_Athens,_Greece.jpg).
+
+## Símbolos de transporte
+
+- **brands/ita-airways.png** – Símbolo ITA recortado do [logotipo da ITA Airways](https://commons.wikimedia.org/wiki/File:ITA_Airways_Logo.svg), Wikimedia Commons.
+- **brands/ryanair.png** – Harpa da Ryanair, [Simple Icons](https://simpleicons.org/?q=ryanair), rasterizada em amarelo.
+- **brands/trenitalia.png** – Símbolo FS recortado do [logotipo FS Trenitalia](https://commons.wikimedia.org/wiki/File:FS-Trenitalia-Logo.svg), Wikimedia Commons.
+- **brands/metro-atenas.png** – [Símbolo do metrô de Atenas](https://commons.wikimedia.org/wiki/File:Athens_Metro_Logo.svg), de Peeperman. Redimensionado em PNG sob [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).
+- **brands/metro-roma.png** – [Símbolo de metrô italiano](https://commons.wikimedia.org/wiki/File:Logo_Metropolitane_Italia.svg), Wikimedia Commons. Redimensionado em PNG para identificar o metrô de Roma.
