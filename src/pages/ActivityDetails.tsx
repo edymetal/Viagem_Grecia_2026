@@ -136,11 +136,14 @@ export function ActivityDetails({
               </dt>
               <dd>
                 <strong>
-                  {a.start || 'A definir'}
-                  {a.end && ` – ${a.end}`}
+                  {a.start || (a.end ? 'Até ' : 'A definir')}
+                  {a.start && a.endTimeZone && ` (${zoneLabel(a)})`}
+                  {a.end && `${a.start ? ' – ' : ''}${a.end}`}
+                  {a.end && a.endTimeZone && ` (${zoneLabel(a, 'end')})`}
                 </strong>
                 <small>
-                  {dateLabel(a.date)} · {zoneLabel(a)}
+                  {dateLabel(a.date)}
+                  {!a.endTimeZone && ` · ${zoneLabel(a)}`}
                 </small>
               </dd>
             </div>

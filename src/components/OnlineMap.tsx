@@ -25,13 +25,17 @@ export function OnlineMap({
   const [online, setOnline] = useState(navigator.onLine);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const visible = points.flatMap((point) => {
+  const [preferredCity, setPreferredCity] = useState('Atenas');
+  const matching = points.flatMap((point) => {
     const activity = activities.find(
       (a) =>
         point.activityIds.includes(a.id) && mapDestination(a) === originalDestinations.get(a.id),
     );
-    return activity ? [{ ...point, activity }] : [];
+    return activity ? [{ ...point, city: point.city ?? 'Atenas', activity }] : [];
   });
+  const cities = [...new Set(matching.map((point) => point.city))];
+  const city = cities.includes(preferredCity) ? preferredCity : cities[0];
+  const visible = matching.filter((point) => point.city === city);
   const signature = JSON.stringify(
     visible.map((p) => [p.name, p.activity.id, p.activity.title, p.activity.date]),
   );
@@ -115,6 +119,17 @@ export function OnlineMap({
       <section className="online-map-card card" aria-label="Mapa interativo dos pontos do roteiro">
         <div className="card-heading">
           <h2>Pontos no mapa</h2>
+          {cities.length > 1 && (
+            <select
+              aria-label="Cidade no mapa"
+              value={city}
+              onChange={(event) => setPreferredCity(event.target.value)}
+            >
+              {cities.map((name) => (
+                <option key={name}>{name}</option>
+              ))}
+            </select>
+          )}
           <span className="small muted">{visible.length} locais</span>
         </div>
         {!online ? (
@@ -130,7 +145,7 @@ export function OnlineMap({
             <div
               ref={container}
               className="online-trip-map"
-              aria-label="Mapa de Atenas com locais do roteiro"
+              aria-label={`Mapa de ${city} com locais do roteiro`}
             />
             {failed && (
               <p className="notice" role="status">

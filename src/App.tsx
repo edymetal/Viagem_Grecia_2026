@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { version as appVersion } from '../package.json';
 import { useTravel } from './hooks/useTravel';
 import type { Preferences } from './data/schema';
 import { athensNow } from './lib/domain';
@@ -127,7 +128,7 @@ export default function App() {
       page === 'roteiro' && route.split('/')[2]
         ? 'Detalhes'
         : nav.find((n) => n.id === page)?.label || 'Mais';
-    document.title = `${title} · Atenas 2026`;
+    document.title = `${title} · Atenas e Roma 2026`;
   }, [page, route]);
   useEffect(() => {
     const media = matchMedia('(prefers-color-scheme: dark)');
@@ -185,9 +186,7 @@ export default function App() {
           <span className="brand-mark">
             <Landmark size={27} strokeWidth={1.5} />
           </span>
-          <span>
-            atenas<span className="brand-year">2026</span>
-          </span>
+          <span>Atenas e Roma</span>
         </a>
         <p className="sidebar-label">MINHA VIAGEM</p>
         <nav aria-label="Menu principal">
@@ -207,8 +206,8 @@ export default function App() {
         <div className="sidebar-trip">
           <span className="small">DESTINO DOS SONHOS</span>
           <Landmark size={40} strokeWidth={1} />
-          <strong>Atenas, Grécia</strong>
-          <p>20 — 23 novembro</p>
+          <strong>Atenas e Roma</strong>
+          <p>20–26 de novembro de 2026</p>
           <span className="pill">4 dias de descobertas</span>
         </div>
         <div className="sidebar-bottom">
@@ -248,7 +247,7 @@ export default function App() {
           <div className="breadcrumb">
             <span>Minha viagem</span>
             <ChevronRight size={14} />
-            <strong>Atenas 2026</strong>
+            <strong>Atenas e Roma 2026</strong>
           </div>
           <div className="topbar-actions">
             <div className="desktop-conditions">
@@ -403,9 +402,10 @@ export default function App() {
         </main>
         <footer className="app-footer">
           <Landmark size={15} />
-          <span>Atenas 2026</span>
+          <span>Atenas e Roma 2026</span>
           <span>Feito para explorar, com tudo por perto.</span>
           <span>Europe/Athens · €</span>
+          <small className="app-version">Versão {appVersion}</small>
           <a
             className="photo-credit"
             href={`${import.meta.env.BASE_URL}images/CREDITS.md`}

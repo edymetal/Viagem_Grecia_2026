@@ -1,0 +1,134 @@
+{
+  "itineraryRevision": "cronograma-2026-11-17-atenas-roma-p1",
+  "activities": [
+    {
+      "id": "nov-26-airport",
+      "date": "2026-11-26",
+      "title": "Procedimentos de embarque em Fiumicino",
+      "start": "10:37",
+      "end": "",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "location": "Aeroporto de Roma Fiumicino (FCO)",
+      "description": "Seguir ao terminal, fazer a segurança e conferir o portão. Se houver bagagem para despachar, verificar o prazo no aplicativo da Ryanair.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": null,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Não informado",
+        "origin": "",
+        "destination": "",
+        "station": "",
+        "lines": "",
+        "minutes": null,
+        "price": null,
+        "certainty": "Não informado",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Planejada",
+      "completed": false,
+      "photoDocumentId": null
+    },
+    {
+      "id": "nov-26-flight",
+      "date": "2026-11-26",
+      "title": "Voo Ryanair · Roma → Palermo",
+      "start": "13:50",
+      "end": "15:00",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Consultado",
+      "timeNote": "Horários informados; comprovante a conferir.",
+      "location": "Aeroporto de Palermo (PMO)",
+      "description": "Compra informada. FR3946 de Fiumicino é a referência do planejamento. Conferir número, aeroporto, valor, bagagem e cartão de embarque no aplicativo.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": 70,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Não informado",
+        "origin": "",
+        "destination": "",
+        "station": "",
+        "lines": "",
+        "minutes": null,
+        "price": null,
+        "certainty": "Não informado",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Confirmada",
+      "completed": false,
+      "photoDocumentId": null
+    },
+    {
+      "id": "nov-26-luggage",
+      "date": "2026-11-26",
+      "title": "Desembarque e retirada do carro no P1 Lunga Sosta",
+      "start": "15:00",
+      "end": "16:30",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "timeNote": "Saída indicada na reserva às 23h00. O intervalo do roteiro é uma estimativa do desembarque e do deslocamento até o estacionamento.",
+      "location": "P1 Lunga Sosta, Aeroporto de Palermo (PMO)",
+      "description": "Após o desembarque e a eventual retirada da bagagem, caminhar cerca de 6 minutos até o P1 Lunga Sosta. Usar o QR code do e-mail. A retirada segue estimada entre 16h30 e 17h.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": 90,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "A pé",
+        "origin": "Aeroporto de Palermo (PMO)",
+        "destination": "P1 Lunga Sosta, Aeroporto de Palermo (PMO)",
+        "station": "",
+        "lines": "",
+        "minutes": 6,
+        "price": null,
+        "certainty": "Estimativa",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Planejada",
+      "completed": false,
+      "photoDocumentId": null
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-11-26",
+      "notes": "Conferir no aplicativo da Ryanair se o embarque é em Fiumicino antes de comprar o trem. Leonardo Express planejado para 10h05. P1 Lunga Sosta com saída reservada às 23h00 e retirada estimada entre 16h30 e 17h. Chegada a Santo Stefano estimada entre 17h30 e 19h."
+    }
+  ],
+  "checklist": [
+    {
+      "id": "trip-check-ryanair",
+      "title": "Conferir voo, aeroporto, bagagem e valor no aplicativo da Ryanair e fazer o check-in",
+      "done": false
+    }
+  ],
+  "flights": [
+    {
+      "id": "plan-flight-ryanair",
+      "origin": "Roma (Fiumicino a conferir)",
+      "destination": "Palermo (PMO)",
+      "departure": "26/11 · 13h50 (Itália)",
+      "arrival": "26/11 · 15h00 (Itália)",
+      "notes": "Compra informada. FR3946 é a referência consultada. Número, aeroporto, tarifa e bagagem a conferir no aplicativo.",
+      "confirmation": "Consultado"
+    }
+  ],
+  "personalNotes": "O financeiro inclui os valores informados no cronograma. Pedágio, combustível, Ryanair e parte das refeições ainda estão sem valor. O funicular e o passe urbano de Roma são opcionais e ficam fora da soma das despesas."
+}

@@ -17,7 +17,7 @@ test('cards do mapa mostram fotos, rotas, detalhes e navegação para a atividad
   await expect
     .poll(() => card.getByRole('img').evaluate((img: HTMLImageElement) => img.naturalWidth > 0))
     .toBe(true);
-  await expect(card.locator('.destination-schedule')).toContainText('09:00–09:35');
+  await expect(card.locator('.destination-schedule')).toContainText('09:05–09:45');
   await expect(card.locator('.destination-opening')).toContainText('08h–15h');
   await expect(
     card.getByRole('link', { name: 'Abrir Biblioteca de Adriano no Google Maps' }),
@@ -30,14 +30,14 @@ test('cards do mapa mostram fotos, rotas, detalhes e navegação para a atividad
     'href',
     /travelmode=transit/,
   );
-  const walk = page.getByRole('article', { name: 'Hotel → Biblioteca de Adriano', exact: true });
+  const walk = page.getByRole('article', { name: 'Caminhada até a Praça Syntagma', exact: true });
   await expect(walk.locator('.transport-detail')).not.toBeVisible();
   await walk.locator('summary').click();
-  await expect(walk.locator('.transport-detail')).toContainText('Adam’s Hotel, Plaka');
-  await expect(walk.locator('.destination-transport-chip')).toContainText('20 min');
+  await expect(walk.locator('.transport-detail')).toContainText('Biblioteca de Adriano');
+  await expect(walk.locator('.destination-transport-chip')).toContainText('14 min');
   await expect(walk.getByRole('link', { name: 'A pé', exact: true })).toHaveAttribute(
     'href',
-    /origin=Adam/,
+    /origin=Biblioteca/,
   );
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 844 });
@@ -55,7 +55,7 @@ test('cards do mapa mostram fotos, rotas, detalhes e navegação para a atividad
   await card
     .getByRole('link', { name: 'Ver atividade: Biblioteca de Adriano', exact: true })
     .click();
-  await expect(page).toHaveURL(/#roteiro\/2026-11-21\/plan-2-03$/);
+  await expect(page).toHaveURL(/#roteiro\/2026-11-22\/plan-2-03$/);
   await expect(page.getByRole('heading', { name: 'Detalhes', exact: true })).toBeVisible();
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
@@ -72,6 +72,6 @@ test('cards do mapa mostram fotos, rotas, detalhes e navegação para a atividad
   await expect(page.getByText('Você está offline.', { exact: false })).toBeVisible();
   await search.fill('nao-existe-xyz');
   await expect(page.getByRole('heading', { name: 'Nenhum destino encontrado' })).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Hospedagem no mapa' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Hospedagem em Atenas no mapa' })).toBeVisible();
   expect(errors).toEqual([]);
 });

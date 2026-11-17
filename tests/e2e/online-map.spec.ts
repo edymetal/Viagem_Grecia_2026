@@ -16,8 +16,12 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
   await page.goto('./#mapa');
   await expect(page.getByRole('heading', { name: 'Seus lugares em Atenas' })).toHaveCount(0);
   await expect(page.locator('.map-screen h2').first()).toHaveText('Pontos no mapa');
-  await expect(page.locator('.trip-map-marker')).toHaveCount(10);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
   await expect(page.locator('.leaflet-control-attribution')).toContainText('OpenStreetMap');
+  await page.getByLabel('Cidade no mapa').selectOption('Roma');
+  await expect(page.locator('.trip-map-marker')).toHaveCount(3);
+  await expect(page.locator('.trip-map-marker[title="Galleria Borghese"]')).toBeVisible();
+  await page.getByLabel('Cidade no mapa').selectOption('Atenas');
   await page.getByRole('searchbox', { name: 'Buscar destinos do roteiro' }).fill('biblioteca');
   await expect(page.locator('.trip-map-marker')).toHaveCount(1);
   await page.locator('.trip-map-marker[title="Biblioteca de Adriano"]').click();
@@ -33,7 +37,7 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
         .evaluate((img: HTMLImageElement) => img.naturalWidth > 0),
     )
     .toBe(true);
-  await expect(preview).toContainText('09:00–09:35');
+  await expect(preview).toContainText('09:05–09:45');
   await expect(preview).toContainText('08h–15h');
   await expect(preview.getByRole('link', { name: 'A pé', exact: true })).toHaveAttribute(
     'href',
@@ -62,7 +66,7 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
   await preview
     .getByRole('link', { name: 'Ver atividade: Biblioteca de Adriano', exact: true })
     .click();
-  await expect(page).toHaveURL(/#roteiro\/2026-11-21\/plan-2-03$/);
+  await expect(page).toHaveURL(/#roteiro\/2026-11-22\/plan-2-03$/);
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
@@ -76,7 +80,7 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
     page.getByRole('article', { name: 'Biblioteca de Adriano', exact: true }),
   ).toBeVisible();
   await context.setOffline(false);
-  await expect(page.locator('.trip-map-marker')).toHaveCount(10);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
 });
 
 test('falha nos tiles mantém pontos e cards acessíveis', async ({ page }) => {
@@ -85,7 +89,7 @@ test('falha nos tiles mantém pontos e cards acessíveis', async ({ page }) => {
   await expect(
     page.getByText('O fundo do mapa não pôde ser carregado.', { exact: false }),
   ).toBeVisible();
-  await expect(page.locator('.trip-map-marker')).toHaveCount(10);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
   await expect(
     page.getByRole('article', { name: 'Biblioteca de Adriano', exact: true }),
   ).toBeVisible();

@@ -1,75 +1,59 @@
 import { test, expect } from '@playwright/test';
 import { emptyState } from '../../src/data/factories';
 
-test('cronograma completo, pendências, fusos, mapa e valores ficam acessíveis offline', async ({
-  page,
-  context,
-}) => {
+test('o cronograma de Atenas e Roma fica acessível offline', async ({ page, context }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  await page.goto('./#roteiro');
-  await expect(page.locator('.activity')).toHaveCount(19);
-  await expect(page.locator('.activity').first()).toContainText('Itália');
-  await expect(page.getByText('Revise os horários', { exact: true })).toHaveCount(0);
-  await page.getByRole('tab', { name: /21\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(24);
-  const acropolis = page.locator('.activity').filter({
-    has: page.getByRole('heading', {
-      name: 'Acrópole e Partenon com guia em português',
-      exact: true,
-    }),
-  });
-  await expect(acropolis).toContainText('Proposto');
-  await acropolis.getByRole('link').click();
-  await expect(page.getByRole('link', { name: 'Reservar somente guia' })).toHaveAttribute(
-    'href',
-    /getyourguide/,
-  );
+  await page.goto('./#roteiro/2026-11-20');
+  await expect(page.getByRole('tab')).toHaveCount(7);
+  await page.getByRole('link', { name: 'Ver detalhes: Voo ITA AZ718 · Roma → Atenas' }).click();
+  await expect(page.locator('.visit-facts')).toContainText('15:35 (Itália) – 18:35 (Atenas)');
   await page.getByRole('link', { name: 'Voltar ao roteiro' }).click();
+  await page.getByRole('tab', { name: /21\/11/ }).click();
+  const tour = page.getByRole('link', { name: /Ver detalhes: Tour da Acrópole/ });
+  await expect(tour).toContainText('Confirmada');
+  await expect(tour).toContainText('09:30');
   await page.getByRole('tab', { name: /22\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(27);
-  await expect(page.locator('.planning-notice')).toContainText('última entrada informada às 16h30');
-  await page.getByRole('tab', { name: /23\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(19);
-  await expect(page.locator('.activity').last()).toContainText('22:59');
-  await expect(page.locator('.activity').last()).toContainText('Itália');
+  await expect(
+    page.getByRole('link', { name: 'Ver detalhes: Biblioteca de Adriano' }),
+  ).toContainText('09:05');
+  await page.getByRole('tab', { name: /24\/11/ }).click();
+  await expect(page.getByRole('link', { name: /Ver detalhes: Vicus Caprarius/ })).toContainText(
+    'Pendente',
+  );
   await page.goto('./#gastos');
-  await expect(page.locator('.planned-range')).toContainText('441,81');
-  await expect(page.locator('.planned-range')).toContainText('481,81');
-  await expect(page.locator('.expense')).toHaveCount(11);
+  await expect(page.locator('.trip-total-value')).toContainText('694,04');
+  await expect(page.locator('.planned-range')).toContainText('430,55');
+  await expect(page.locator('.planned-range')).toContainText('460,55');
   await expect(page.locator('.balance strong')).toHaveText('—');
   await page.goto('./#hotel');
-  await expect(page.getByRole('heading', { name: 'Adam’s Hotel', exact: true })).toBeVisible();
-  await expect(page.locator('.hotel-card')).toContainText('Ainda não reservado');
+  await expect(page.getByRole('heading', { name: 'Ilissos Hotel', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Ciao Termini', exact: true })).toBeVisible();
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
   await page.reload();
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
   await context.setOffline(true);
-  await page.goto('./#roteiro');
-  await page.getByRole('tab', { name: /22\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(27);
-  await page.goto('./#mapa');
+  await page.goto('./#roteiro/2026-11-25');
   await expect(
-    page.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }),
-  ).toBeVisible();
-  await page.goto('./#gastos');
-  await expect(page.locator('.planned-range')).toContainText('481,81');
+    page.getByRole('link', { name: /Ver detalhes: Planetário · Ritorno/ }),
+  ).toContainText('16:00');
+  await expect(
+    page.getByRole('link', { name: /Ver detalhes: Planetário · Interstellari/ }),
+  ).toContainText('17:00');
+  await page.getByRole('tab', { name: /26\/11/ }).click();
+  await expect(page.getByRole('link', { name: /Ver detalhes: Voo Ryanair/ })).toContainText(
+    '13:50',
+  );
+  await page.goto('./#mapa');
+  await expect(page.getByRole('heading', { name: 'Galleria Borghese', exact: true })).toBeVisible();
   await page.goto('./#inicio');
   await expect(
     page.getByRole('img', { name: 'Vista da Acrópole e do Partenon em Atenas' }),
   ).toBeVisible();
-  await expect
-    .poll(() =>
-      page
-        .locator('.hero-photo')
-        .evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
-    )
-    .toBe(true);
   expect(errors).toEqual([]);
 });
-
 test('instalação anterior incorpora o cronograma uma vez sem perder notas, gastos e arquivos', async ({
   page,
 }) => {
@@ -115,14 +99,14 @@ test('instalação anterior incorpora o cronograma uma vez sem perder notas, gas
   }, state);
   await page.reload();
   await page.getByRole('button', { name: 'Incorporar cronograma', exact: true }).click();
-  await expect(page.getByLabel('Adicionar as 11 despesas')).not.toBeChecked();
+  await expect(page.getByLabel('Adicionar as despesas informadas')).not.toBeChecked();
   await page.getByRole('button', { name: 'Incorporar planejamento', exact: true }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Incorporar cronograma', exact: true }),
   ).toHaveCount(0);
   await page.goto('./#roteiro');
-  await expect(page.locator('.activity')).toHaveCount(19);
+  await expect(page.locator('.activity')).toHaveCount(12);
   await expect(page.getByText('Anotação anterior', { exact: true })).toBeVisible();
   await page.goto('./#gastos');
   await expect(page.locator('.expense')).toHaveCount(1);

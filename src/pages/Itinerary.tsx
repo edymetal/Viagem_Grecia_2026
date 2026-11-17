@@ -18,7 +18,7 @@ import type { Activity } from '../data/schema';
 import { activitySchema, tripDates } from '../data/schema';
 import { emptyActivity } from '../data/initial';
 import type { TravelStore } from '../hooks/useTravel';
-import { athensNow, conflicts, dateLabel, euro, zoneLabel } from '../lib/domain';
+import { conflicts, dateLabel, euro, tripNow, zoneLabel } from '../lib/domain';
 import { itineraryHref, itineraryRoute } from '../lib/itineraryRoute';
 import { timelinePosition } from '../lib/timeline';
 import { PlanningNotice } from '../components/Planning';
@@ -61,6 +61,7 @@ export function ActivityEditor({
             start: value(f, 'start'),
             end: value(f, 'end'),
             timeZone: value(f, 'timeZone'),
+            endTimeZone: value(f, 'endTimeZone') || undefined,
             timeCertainty: value(f, 'timeCertainty'),
             timeNote: value(f, 'timeNote'),
             location: value(f, 'location'),
@@ -119,13 +120,14 @@ export function ActivityEditor({
             <select name="confirmation" defaultValue={a.confirmation}>
               <option>Sugestão</option>
               <option>Planejada</option>
+              <option>Pendente</option>
               <option>Confirmada</option>
             </select>
           </Field>
           <Field label="Início · horário local">
             <input type="time" name="start" defaultValue={a.start} />
           </Field>
-          <Field label="Fuso dos horários">
+          <Field label="Fuso de início">
             <select name="timeZone" defaultValue={a.timeZone || 'Europe/Athens'}>
               <option value="Europe/Athens">Atenas · Europe/Athens</option>
               <option value="Europe/Rome">Itália · Europe/Rome</option>
@@ -133,7 +135,7 @@ export function ActivityEditor({
           </Field>
           <Field label="Natureza dos horários">
             <select name="timeCertainty" defaultValue={a.timeCertainty || 'Planejado'}>
-              {['Planejado', 'Consultado', 'Estimativa', 'Proposto'].map((s) => (
+              {['Planejado', 'Consultado', 'Estimativa', 'Proposto', 'Confirmado'].map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
@@ -143,6 +145,13 @@ export function ActivityEditor({
           </Field>
           <Field label="Término · mesmo dia">
             <input type="time" name="end" defaultValue={a.end} />
+          </Field>
+          <Field label="Fuso de término">
+            <select name="endTimeZone" defaultValue={a.endTimeZone ?? ''}>
+              <option value="">Mesmo fuso do início</option>
+              <option value="Europe/Athens">Atenas · Europe/Athens</option>
+              <option value="Europe/Rome">Itália · Europe/Rome</option>
+            </select>
           </Field>
           <Field label="Descrição" wide>
             <textarea name="description" defaultValue={a.description} />
@@ -227,6 +236,7 @@ export function ActivityEditor({
                 'Metrô',
                 'Trem',
                 'Avião',
+                'Carro',
                 'Transporte público',
                 'Outro',
               ].map((m) => (
@@ -302,12 +312,13 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
     sessionStorage.removeItem('selected-day');
   }, []);
   const { day: routeDay, activityId } = itineraryRoute(route);
+  const selected = state.activities.find((a) => a.id === activityId);
   const day =
+    selected?.date ||
     routeDay ||
     initialDay ||
-    state.days.find((d) => d.date === athensNow(now).date)?.date ||
+    state.days.find((d) => d.date === tripNow(now).date)?.date ||
     tripDates[0];
-  const selected = state.activities.find((a) => a.id === activityId);
   const [editing, setEditing] = useState<Activity | null>(null);
   const [removing, setRemoving] = useState<Activity | null>(null);
   const [dayNotes, setDayNotes] = useState(false);
@@ -480,8 +491,13 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                       >
                         <span className="activity-time">
                           <strong>{a.start || 'A definir'}</strong>
-                          {a.end && <small>até {a.end}</small>}
                           <small>{zoneLabel(a)}</small>
+                          {a.end && (
+                            <small>
+                              até {a.end}
+                              {a.endTimeZone && ` · ${zoneLabel(a, 'end')}`}
+                            </small>
+                          )}
                           {position.state === 'current' && (
                             <small className="timeline-now">Agora</small>
                           )}
@@ -635,7 +651,7 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
       )}
       {calendar && (
         <Modal title="Escolher dia do roteiro" onClose={() => setCalendar(false)}>
-          <p className="muted small">Atenas · 20 a 23 de novembro de 2026</p>
+          <p className="muted small">Atenas e Roma · 20 a 26 de novembro de 2026</p>
           <div className="trip-date-picker">
             {state.days.map((d, i) => (
               <button

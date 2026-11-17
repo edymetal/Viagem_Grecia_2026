@@ -14,6 +14,10 @@ export function MapPage({
   navigate: (page: string) => void;
 }) {
   const [search, setSearch] = useState('');
+  const hotels = [
+    { ...store.state!.hotel, city: 'Atenas' },
+    { ...store.state!.romeHotel, city: 'Roma' },
+  ];
   const normalize = (s: string) =>
     s
       .normalize('NFD')
@@ -21,7 +25,10 @@ export function MapPage({
       .toLocaleLowerCase('pt-BR');
   const locations = store.state!.activities.filter(
     (a) =>
-      mapDestination(a) && normalize(`${a.title} ${mapDestination(a)}`).includes(normalize(search)),
+      mapDestination(a) &&
+      normalize(`${a.title} ${mapDestination(a)} ${a.transport.origin}`).includes(
+        normalize(search),
+      ),
   );
   return (
     <section className="map-screen">
@@ -69,30 +76,34 @@ export function MapPage({
           ))}
         </div>
       )}
-      {store.state!.hotel.address && (
-        <section className="card hotel-map-card" aria-label="Hospedagem no mapa">
-          <div className="hotel-map-heading">
-            <span className="icon-tile pink">
-              <BedDouble size={26} />
-            </span>
-            <div>
-              <span className="eyebrow">SUA BASE EM ATENAS</span>
-              <h3>{store.state!.hotel.name || 'Hospedagem'}</h3>
-            </div>
-          </div>
-          <p className="destination-address">
-            <MapPin size={16} />
-            <span>{store.state!.hotel.address}</span>
-          </p>
-          <DestinationLinks
-            destination={store.state!.hotel.address}
-            title={store.state!.hotel.name || 'Hospedagem'}
-          />
-          <a href="#hotel" className="destination-details-link">
-            Ver hospedagem
-            <ChevronRight size={17} />
-          </a>
-        </section>
+      {hotels.map(
+        (hotel) =>
+          hotel.address && (
+            <section
+              className="card hotel-map-card"
+              key={hotel.city}
+              aria-label={`Hospedagem em ${hotel.city} no mapa`}
+            >
+              <div className="hotel-map-heading">
+                <span className="icon-tile pink">
+                  <BedDouble size={26} />
+                </span>
+                <div>
+                  <span className="eyebrow">SUA BASE EM {hotel.city.toUpperCase()}</span>
+                  <h3>{hotel.name || 'Hospedagem'}</h3>
+                </div>
+              </div>
+              <p className="destination-address">
+                <MapPin size={16} />
+                <span>{hotel.address}</span>
+              </p>
+              <DestinationLinks destination={hotel.address} title={hotel.name || 'Hospedagem'} />
+              <a href="#hotel" className="destination-details-link">
+                Ver hospedagem
+                <ChevronRight size={17} />
+              </a>
+            </section>
+          ),
       )}
     </section>
   );

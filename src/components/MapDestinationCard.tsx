@@ -1,5 +1,6 @@
 import {
   CalendarDays,
+  CarFront,
   Check,
   ChevronDown,
   ChevronRight,
@@ -22,10 +23,12 @@ export function DestinationLinks({
   destination,
   origin,
   title,
+  driving,
 }: {
   destination: string;
   origin?: string;
   title: string;
+  driving?: boolean;
 }) {
   return (
     <div className="destination-links">
@@ -39,14 +42,22 @@ export function DestinationLinks({
         <Navigation size={18} /> Abrir no mapa
       </a>
       <div className="destination-secondary-links">
-        <a href={mapsLink(destination, 'walking', origin)} target="_blank" rel="noreferrer">
-          <Footprints size={16} />
-          <span>A pé</span>
-        </a>
-        <a href={mapsLink(destination, 'transit', origin)} target="_blank" rel="noreferrer">
-          <TrainFront size={16} />
-          <span>Transporte público</span>
-        </a>
+        {driving ? (
+          <a href={mapsLink(destination, 'driving', origin)} target="_blank" rel="noreferrer">
+            <CarFront size={16} /> De carro
+          </a>
+        ) : (
+          <>
+            <a href={mapsLink(destination, 'walking', origin)} target="_blank" rel="noreferrer">
+              <Footprints size={16} />
+              <span>A pé</span>
+            </a>
+            <a href={mapsLink(destination, 'transit', origin)} target="_blank" rel="noreferrer">
+              <TrainFront size={16} />
+              <span>Transporte público</span>
+            </a>
+          </>
+        )}
       </div>
     </div>
   );
@@ -81,9 +92,11 @@ export function MapDestinationCard({
       ? Footprints
       : transport.mode === 'Avião'
         ? Plane
-        : transport.mode === 'Outro'
-          ? MapPin
-          : TrainFront;
+        : transport.mode === 'Carro'
+          ? CarFront
+          : transport.mode === 'Outro'
+            ? MapPin
+            : TrainFront;
   return (
     <article
       className={`card location-card destination-card ${a.completed ? 'destination-visited' : ''}`}
@@ -111,10 +124,11 @@ export function MapDestinationCard({
           <span>
             <Clock3 size={13} />
             <strong>
-              {a.start || 'A definir'}
-              {a.end && `–${a.end}`}
+              {a.start || (a.end ? 'Até ' : 'A definir')}
+              {a.start && a.endTimeZone && ` (${zoneLabel(a)})`}
+              {a.end && `${a.start ? '–' : ''}${a.end}`}
             </strong>{' '}
-            · {zoneLabel(a)}
+            · {zoneLabel(a, 'end')}
           </span>
         </div>
         <h3>{a.title}</h3>
@@ -146,6 +160,7 @@ export function MapDestinationCard({
           destination={mapDestination(a)}
           origin={transport.origin}
           title={a.title}
+          driving={transport.mode === 'Carro'}
         />
         {hasTransport && (
           <details className="destination-transport">

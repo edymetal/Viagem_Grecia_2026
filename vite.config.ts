@@ -25,8 +25,8 @@ export default defineConfig({
       includeAssets: ['icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable.png'],
       manifest: {
         id: base,
-        name: 'Atenas 2026 · Minha viagem',
-        short_name: 'Atenas 2026',
+        name: 'Atenas e Roma 2026 · Minha viagem',
+        short_name: 'Atenas e Roma',
         description: 'Seu roteiro, gastos e documentos de viagem, também offline.',
         lang: 'pt-BR',
         start_url: base,

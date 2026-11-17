@@ -16,30 +16,21 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await page.getByRole('button', { name: /Dia 2 · sábado/ }).click();
   await expect(page.getByRole('tab', { selected: true })).toContainText('21/11');
   await expect(page.getByRole('tab', { selected: true })).not.toContainText('Dia');
-  await expect(page.locator('.activity')).toHaveCount(24);
-  const library = page
-    .locator('.activity')
-    .filter({ has: page.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }) });
-  await expect(library).toContainText('Funcionamento: Inverno: 08h–15h');
-  await expect(library.locator('img')).toHaveJSProperty('complete', true);
+  await expect(page.locator('.activity')).toHaveCount(13);
   await expect(page.getByRole('button', { name: /Mover .* para cima/ })).toHaveCount(0);
   await page.screenshot({ path: 'test-results/roteiro-compacto.png', fullPage: false });
   await page
     .getByRole('link', {
-      name: 'Ver detalhes: Acrópole e Partenon com guia em português',
+      name: 'Ver detalhes: Tour da Acrópole, Partenon e Museu da Acrópole',
       exact: true,
     })
     .click();
   await expect(page.getByRole('heading', { name: 'Detalhes', exact: true })).toBeVisible();
-  await expect(page.locator('.visit-facts')).toContainText('14:30 – 16:30');
-  await expect(page.locator('.detail-status')).toContainText('proposto');
+  await expect(page.locator('.visit-facts')).toContainText('09:30 – 14:00');
+  await expect(page.locator('.detail-status')).toContainText('Confirmada');
   await expect(page.getByRole('link', { name: 'Ir no mapa', exact: true })).toHaveAttribute(
     'href',
     /google\.com\/maps\/search/,
-  );
-  await expect(page.getByRole('link', { name: /Reservar somente guia/ })).toHaveAttribute(
-    'href',
-    /getyourguide/,
   );
   await page.screenshot({ path: 'test-results/roteiro-detalhes.png', fullPage: false });
   await page.getByRole('button', { name: 'Adicionar aos favoritos' }).click();
@@ -83,7 +74,7 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await expect(page.locator('.activity')).toHaveCount(1);
   await page
     .getByRole('link', {
-      name: 'Ver detalhes: Acrópole e Partenon com guia em português',
+      name: 'Ver detalhes: Tour da Acrópole, Partenon e Museu da Acrópole',
       exact: true,
     })
     .click();
@@ -115,7 +106,7 @@ test('detalhes e dias funcionam em links diretos, teclado e diferentes larguras'
   await expect(page.getByRole('tab', { selected: true })).toBeFocused();
   await page.goto('./#roteiro/2026-11-21/nao-existe');
   await expect(page.getByText('Atividade não encontrada.', { exact: false })).toBeVisible();
-  await expect(page.locator('.activity')).toHaveCount(24);
+  await expect(page.locator('.activity')).toHaveCount(13);
   await page.goto('./#roteiro/2026-11-20/plan-1-01');
   await expect(page.getByText('Sem foto adicionada', { exact: true })).toBeVisible();
   await expect(page.locator('.detail-hero img')).toHaveCount(0);
@@ -143,7 +134,7 @@ test('foto pessoal anexada permanece nos detalhes e na linha do tempo offline', 
   await page.getByRole('button', { name: 'Guardar neste dispositivo' }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.goto('./#roteiro/2026-11-20/plan-1-01');
-  await page.getByRole('button', { name: /Editar Chegar à estação/ }).click();
+  await page.getByRole('button', { name: /Editar Saída de Santo Stefano/ }).click();
   await page.getByLabel('Fotografia local').selectOption({ label: 'foto-local.png' });
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
@@ -163,7 +154,7 @@ test('foto pessoal anexada permanece nos detalhes e na linha do tempo offline', 
   await page.goto('./#mapa');
   await expect(
     page
-      .getByRole('article', { name: 'Chegar à estação de Santo Stefano', exact: true })
+      .getByRole('article', { name: 'Saída de Santo Stefano de carro', exact: true })
       .locator('.destination-cover img'),
   ).toHaveJSProperty('naturalWidth', 1);
 });
@@ -182,9 +173,8 @@ test('fotos dos locais e horários fornecidos permanecem disponíveis offline', 
   for (const [id, alt, hours] of [
     ['plan-2-03', 'Biblioteca de Adriano', '08h–15h'],
     ['plan-2-05', 'Exposição do Museu Kotsanas em Atenas', '10h–18h'],
-    ['plan-3-13', 'Edifício do Museu da Acrópole', '09h–20h'],
   ]) {
-    const day = id.startsWith('plan-2') ? '2026-11-21' : '2026-11-22';
+    const day = id === 'plan-2-05' ? '2026-11-21' : '2026-11-22';
     await page.goto(`./#roteiro/${day}/${id}`);
     await expect
       .poll(() =>

@@ -1,0 +1,159 @@
+{
+  "itineraryRevision": "cronograma-2026-11-17-atenas-roma",
+  "activities": [
+    {
+      "id": "plan-1-01",
+      "date": "2026-11-20",
+      "title": "Saída de Santo Stefano de carro",
+      "start": "08:00",
+      "end": "08:15",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "location": "Aeroporto de Palermo (PMO)",
+      "description": "Janela de saída. Cerca de 130 km e 1h30 de estrada, com pedágio.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": 15,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Carro",
+        "origin": "Santo Stefano di Camastra",
+        "destination": "Aeroporto de Palermo (PMO)",
+        "station": "",
+        "lines": "",
+        "minutes": 90,
+        "price": null,
+        "certainty": "Estimativa",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Planejada",
+      "completed": false,
+      "photoDocumentId": null
+    },
+    {
+      "id": "nov-20-parking",
+      "date": "2026-11-20",
+      "title": "Estacionamento e ida ao terminal",
+      "start": "",
+      "end": "10:00",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "location": "Aeroporto de Palermo (PMO)",
+      "description": "Meta de chegada à região do aeroporto até 10h. Definir estacionamento, valor e reserva de 20 a 26/11. Retirada prevista entre 16h30 e 17h no retorno.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": null,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Não informado",
+        "origin": "",
+        "destination": "",
+        "station": "",
+        "lines": "",
+        "minutes": null,
+        "price": null,
+        "certainty": "Não informado",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Pendente",
+      "completed": false,
+      "photoDocumentId": null
+    },
+    {
+      "id": "nov-26-luggage",
+      "date": "2026-11-26",
+      "title": "Desembarque e retirada do carro",
+      "start": "15:00",
+      "end": "16:30",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "location": "Aeroporto de Palermo (PMO)",
+      "description": "Janela estimada para sair do avião, pegar a bagagem e chegar ao estacionamento. Retirada de referência entre 16h30 e 17h.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": 90,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Não informado",
+        "origin": "",
+        "destination": "",
+        "station": "",
+        "lines": "",
+        "minutes": null,
+        "price": null,
+        "certainty": "Não informado",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Planejada",
+      "completed": false,
+      "photoDocumentId": null
+    },
+    {
+      "id": "nov-26-drive",
+      "date": "2026-11-26",
+      "title": "Retorno de carro a Santo Stefano",
+      "start": "16:30",
+      "end": "",
+      "timeZone": "Europe/Rome",
+      "timeCertainty": "Estimativa",
+      "location": "Santo Stefano di Camastra",
+      "description": "A saída pode variar entre 16h e 17h, conforme o desembarque. Cerca de 130 km e 1h30–2h. Chegada estimada entre 17h30 e 19h.",
+      "address": "",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "duration": null,
+      "openingHours": "",
+      "website": "",
+      "ticketUrl": "",
+      "notes": "",
+      "transport": {
+        "mode": "Carro",
+        "origin": "Aeroporto de Palermo (PMO)",
+        "destination": "Santo Stefano di Camastra",
+        "station": "",
+        "lines": "",
+        "minutes": 90,
+        "price": null,
+        "certainty": "Estimativa",
+        "notes": ""
+      },
+      "required": false,
+      "confirmation": "Planejada",
+      "completed": false,
+      "photoDocumentId": null
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-11-20",
+      "notes": "Palermo de carro. Reservar estacionamento de 20 a 26/11. Atenas está uma hora à frente da Itália. Comprar e validar o passe de 72h ao chegar ao aeroporto. Chegada estimada ao Ilissos Hotel entre 20h30 e 21h."
+    },
+    {
+      "date": "2026-11-26",
+      "notes": "Conferir no aplicativo da Ryanair se o embarque é em Fiumicino antes de comprar o trem. Leonardo Express planejado para 10h05. Chegada a Santo Stefano estimada entre 17h30 e 19h."
+    }
+  ],
+  "checklist": [
+    {
+      "id": "trip-check-parking",
+      "title": "Reservar estacionamento em Palermo de 20 a 26/11 e confirmar valor e retirada do carro",
+      "done": false
+    }
+  ],
+  "personalNotes": "O financeiro inclui os valores informados no cronograma. Estacionamento, pedágio, combustível, Ryanair e parte das refeições ainda estão sem valor. O funicular e o passe urbano de Roma são opcionais e ficam fora da soma das despesas."
+}

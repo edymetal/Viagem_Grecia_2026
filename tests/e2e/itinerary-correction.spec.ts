@@ -47,14 +47,14 @@ test('instalação existente recebe a correção offline sem duplicar nem perder
   await context.setOffline(true);
   await page.goto('./#roteiro');
   await page.reload();
-  await expect(page.locator('.activity')).toHaveCount(19);
+  await expect(page.locator('.activity')).toHaveCount(12);
   await expect(page.getByText('Revise os horários', { exact: true })).toHaveCount(0);
-  await page.getByRole('tab', { name: /21\/11/ }).click();
-  await expect(page.locator('.activity')).toHaveCount(24);
+  await page.getByRole('tab', { name: /22\/11/ }).click();
+  await expect(page.locator('.activity')).toHaveCount(18);
   await page
     .getByRole('link', { name: 'Ver detalhes: Biblioteca de Adriano', exact: true })
     .click();
-  await expect(page.locator('.visit-facts')).toContainText('09:00 – 09:35');
+  await expect(page.locator('.visit-facts')).toContainText('09:05 – 09:45');
   await expect(page.getByText('Observação particular preservada')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Remover dos favoritos' })).toHaveAttribute(
     'aria-pressed',
@@ -64,15 +64,14 @@ test('instalação existente recebe a correção offline sem duplicar nem perder
   await page.reload();
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
   await context.setOffline(true);
-  await page.goto('./#roteiro/2026-11-22/plan-3-14');
-  await expect(page.getByRole('heading', { name: /Finalizar a visita e sair/ })).toBeVisible();
-  await expect(page.locator('.visit-facts')).toContainText('16:30 – 16:40');
+  await page.goto('./#roteiro/2026-11-24/nov-24-vicus');
+  await expect(page.getByRole('heading', { name: /Vicus Caprarius/ })).toBeVisible();
   await page.goto('./#hotel');
-  await expect(page.locator('.hotel-card')).toContainText('20h55–21h15');
+  await expect(page.getByRole('heading', { name: 'Ciao Termini' })).toBeVisible();
   await page.goto('./#gastos');
-  await expect(page.locator('.trip-total-value')).toContainText('206,01');
+  await expect(page.locator('.trip-total-value')).toContainText('656,99');
   await expect(page.locator('.stat').first()).toContainText('900,00');
-  await expect(page.locator('.expense')).toHaveCount(11);
+  await expect(page.locator('.expense')).toHaveCount(22);
   await page.goto('./#documentos');
   await expect(page.getByRole('heading', { name: 'documento-teste.pdf' })).toBeVisible();
   const saved = await page.evaluate(
@@ -92,5 +91,5 @@ test('instalação existente recebe a correção offline sem duplicar nem perder
         };
       }),
   );
-  expect(saved).toEqual({ revision: ITINERARY_REVISION, count: 89 });
+  expect(saved).toEqual({ revision: ITINERARY_REVISION, count: 91 });
 });

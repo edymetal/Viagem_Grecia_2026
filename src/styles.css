@@ -576,6 +576,11 @@ main:focus {
 .app-footer > span:nth-child(3) {
   margin-left: 9px;
 }
+.app-version {
+  color: var(--muted);
+  font-size: 0.6875rem;
+  white-space: nowrap;
+}
 .bottom-nav,
 .mobile-brand {
   display: none;
@@ -1528,6 +1533,27 @@ input[type='checkbox'] {
   margin: 15px 0 6px;
   font-size: 14px;
   overflow-wrap: anywhere;
+}
+.local-pdf-folder .section-title,
+.local-pdf-folder .section-title > .inline {
+  flex-wrap: wrap;
+}
+.local-pdf-folder .count-badge {
+  margin-inline-start: 8px;
+}
+.linked-pdf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.linked-pdf .icon-tile {
+  flex-shrink: 0;
+}
+.linked-pdf small {
+  display: block;
+  margin-top: 4px;
 }
 .document-actions {
   display: flex;

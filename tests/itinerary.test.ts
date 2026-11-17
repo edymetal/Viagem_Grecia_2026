@@ -1,79 +1,117 @@
 import { describe, expect, it } from 'vitest';
 import { suppliedItinerary, ITINERARY_REVISION } from '../src/data/itinerary';
 import { emptyActivity, emptyState } from '../src/data/factories';
-import { activityInstant, conflicts, nextActivity, plannedRange, totals } from '../src/lib/domain';
+import {
+  activityInstant,
+  conflicts,
+  nextActivity,
+  plannedRange,
+  totals,
+  tripNow,
+} from '../src/lib/domain';
 import { mergeItinerary } from '../src/lib/itinerary';
 import { createBackup, parseBackup } from '../src/lib/backup';
 import { expenseSchema, stateSchema } from '../src/data/schema';
 
-describe('cronograma fornecido de 20 a 23/11', () => {
-  it('preserva as 89 etapas corrigidas e horários, sem compras ou reservas inventadas', () => {
-    const s = suppliedItinerary();
-    expect(stateSchema.parse(s)).toEqual(s);
-    expect(s.activities).toHaveLength(89);
-    expect(s.days.map((d) => s.activities.filter((a) => a.date === d.date).length)).toEqual([
-      19, 24, 27, 19,
-    ]);
-    expect(s.reservations).toEqual([]);
-    expect(s.expenses.every((e) => e.status === 'Previsto' && !e.paid)).toBe(true);
-    expect(s.activities.every((a) => a.confirmation !== 'Confirmada' && !a.completed)).toBe(true);
-    expect(s.activities.find((a) => a.id === 'plan-1-02')).toMatchObject({
-      start: '07:04',
-      end: '08:51',
+describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
+  it('incorpora os sete dias com horários, estados e faixas de entrada', () => {
+    const plan = suppliedItinerary();
+    expect(stateSchema.parse(plan)).toEqual(plan);
+    expect(
+      plan.days.map((day) => plan.activities.filter((a) => a.date === day.date).length),
+    ).toEqual([12, 13, 18, 10, 14, 16, 8]);
+    expect(plan.reservations).toEqual([]);
+    expect(plan.activities.every((activity) => !activity.completed)).toBe(true);
+    expect(plan.activities.find((a) => a.id === 'plan-2-03')).toMatchObject({
+      date: '2026-11-22',
+      start: '09:05',
+      confirmation: 'Confirmada',
+      price: 10,
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-24-vicus')).toMatchObject({
+      start: '15:00',
+      confirmation: 'Pendente',
+      timeCertainty: 'Proposto',
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-25-voyager')).toMatchObject({
+      start: '17:00',
+      confirmation: 'Pendente',
       timeZone: 'Europe/Rome',
     });
-    expect(s.activities.find((a) => a.id === 'plan-4-13')).toMatchObject({
-      start: '21:35',
-      end: '22:59',
-      timeZone: 'Europe/Rome',
+    expect(plan.activities.find((a) => a.id === 'nov-26-flight')).toMatchObject({
+      start: '13:50',
+      end: '15:00',
+      confirmation: 'Confirmada',
+      timeCertainty: 'Confirmado',
+      price: 64.89,
+      description: expect.stringContaining('40 × 30 × 20 cm'),
     });
-    expect(s.activities.some((a) => a.title.includes('Panatenaico'))).toBe(false);
-    expect(
-      s.activities.filter((a) => a.guideUrl).map((a) => [a.start, a.end, a.timeCertainty]),
-    ).toEqual([
-      ['14:30', '16:30', 'Proposto'],
-      ['14:30', '16:30', 'Proposto'],
-    ]);
+    expect(plan.flights.find((flight) => flight.id === 'plan-flight-ryanair')).toMatchObject({
+      origin: 'Roma Fiumicino (FCO)',
+      confirmation: 'Confirmado',
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-20-parking')).toMatchObject({
+      end: '10:00',
+      confirmation: 'Confirmada',
+      timeCertainty: 'Estimativa',
+      timeNote: expect.stringContaining('09h00'),
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-26-luggage')).toMatchObject({
+      end: '16:30',
+      timeCertainty: 'Estimativa',
+      timeNote: expect.stringContaining('23h00'),
+    });
   });
-  it('preserva preços exatos e faixas sem duplicar ingressos, alimentação ou passe', () => {
+
+  it('preserva valores informados sem somar entradas do tour combinado em duplicidade', () => {
     const s = suppliedItinerary();
-    expect(s.expenses).toHaveLength(11);
-    expect(
-      s.expenses.filter((e) => e.category === 'Ingressos').reduce((n, e) => n + e.amount, 0),
-    ).toBe(107);
-    expect(plannedRange(s)).toEqual({ min: 441.81, max: 481.81 });
-    expect(totals(s).actual).toBe(0);
-    expect(s.budget).toBeNull();
-    expect(s.expenses.some((e) => e.category === 'Hotel' || e.category === 'Passeios')).toBe(false);
-    expect(s.activities.find((a) => a.id === 'plan-1-14')).toMatchObject({
-      price: 12,
-      priceMax: 20,
-      priceCertainty: 'Estimativa',
+    expect(s.expenses).toHaveLength(23);
+    expect(s.expenses.filter((e) => e.id.includes('acropolis')).map((e) => e.amount)).toEqual([
+      110,
+    ]);
+    expect(plannedRange(s)).toEqual({ min: 430.55, max: 460.55 });
+    expect(totals(s).paid).toBe(694.04);
+    expect(totals(s).actual).toBe(694.04);
+    expect(s.expenses.find((e) => e.id === 'plan-exp-ryanair')).toMatchObject({
+      amount: 64.89,
+      paid: true,
+      status: 'Realizado',
+      category: 'Passagens aéreas',
     });
-    expect(s.hotel.notes).toContain('Preço final');
+    expect(s.checklist.find((item) => item.id === 'trip-check-ryanair')).toMatchObject({
+      title: 'Fazer o check-in da Ryanair e salvar o cartão de embarque do FR3946',
+      done: false,
+    });
+    expect(s.expenses.find((e) => e.id === 'plan-exp-parking')).toMatchObject({
+      amount: 65,
+      paid: true,
+      status: 'Realizado',
+      category: 'Transporte',
+    });
+    expect(s.checklist.find((item) => item.id === 'trip-check-parking')?.done).toBe(true);
+    expect(s.expenses.find((e) => e.id === 'plan-exp-ciao')).toMatchObject({
+      amount: 224.55,
+      paid: false,
+      status: 'Previsto',
+    });
+    expect(s.hotel.name).toBe('Ilissos Hotel');
+    expect(s.romeHotel?.name).toBe('Ciao Termini');
   });
-  it('compara corretamente Itália e Atenas para próxima atividade e conflitos', () => {
-    const train = suppliedItinerary().activities.find((a) => a.id === 'plan-1-02')!;
-    expect(new Date(activityInstant(train)).toISOString()).toBe('2026-11-20T06:04:00.000Z');
-    const greece = {
-      ...emptyActivity('2026-11-20'),
-      id: 'gr',
-      title: 'Teste GR',
-      start: '07:30',
-      end: '08:00',
-      confirmation: 'Planejada' as const,
-    };
-    expect(nextActivity([train, greece], new Date('2026-11-20T05:00Z'))?.id).toBe('gr');
-    const italy = {
-      ...greece,
-      id: 'it',
-      title: 'Teste IT',
-      start: '06:45',
-      end: '07:15',
-      timeZone: 'Europe/Rome' as const,
-    };
-    expect(conflicts([italy, greece])).toHaveLength(1);
-    expect(conflicts(suppliedItinerary().activities)).toHaveLength(0);
+
+  it('compara os fusos dos voos e a troca de dia em Roma', () => {
+    const plan = suppliedItinerary();
+    const outbound = plan.activities.find((a) => a.id === 'nov-20-az718')!;
+    expect(new Date(activityInstant(outbound)).toISOString()).toBe('2026-11-20T14:35:00.000Z');
+    expect(new Date(activityInstant(outbound, 'end')).toISOString()).toBe(
+      '2026-11-20T16:35:00.000Z',
+    );
+    const returnFlight = plan.activities.find((a) => a.id === 'plan-4-06')!;
+    expect(new Date(activityInstant(returnFlight, 'end')).toISOString()).toBe(
+      '2026-11-23T12:55:00.000Z',
+    );
+    expect(nextActivity(plan.activities, new Date('2026-11-23T12:00Z'))?.id).toBe(returnFlight.id);
+    expect(conflicts(plan.activities)).toHaveLength(0);
+    expect(tripNow(new Date('2026-11-24T22:30Z')).date).toBe('2026-11-24');
   });
   it('incorpora uma vez e preserva edições, orçamento e despesas já cadastradas', () => {
     const current = emptyState();
@@ -94,7 +132,7 @@ describe('cronograma fornecido de 20 a 23/11', () => {
       paid: true,
     });
     const merged = mergeItinerary(current);
-    expect(merged.activities).toHaveLength(90);
+    expect(merged.activities).toHaveLength(suppliedItinerary().activities.length + 1);
     expect(merged.expenses).toEqual(current.expenses);
     expect(merged.budget).toBe(800);
     expect(merged.days[0].notes).toBe('Anotação local');

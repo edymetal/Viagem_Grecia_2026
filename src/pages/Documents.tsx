@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { Download, FileText, HardDrive, Image, LockKeyhole, Plus, Trash2 } from 'lucide-react';
-import { documentCategories, documentMetaSchema, type LocalDocument } from '../data/schema';
+import { documentCategories, type LocalDocument } from '../data/schema';
 import type { TravelStore } from '../hooks/useTravel';
-import { downloadBlob, verifyFile } from '../lib/backup';
+import { downloadBlob } from '../lib/backup';
+import { prepareLocalDocuments } from '../lib/documents';
 import { AsyncForm, Empty, Field, Modal, value } from '../components/ui';
+import { LinkedPdfFolder } from '../components/LinkedPdfFolder';
 
 export function Documents({ store }: { store: TravelStore }) {
   const [adding, setAdding] = useState(false);
   const [viewing, setViewing] = useState<LocalDocument | null>(null);
   const [removing, setRemoving] = useState<LocalDocument | null>(null);
   const [storageMessage, setStorageMessage] = useState('');
+  const [importMessage, setImportMessage] = useState('');
   const used = store.documents.reduce((n, d) => n + d.size, 0);
   return (
     <>
@@ -18,21 +21,32 @@ export function Documents({ store }: { store: TravelStore }) {
         <div>
           <strong>Seus documentos ficam com você</strong>
           <p>
-            Arquivos guardados apenas neste navegador e dispositivo, sem envio para servidores. Se
-            os dados do navegador forem apagados, eles poderão ser perdidos. Mantenha um backup
-            seguro.
+            Seus PDFs ficam neste dispositivo. O Chrome gerencia o acesso à pasta. Guarde um backup
+            dos arquivos que salvar no navegador.
           </p>
         </div>
       </div>
+      <LinkedPdfFolder />
       <div className="section-title">
         <h2>
-          Documentos e reservas <span className="count-badge">{store.documents.length}</span>
+          Arquivos salvos no app <span className="count-badge">{store.documents.length}</span>
         </h2>
-        <button className="button" onClick={() => setAdding(true)}>
+        <button
+          className="button"
+          onClick={() => {
+            setImportMessage('');
+            setAdding(true);
+          }}
+        >
           <Plus size={17} />
           Adicionar arquivo
         </button>
       </div>
+      {importMessage && (
+        <p className="notice success" role="status">
+          {importMessage}
+        </p>
+      )}
       {!store.documents.length ? (
         <section className="card">
           <Empty title="O essencial, sempre com você">
@@ -111,50 +125,20 @@ export function Documents({ store }: { store: TravelStore }) {
         </button>
       </section>
       {adding && (
-        <Modal title="Adicionar documento" onClose={() => setAdding(false)}>
-          <AsyncForm
-            label="Guardar neste dispositivo"
-            onSave={async (f) => {
-              const file = f.get('file');
-              if (!(file instanceof File) || file.size === 0)
-                throw new Error('Selecione um arquivo válido.');
-              const meta = documentMetaSchema.safeParse({
-                id: crypto.randomUUID(),
-                name: file.name,
-                category: value(f, 'category'),
-                type: file.type,
-                size: file.size,
-                createdAt: new Date().toISOString(),
-              });
-              if (!meta.success) throw new Error('Use PDF, PNG, JPEG ou WebP de até 10 MB.');
-              await verifyFile(file, file.type);
-              await store.addDocument({ ...meta.data, blob: file });
-              setAdding(false);
-            }}
-          >
-            <div className="form-grid">
-              <Field label="Categoria" wide>
-                <select name="category">
-                  {documentCategories.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="PDF ou imagem (PNG, JPEG, WebP) · até 10 MB" wide>
-                <input
-                  name="file"
-                  type="file"
-                  accept="application/pdf,image/png,image/jpeg,image/webp"
-                  required
-                />
-              </Field>
-              <p className="small muted wide">
-                Para guardar códigos QR, adicione a imagem ou PDF que contém o código. Nenhum
-                documento é incluído no código-fonte.
-              </p>
-            </div>
-          </AsyncForm>
-        </Modal>
+        <DocumentImporter
+          store={store}
+          onClose={() => setAdding(false)}
+          onSaved={(count) => {
+            setImportMessage(
+              count === 0
+                ? 'Os arquivos selecionados já estão no app.'
+                : count === 1
+                  ? 'Arquivo guardado neste dispositivo.'
+                  : `${count} arquivos guardados neste dispositivo.`,
+            );
+            setAdding(false);
+          }}
+        />
       )}
       {viewing && <DocumentViewer document={viewing} onClose={() => setViewing(null)} />}
       {removing && (
@@ -177,6 +161,58 @@ export function Documents({ store }: { store: TravelStore }) {
     </>
   );
 }
+
+function DocumentImporter({
+  store,
+  onClose,
+  onSaved,
+}: {
+  store: TravelStore;
+  onClose: () => void;
+  onSaved: (count: number) => void;
+}) {
+  const [files, setFiles] = useState<File[]>([]);
+
+  return (
+    <Modal title="Adicionar documentos" onClose={onClose}>
+      <AsyncForm
+        label="Guardar neste dispositivo"
+        onSave={async (form) => {
+          const documents = await prepareLocalDocuments(
+            files,
+            value(form, 'category'),
+            store.documents,
+          );
+          onSaved(await store.addDocuments(documents));
+        }}
+      >
+        <div className="form-grid">
+          <Field label="PDF ou imagem (seleção múltipla) · até 10 MB por arquivo" wide>
+            <input
+              type="file"
+              accept=".pdf,application/pdf,image/png,image/jpeg,image/webp"
+              multiple
+              onChange={(event) => setFiles(Array.from(event.currentTarget.files ?? []))}
+            />
+          </Field>
+          {files.length > 0 && (
+            <p className="small wide" role="status">
+              {files.length === 1 ? files[0].name : `${files.length} arquivos selecionados`}
+            </p>
+          )}
+          <Field label="Categoria" wide>
+            <select name="category">
+              {documentCategories.map((category) => (
+                <option key={category}>{category}</option>
+              ))}
+            </select>
+          </Field>
+        </div>
+      </AsyncForm>
+    </Modal>
+  );
+}
+
 function DocumentViewer({
   document: doc,
   onClose,
@@ -185,6 +221,9 @@ function DocumentViewer({
   onClose: () => void;
 }) {
   const [url, setUrl] = useState('');
+  const isPdf = doc.type === 'application/pdf';
+  const showInline =
+    !isPdf || (navigator.pdfViewerEnabled !== false && !/Android/i.test(navigator.userAgent));
   useEffect(() => {
     const u = URL.createObjectURL(doc.blob);
     setUrl(u);
@@ -192,21 +231,34 @@ function DocumentViewer({
   }, [doc]);
   return (
     <Modal title={doc.name} onClose={onClose}>
-      <div className="document-viewer">
-        {url &&
-          (doc.type === 'application/pdf' ? (
+      {url && showInline && (
+        <div className="document-viewer">
+          {isPdf ? (
             <iframe title={`PDF: ${doc.name}`} src={url} />
           ) : (
             <img src={url} alt={doc.name} />
-          ))}
+          )}
+        </div>
+      )}
+      <div className="inline">
+        {url && isPdf && (
+          <a className="button" href={url} target="_blank" rel="noopener noreferrer">
+            <FileText size={17} /> Abrir PDF no navegador
+          </a>
+        )}
+        <button
+          className={isPdf ? 'button secondary' : 'button'}
+          onClick={() => downloadBlob(doc.blob, doc.name)}
+        >
+          <Download size={17} />
+          Baixar arquivo
+        </button>
       </div>
-      <p className="muted small">
-        Se o navegador não exibir o PDF, baixe para abrir em um leitor no dispositivo.
-      </p>
-      <button className="button" onClick={() => downloadBlob(doc.blob, doc.name)}>
-        <Download size={17} />
-        Baixar arquivo
-      </button>
+      {isPdf && (
+        <p className="muted small">
+          Você também pode abrir o PDF baixado pelo aplicativo Arquivos do celular.
+        </p>
+      )}
     </Modal>
   );
 }

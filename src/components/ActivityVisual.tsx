@@ -1,6 +1,7 @@
 import {
   ArrowRightLeft,
   BedDouble,
+  CarFront,
   ClipboardCheck,
   Coffee,
   DoorOpen,
@@ -25,6 +26,7 @@ export const parthenonPhoto = `${import.meta.env.BASE_URL}images/parthenon.jpg`;
 
 function activitySymbol(a: Activity): [LucideIcon, string] {
   const title = a.title.toLocaleLowerCase('pt-BR');
+  if (a.transport.mode === 'Carro') return [CarFront, 'cyan'];
   if (/café/.test(title)) return [Coffee, 'amber'];
   if (/almoço|jantar|lanche/.test(title)) return [Utensils, 'amber'];
   if (a.transport.mode === 'A pé' || /caminh|deslocamento|retorn|voltar|descida|descer/.test(title))

@@ -4,6 +4,7 @@ import { deleteDB } from 'idb';
 import { emptyState as initialState } from '../src/data/initial';
 import {
   addDocument,
+  addDocuments,
   deleteDocument,
   listDocuments,
   loadState,
@@ -11,7 +12,8 @@ import {
   saveState,
 } from '../src/lib/storage';
 import { createBackup, parseBackup } from '../src/lib/backup';
-import type { LocalDocument } from '../src/data/schema';
+import { prepareLocalDocuments } from '../src/lib/documents';
+import { MAX_LOCAL_DOCUMENTS, type LocalDocument } from '../src/data/schema';
 import { previousItinerary } from '../src/lib/itinerary';
 import { ITINERARY_REVISION } from '../src/data/itinerary';
 
@@ -34,6 +36,36 @@ afterEach(async () => {
   await deleteDB('atenas-2026');
 });
 describe('armazenamento e backup', () => {
+  it('importa PDFs selecionados em lote e conserva vínculos de importações antigas', async () => {
+    const original = doc();
+    await addDocument(original);
+    const files = [
+      new File([original.blob], original.name, { type: 'application/octet-stream' }),
+      new File(['%PDF-1.4\n% outro\n%%EOF'], 'outro.PDF'),
+    ];
+    const selected = await prepareLocalDocuments(files, 'Ingresso', await listDocuments());
+    expect(selected[0].id).toBe(original.id);
+    expect(selected[1].blob.type).toBe('application/pdf');
+    expect(await addDocuments(selected)).toBe(1);
+    const reimport = await prepareLocalDocuments(files, 'Ingresso', await listDocuments());
+    expect(await addDocuments(reimport)).toBe(0);
+    expect(await listDocuments()).toHaveLength(2);
+  });
+
+  it('rejeita um lote acima da capacidade sem deixar arquivos parcialmente salvos', async () => {
+    const template = doc();
+    await addDocuments(
+      Array.from({ length: MAX_LOCAL_DOCUMENTS - 1 }, (_, index) => ({
+        ...template,
+        id: `existente-${index}`,
+      })),
+    );
+    await expect(addDocuments([template, { ...template, id: 'novo' }])).rejects.toThrow(
+      '100 documentos',
+    );
+    expect(await listDocuments()).toHaveLength(MAX_LOCAL_DOCUMENTS - 1);
+  });
+
   it('migra o cronograma antigo uma vez e mantém o arquivo pessoal no IndexedDB', async () => {
     const old = previousItinerary();
     old.activities[0].photoDocumentId = 'teste-local';
@@ -42,10 +74,10 @@ describe('armazenamento e backup', () => {
     await addDocument(doc());
     const corrected = await loadState();
     expect(corrected.itineraryRevision).toBe(ITINERARY_REVISION);
-    expect(corrected.activities).toHaveLength(89);
+    expect(corrected.activities).toHaveLength(91);
     expect(corrected.activities[0].photoDocumentId).toBe('teste-local');
     expect(corrected.activities[0].notes).toBe('Nota particular');
-    expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:55');
+    expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:30');
     expect(await loadState()).toEqual(corrected);
     expect(await (await listDocuments())[0].blob.text()).toContain('%PDF');
   });

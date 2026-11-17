@@ -6,7 +6,7 @@ import {
   saveState,
   listDocuments,
   restoreState,
-  addDocument,
+  addDocuments,
   deleteDocument,
 } from '../lib/storage';
 
@@ -38,7 +38,7 @@ export function useTravel() {
       active = false;
     };
   }, []);
-  const run = (operation: () => Promise<void>) => {
+  const run = <T>(operation: () => Promise<T>) => {
     pendingOperations.current++;
     setBusy(true);
     const task = queue.current.then(operation).catch((e) => {
@@ -49,7 +49,10 @@ export function useTravel() {
       throw e;
     });
     queue.current = task
-      .catch(() => undefined)
+      .then(
+        () => undefined,
+        () => undefined,
+      )
       .finally(() => {
         pendingOperations.current--;
         if (pendingOperations.current === 0) setBusy(false);
@@ -71,10 +74,11 @@ export function useTravel() {
     busy,
     clearError: () => setError(''),
     update,
-    addDocument: (document: LocalDocument) =>
+    addDocuments: (documents: LocalDocument[]) =>
       run(async () => {
-        await addDocument(document);
+        const added = await addDocuments(documents);
         setDocuments(await listDocuments());
+        return added;
       }),
     deleteDocument: (id: string) =>
       run(async () => {

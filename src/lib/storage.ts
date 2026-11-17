@@ -1,5 +1,12 @@
 import { openDB, type DBSchema } from 'idb';
-import { stateSchema, documentMetaSchema, type AppState, type LocalDocument } from '../data/schema';
+import {
+  stateSchema,
+  documentMetaSchema,
+  MAX_LOCAL_DOCUMENTS,
+  MAX_LOCAL_DOCUMENT_BYTES,
+  type AppState,
+  type LocalDocument,
+} from '../data/schema';
 import { initialState } from '../data/initial';
 import { correctItinerary } from './itinerary';
 
@@ -66,22 +73,36 @@ export async function listDocuments() {
   }
 }
 export async function addDocument(doc: LocalDocument) {
-  documentMetaSchema.parse(doc);
+  if (!(await addDocuments([doc])))
+    throw new DOMException('Já existe um documento com este identificador.', 'ConstraintError');
+}
+export async function addDocuments(documents: LocalDocument[]) {
+  for (const doc of documents) documentMetaSchema.parse(doc);
   const database = await db();
+  let added = 0;
   try {
     const tx = database.transaction('documents', 'readwrite');
     await commitTransaction(tx, async () => {
       const existing = await tx.store.getAll();
+      const ids = new Set(existing.map((doc) => doc.id));
+      const additions = documents.filter((doc) => {
+        if (ids.has(doc.id)) return false;
+        ids.add(doc.id);
+        return true;
+      });
       if (
-        existing.length >= 100 ||
-        existing.reduce((n, d) => n + d.size, 0) + doc.size > 50 * 1024 * 1024
+        ids.size > MAX_LOCAL_DOCUMENTS ||
+        [...existing, ...additions].reduce((total, doc) => total + doc.size, 0) >
+          MAX_LOCAL_DOCUMENT_BYTES
       ) {
         throw new Error(
           'O limite local é 100 documentos ou 50 MB. Exporte e remova arquivos antes de adicionar outros.',
         );
       }
-      await tx.store.add(doc);
+      for (const doc of additions) await tx.store.add(doc);
+      added = additions.length;
     });
+    return added;
   } finally {
     database.close();
   }

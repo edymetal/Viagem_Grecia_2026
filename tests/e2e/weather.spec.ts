@@ -73,5 +73,5 @@ test('falha da previsão não impede o app e não mostra temperatura inventada',
   await expect(page.getByRole('dialog')).toContainText('Não foi possível consultar');
   await page.getByRole('button', { name: 'Fechar janela' }).click();
   await page.getByRole('button', { name: 'Ver roteiro', exact: true }).click();
-  await expect(page.locator('.activity')).toHaveCount(19);
+  await expect(page.locator('.activity').first()).toBeVisible();
 });

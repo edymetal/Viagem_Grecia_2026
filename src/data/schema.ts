@@ -1,6 +1,15 @@
 import { z } from 'zod';
 
-export const tripDates = ['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23'] as const;
+export const tripDates = [
+  '2026-11-20',
+  '2026-11-21',
+  '2026-11-22',
+  '2026-11-23',
+  '2026-11-24',
+  '2026-11-25',
+  '2026-11-26',
+] as const;
+export const activityZones = ['Europe/Athens', 'Europe/Rome'] as const;
 export const categories = [
   'Passagens aéreas',
   'Hotel',
@@ -40,6 +49,7 @@ export const transportSchema = z
       'Metrô',
       'Trem',
       'Avião',
+      'Carro',
       'Transporte público',
       'Outro',
     ]),
@@ -64,8 +74,11 @@ export const activitySchema = z
     title: z.string().trim().min(1).max(200),
     start: time,
     end: time,
-    timeZone: z.enum(['Europe/Athens', 'Europe/Rome']).optional(),
-    timeCertainty: z.enum(['Planejado', 'Consultado', 'Estimativa', 'Proposto']).optional(),
+    timeZone: z.enum(activityZones).optional(),
+    endTimeZone: z.enum(activityZones).optional(),
+    timeCertainty: z
+      .enum(['Planejado', 'Consultado', 'Estimativa', 'Proposto', 'Confirmado'])
+      .optional(),
     timeNote: text.optional(),
     location: text.optional(),
     description: text,
@@ -81,15 +94,24 @@ export const activitySchema = z
     notes: text,
     transport: transportSchema,
     required: z.boolean(),
-    confirmation: z.enum(['Confirmada', 'Planejada', 'Sugestão']),
+    confirmation: z.enum(['Confirmada', 'Planejada', 'Pendente', 'Sugestão']),
     completed: z.boolean(),
     favorite: z.boolean().optional(),
     photoDocumentId: id.nullable(),
   })
-  .refine((v) => !v.start || !v.end || v.end >= v.start, {
-    message: 'O término deve ser posterior ao início (no mesmo dia).',
-    path: ['end'],
-  })
+  .refine(
+    (v) => {
+      if (!v.start || !v.end) return true;
+      const minutes = (time: string, zone: (typeof activityZones)[number]) =>
+        Number(time.slice(0, 2)) * 60 + Number(time.slice(3)) - (zone === 'Europe/Athens' ? 60 : 0);
+      const startZone = v.timeZone ?? 'Europe/Athens';
+      return minutes(v.end, v.endTimeZone ?? startZone) >= minutes(v.start, startZone);
+    },
+    {
+      message: 'O término deve ser posterior ao início (no mesmo dia).',
+      path: ['end'],
+    },
+  )
   .refine((v) => v.priceMax == null || (v.price !== null && v.priceMax >= v.price), {
     message: 'O preço máximo deve ser maior ou igual ao mínimo.',
     path: ['priceMax'],
@@ -149,16 +171,29 @@ export const usefulSchema = z.object({
   phrasesIt: text,
   phrasesEl: text,
 });
+const daysSchema = z
+  .array(z.object({ date, notes: text }))
+  .refine((days) => {
+    const expected = days.length === 4 ? tripDates.slice(0, 4) : tripDates;
+    return (
+      days.length === expected.length &&
+      expected.every((date) => days.some((day) => day.date === date))
+    );
+  }, 'Datas do roteiro inválidas.')
+  .transform((days) =>
+    tripDates.map((date) => days.find((day) => day.date === date) ?? { date, notes: '' }),
+  );
 export const stateSchema = z
   .object({
     tripId: z.literal('atenas-2026'),
     itineraryRevision: z.string().max(100).optional(),
     alternatives: z.array(alternativeSchema).max(30).optional(),
-    days: z.array(z.object({ date, notes: text })).length(4),
+    days: daysSchema,
     activities: z.array(activitySchema).max(500),
     expenses: z.array(expenseSchema).max(5000),
     budget: money.nullable(),
     hotel: hotelSchema,
+    romeHotel: hotelSchema.optional(),
     useful: usefulSchema,
     checklist: z
       .array(z.object({ id, title: z.string().trim().min(1).max(300), done: z.boolean() }))
@@ -185,10 +220,6 @@ export const stateSchema = z
       if (new Set(values).size !== values.length)
         ctx.addIssue({ code: 'custom', message: 'Identificadores duplicados.', path: [path] });
     };
-    unique(
-      v.days.map((d) => d.date),
-      'days',
-    );
     if (v.alternatives)
       unique(
         v.alternatives.map((a) => a.id),
@@ -201,6 +232,8 @@ export const stateSchema = z
       );
   });
 export const preferencesSchema = z.object({ theme: z.enum(['system', 'light', 'dark']) });
+export const MAX_LOCAL_DOCUMENTS = 100;
+export const MAX_LOCAL_DOCUMENT_BYTES = 50 * 1024 * 1024;
 export const documentMetaSchema = z.object({
   id,
   name: z.string().min(1).max(255),
@@ -221,7 +254,7 @@ export const backupSchema = z.object({
   preferences: preferencesSchema,
   documents: z
     .array(documentMetaSchema.extend({ base64: z.string().max(14_000_000) }))
-    .max(100)
+    .max(MAX_LOCAL_DOCUMENTS)
     .optional(),
 });
 export type AppState = z.infer<typeof stateSchema>;

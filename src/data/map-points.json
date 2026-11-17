@@ -3,7 +3,7 @@
     "name": "Museu da Acrópole",
     "latitude": 37.969108,
     "longitude": 23.728299,
-    "activityIds": ["plan-3-13"],
+    "activityIds": ["plan-3-13", "plan-2-11"],
     "source": "https://en.wikipedia.org/?curid=10944017"
   },
   {
@@ -68,5 +68,29 @@
     "longitude": 23.738217,
     "activityIds": ["plan-2-05"],
     "source": "https://www.openstreetmap.org/node/11377308267"
+  },
+  {
+    "name": "Vicus Caprarius",
+    "city": "Roma",
+    "latitude": 41.900413,
+    "longitude": 12.484133,
+    "activityIds": ["nov-24-vicus"],
+    "source": "https://www.turismoroma.it/en/node/1150"
+  },
+  {
+    "name": "Galleria Borghese",
+    "city": "Roma",
+    "latitude": 41.91421,
+    "longitude": 12.49214,
+    "activityIds": ["nov-25-borghese"],
+    "source": "https://www.wikidata.org/wiki/Q841506"
+  },
+  {
+    "name": "Planetário de Roma",
+    "city": "Roma",
+    "latitude": 41.831025,
+    "longitude": 12.477435,
+    "activityIds": ["nov-25-stars", "nov-25-voyager"],
+    "source": "https://www.turismoroma.it/it/eventi/programmazione-del-planetario-dal-1%C2%B0-al-31-ottobre"
   }
 ]

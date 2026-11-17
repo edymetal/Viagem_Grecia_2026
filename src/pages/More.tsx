@@ -131,7 +131,7 @@ export function More({
               <dl className="detail-grid">
                 <div>
                   <dt>Destino</dt>
-                  <dd>Atenas, Grécia</dd>
+                  <dd>Atenas, Grécia e Roma, Itália</dd>
                 </div>
                 <div>
                   <dt>Origem</dt>
@@ -139,7 +139,7 @@ export function More({
                 </div>
                 <div>
                   <dt>Período</dt>
-                  <dd>20 a 23 de novembro de 2026</dd>
+                  <dd>20 a 26 de novembro de 2026</dd>
                 </div>
                 <div>
                   <dt>Fuso do roteiro</dt>
@@ -166,48 +166,61 @@ export function More({
   );
 }
 function HotelPage({ store }: { store: TravelStore }) {
-  const s = store.state!,
-    h = s.hotel;
-  const [editing, setEditing] = useState(false);
+  const s = store.state!;
+  const [editing, setEditing] = useState<'hotel' | 'romeHotel' | null>(null);
+  const editedHotel = editing ? s[editing] : undefined;
+  const hotels = [
+    { id: 'hotel', city: 'Atenas', hotel: s.hotel },
+    { id: 'romeHotel', city: 'Roma', hotel: s.romeHotel },
+  ] as const;
   const [record, setRecord] = useState<{ type: 'flight' | 'reservation'; id: string } | null>(null);
   const [removing, setRemoving] = useState<{ type: 'flight' | 'reservation'; id: string } | null>(
     null,
   );
   return (
     <>
-      <section className="card hotel-card">
-        <span className="icon-tile warm">
-          <Hotel size={24} />
-        </span>
-        <div className="section-title">
-          <h2>{h.name || 'Seu hotel em Atenas'}</h2>
-          <button className="button secondary" onClick={() => setEditing(true)}>
-            <Edit3 size={16} />
-            Editar hotel
-          </button>
-        </div>
-        <p className="muted">
-          {h.address ||
-            'Endereço ainda não informado. Os dados serão preenchidos com o cronograma definitivo.'}
-        </p>
-        <dl className="detail-grid">
-          <div>
-            <dt>Entrada</dt>
-            <dd>{h.checkIn || 'A informar'}</dd>
-          </div>
-          <div>
-            <dt>Saída</dt>
-            <dd>{h.checkOut || 'A informar'}</dd>
-          </div>
-        </dl>
-        {h.notes && <p className="notes">{h.notes}</p>}
-        <MapsLinks address={h.address} />
-        {h.website && (
-          <a className="text-button" href={h.website} target="_blank" rel="noreferrer">
-            Site do hotel ↗ · Requer internet
-          </a>
-        )}
-      </section>
+      {hotels.map(
+        ({ id, city, hotel: h }) =>
+          h && (
+            <section className="card hotel-card" key={id}>
+              <span className="icon-tile warm">
+                <Hotel size={24} />
+              </span>
+              <div className="section-title">
+                <h2>{h.name || `Seu hotel em ${city}`}</h2>
+                <button
+                  className="button secondary"
+                  onClick={() => setEditing(id)}
+                  aria-label={`Editar hotel em ${city}`}
+                >
+                  <Edit3 size={16} />
+                  Editar hotel
+                </button>
+              </div>
+              <p className="muted">
+                {h.address ||
+                  'Endereço ainda não informado. Os dados serão preenchidos com o cronograma definitivo.'}
+              </p>
+              <dl className="detail-grid">
+                <div>
+                  <dt>Entrada</dt>
+                  <dd>{h.checkIn || 'A informar'}</dd>
+                </div>
+                <div>
+                  <dt>Saída</dt>
+                  <dd>{h.checkOut || 'A informar'}</dd>
+                </div>
+              </dl>
+              {h.notes && <p className="notes">{h.notes}</p>}
+              <MapsLinks address={h.address} />
+              {h.website && (
+                <a className="text-button" href={h.website} target="_blank" rel="noreferrer">
+                  Site do hotel ↗ · Requer internet
+                </a>
+              )}
+            </section>
+          ),
+      )}
       <div className="section-title">
         <h2>Voos</h2>
         <button
@@ -297,13 +310,13 @@ function HotelPage({ store }: { store: TravelStore }) {
           </div>
         </section>
       ))}
-      {editing && (
-        <Modal title="Dados do hotel" onClose={() => setEditing(false)}>
+      {editing && editedHotel && (
+        <Modal title="Dados do hotel" onClose={() => setEditing(null)}>
           <AsyncForm
             onSave={async (f) => {
               await store.update((state) => ({
                 ...state,
-                hotel: {
+                [editing]: {
                   name: value(f, 'name'),
                   address: value(f, 'address'),
                   checkIn: value(f, 'checkIn'),
@@ -312,7 +325,7 @@ function HotelPage({ store }: { store: TravelStore }) {
                   website: value(f, 'website'),
                 },
               }));
-              setEditing(false);
+              setEditing(null);
             }}
           >
             <div className="form-grid">
@@ -326,14 +339,14 @@ function HotelPage({ store }: { store: TravelStore }) {
                 <Field label={label} key={key} wide>
                   <input
                     name={key}
-                    defaultValue={h[key as keyof typeof h]}
+                    defaultValue={editedHotel[key as keyof typeof editedHotel]}
                     type={key === 'website' ? 'url' : 'text'}
                     maxLength={key === 'website' ? 2000 : 10000}
                   />
                 </Field>
               ))}
               <Field label="Observações" wide>
-                <textarea name="notes" defaultValue={h.notes} maxLength={10000} />
+                <textarea name="notes" defaultValue={editedHotel.notes} maxLength={10000} />
               </Field>
             </div>
           </AsyncForm>

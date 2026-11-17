@@ -4,11 +4,11 @@ import { activitySchema, stateSchema } from '../src/data/schema';
 import { athensNow, conflicts, countdown, mapsLink, nextActivity, totals } from '../src/lib/domain';
 
 describe('roteiro e horário de Atenas', () => {
-  it('começa com quatro dias vazios, sem dados turísticos inventados', () => {
+  it('começa com sete dias vazios, sem dados turísticos inventados', () => {
     const s = initialState();
     expect(stateSchema.parse(s)).toEqual(s);
     expect(s.activities).toHaveLength(0);
-    expect(s.days).toHaveLength(4);
+    expect(s.days).toHaveLength(7);
     expect(s.budget).toBeNull();
   });
   it('usa o dia de Atenas quando a Itália ainda está no dia anterior', () => {

@@ -1,5 +1,6 @@
 import {
   backupSchema,
+  MAX_LOCAL_DOCUMENT_BYTES,
   preferencesSchema,
   type AppState,
   type Backup,
@@ -74,7 +75,7 @@ export async function parseBackup(content: string) {
             throw new Error('Documento com codificação inválida.');
           const binary = atob(base64);
           total += binary.length;
-          if (binary.length !== meta.size || total > 50 * 1024 * 1024)
+          if (binary.length !== meta.size || total > MAX_LOCAL_DOCUMENT_BYTES)
             throw new Error('Tamanho dos documentos inválido ou maior que 50 MB.');
           const blob = new Blob([Uint8Array.from(binary, (c) => c.charCodeAt(0))], {
             type: meta.type,

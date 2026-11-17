@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { categories, expenseSchema, tripDates, type Expense } from '../data/schema';
 import type { TravelStore } from '../hooks/useTravel';
-import { athensNow, dateLabel, euro, totals, moneyRange, plannedRange } from '../lib/domain';
+import { tripNow, dateLabel, euro, totals, moneyRange, plannedRange } from '../lib/domain';
 import {
   AsyncForm,
   Empty,
@@ -167,7 +167,7 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
       title: '',
       amount: 0,
       category: 'Outros',
-      date: tripDates.find((d) => d === athensNow(now).date) || tripDates[0],
+      date: tripDates.find((d) => d === tripNow(now).date) || tripDates[0],
       status: 'Previsto',
       paid: false,
       notes: '',

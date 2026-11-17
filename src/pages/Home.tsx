@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import type { TravelStore } from '../hooks/useTravel';
 import {
-  athensNow,
+  tripNow,
   countdown,
   dateLabel,
   euro,
@@ -39,7 +39,7 @@ export function Home({
 }) {
   const state = store.state!;
   const days = countdown(now),
-    current = athensNow(now),
+    current = tripNow(now),
     next = nextActivity(state.activities, now),
     total = totals(state);
   const dayIndex = state.days.findIndex((d) => d.date === current.date);
@@ -80,11 +80,11 @@ export function Home({
           <h1>
             Olá, viajante<span className="coral">.</span>
           </h1>
-          <p className="muted">Sua viagem a Atenas, em um só lugar.</p>
+          <p className="muted">Seu roteiro de Atenas e Roma.</p>
         </div>
         <span className="pill">
           <Plane size={14} />
-          Palermo → Atenas
+          Palermo → Atenas → Roma → Palermo
         </span>
       </div>
       <section className="hero photo-hero">
@@ -95,23 +95,24 @@ export function Home({
           fetchPriority="high"
         />
         <div className="hero-content">
-          <span className="hero-tag">MINHA VIAGEM · GRÉCIA</span>
-          <h2>Atenas</h2>
-          <p>Sua viagem a Atenas</p>
+          <h2>Atenas e Roma</h2>
           <div className="hero-meta">
             <span>
               <CalendarDays size={16} />
-              20–23 nov 2026
+              20–26 nov 2026
             </span>
             <span>
-              <Clock3 size={16} />4 dias
+              <Clock3 size={16} />
+              {state.days.length} dias
             </span>
           </div>
         </div>
         <div className="countdown">
           <span>{days > 0 ? 'FALTAM' : dayIndex >= 0 ? 'DIA' : 'VIAGEM'}</span>
-          <strong>{days > 0 ? days : dayIndex >= 0 ? `${dayIndex + 1}/4` : '✓'}</strong>
-          <span>{days > 0 ? 'DIAS' : dayIndex >= 0 ? 'EM ATENAS' : 'CONCLUÍDA'}</span>
+          <strong>
+            {days > 0 ? days : dayIndex >= 0 ? `${dayIndex + 1}/${state.days.length}` : '✓'}
+          </strong>
+          <span>{days > 0 ? 'DIAS' : dayIndex >= 0 ? 'DA VIAGEM' : 'CONCLUÍDA'}</span>
         </div>
       </section>
       <nav className="home-shortcuts" aria-label="Atalhos da viagem">
@@ -133,8 +134,8 @@ export function Home({
         <div className="summary-cells">
           <button onClick={() => navigate('roteiro')}>
             <CalendarDays className="blue" size={24} />
-            <strong>4 dias</strong>
-            <span>20 a 23 de novembro</span>
+            <strong>{state.days.length} dias</strong>
+            <span>20 a 26 de novembro</span>
           </button>
           <button onClick={() => navigate('roteiro')}>
             <MapPin className="red" size={24} />
@@ -150,7 +151,7 @@ export function Home({
       </section>
       <PlanningNotice store={store} />
       <div className="section-title">
-        <h2>Seus dias em Atenas</h2>
+        <h2>Dias da viagem</h2>
         <button className="text-button" onClick={() => navigate('roteiro')}>
           Ver todos <ChevronRight size={16} />
         </button>
@@ -252,7 +253,10 @@ export function Home({
           </span>
           <div>
             <strong>Minha hospedagem</strong>
-            <span>{state.hotel.name || 'Adicione os dados do hotel'}</span>
+            <span>
+              {[state.hotel.name, state.romeHotel?.name].filter(Boolean).join(' · ') ||
+                'Adicione os dados do hotel'}
+            </span>
           </div>
           <ChevronRight size={18} />
         </button>

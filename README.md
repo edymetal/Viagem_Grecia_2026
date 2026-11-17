@@ -1,8 +1,8 @@
-# Atenas 2026
+# Atenas e Roma 2026
 
-Aplicativo pessoal de viagem para **uma pessoa, de Santo Stefano di Camastra a Atenas via Palermo, de 20 a 23/11/2026**. Interface em português brasileiro e valores em euros. React, TypeScript, Vite, Tailwind CSS, Lucide, IndexedDB (`idb`), Zod e PWA (`vite-plugin-pwa` / Workbox). Front-end estático, sem autenticação, back-end, serviços pagos ou chaves privadas.
+Aplicativo pessoal de viagem de Santo Stefano di Camastra a Atenas e Roma, de **20 a 26/11/2026**. Interface em português brasileiro e valores em euros. React, TypeScript, Vite, Tailwind CSS, Lucide, IndexedDB, Zod e PWA.
 
-O cronograma enviado foi incorporado: **89 etapas corrigidas: 19 na sexta, 24 no sábado, 27 no domingo e 19 na segunda**, hotel escolhido, voos e trens consultados, transporte, ingressos, alimentação estimada, alternativas e checklist. O texto informa que nenhuma compra ou reserva foi realizada. Guias às 14h30–16h30 são propostas, não vagas garantidas. Os dados e links foram transcritos sem nova consulta de disponibilidade. Não há documentos ou códigos de reserva no código-fonte.
+Confira o [cronograma atualizado e as fontes](docs/CRONOGRAMA.md). O app diferencia atividades confirmadas, planejadas e pendentes e mostra os horários no fuso de cada trecho. Códigos de reserva e documentos ficam no navegador.
 
 ## Instalar e executar
 
@@ -37,19 +37,11 @@ npm run test:e2e
 
 Os testes de navegador usam a versão já compilada em `dist`, com viewport e toque equivalentes a Android/Chromium; não substituem um teste em aparelho físico. O projeto não depende de conexão com aparelhos pessoais.
 
-## Correção do cronograma
-
-A tabela completa enviada na correção prevalece sobre a introdução em prosa, que repete parcialmente a sexta e o sábado. As 89 etapas separam caminhadas, acesso, visita e saída, preservando todos os horários fornecidos. Metrô de chegada: 19h35–20h45; caminhada ao hotel: 20h45–20h55; check-in: 20h55–21h15. No domingo, o bloco de 16h30–16h40 é somente para finalizar e sair do museu. Os dois guias às 14h30 continuam provisórios. Os percursos casa → estação e estação → casa não foram definidos; o app não inventa horários ou endereços para esses trajetos.
-
-Ao carregar uma instalação com a revisão anterior conhecida (`cronograma-2026-11-05`), o app atualiza automaticamente o IndexedDB para `cronograma-2026-11-05-correcao-2`. O arquivo `src/data/itinerary-previous.json` contém somente o planejamento público anterior, usado para comparar os campos; não contém dados extraídos do navegador. A migração atualiza campos que ainda correspondiam ao original, insere 29 etapas e preserva edições pessoais, ordem, exclusões, favoritos, visitas concluídas, fotos locais, documentos, despesas, orçamento e reservas. Se uma edição local tornaria um registro inválido ao combinar horários, esse registro é mantido integralmente. A atualização não se repete nem duplica despesas. Backups da revisão anterior recebem a mesma correção ao serem restaurados. Outras revisões ou dados sem revisão não são substituídos automaticamente.
-
-Os horários de funcionamento e links já fornecidos no planejamento anterior são mantidos como referência e identificados para reconferência; não houve consulta de disponibilidade. Preços continuam €107 para seis ingressos e €441,81–481,81 com alimentação, sem hotel e guias.
-
 ## Usar o roteiro
 
 - As abas mostram apenas data e dia da semana. Os horários da linha do tempo têm maior destaque. Fotos de locais de visitação são arquivos locais (créditos e licenças em `public/images/CREDITS.md`) e os horários de funcionamento fornecidos aparecem também na lista; dados ausentes são indicados sem suposição.
 
-- Entre 20 e 23/11/2026, abrir **Roteiro** seleciona o dia atual pelo calendário de Atenas, inclusive ao virar a meia-noite com a tela aberta. As abas, o calendário, os cartões do início e os links diretos continuam permitindo escolher outro dia.
+- Entre 20 e 26/11/2026, abrir **Roteiro** seleciona o dia atual pelo calendário local em Atenas ou Roma, inclusive ao virar a meia-noite com a tela aberta. As abas, o calendário, os cartões do início e os links diretos continuam permitindo escolher outro dia.
 - A linha dos horários preenche em azul conforme o tempo passa, respeitando os fusos de cada etapa na Itália e em Atenas. **Agora** indica o trecho atual; horários futuros permanecem sem preenchimento e dias passados aparecem preenchidos. O avanço funciona offline e não marca visitas como concluídas: essa confirmação continua manual.
 - Toque em qualquer atividade da linha do tempo para abrir **Detalhes**: fotografia local quando disponível, preço e sua natureza, programação, funcionamento, duração, transporte, links e observações. Nenhuma avaliação turística ou foto de outro local é criada para preencher campos ausentes.
 - Use o coração para favoritar e o filtro **Favoritos** para ver os salvos no dia selecionado. Favoritos, visitas concluídas e edições ficam no IndexedDB e também são incluídos nos backups. Backups anteriores sem favoritos continuam compatíveis.
@@ -83,7 +75,11 @@ Em bash: `VITE_BASE_PATH=/outro-repositorio/ npm run build` (use a mesma variáv
 2. Toque em **Instalar app** (ícone de download no celular). Se a instalação direta não estiver disponível, use o menu ⋮ do Chrome → **Adicionar à tela inicial / Instalar aplicativo**.
 3. Abra novamente o app, desligue a conexão e confira roteiro, gastos, checklist e arquivos adicionados.
 
-O Workbox pré-armazena HTML, JavaScript, CSS e ícones no escopo do aplicativo. As telas offline usam fontes e fotos locais. O mapa online carrega imagens externas do OpenStreetMap; elas não são pré-armazenadas pelo service worker. Documentos e fotografias são blobs locais em IndexedDB. Uma atualização de código é oferecida ao usuário; finalize os formulários antes de atualizar. Dados locais não são substituídos por uma atualização.
+Para abrir os ingressos do telefone, vá em **Mais → Documentos → Escolher pasta Viagem** e autorize a leitura de **Armazenamento interno → Documents → Viagem** no seletor do Android. Os PDFs da pasta e das subpastas aparecem na lista. Toque no nome de um PDF para abrir o arquivo original, inclusive offline. O app guarda no navegador somente a referência à pasta. Se o Chrome pedir acesso ao voltar ao app, use **Autorizar acesso à pasta**.
+
+O botão **Adicionar arquivo** permite guardar cópias locais de documentos selecionados. A reimportação de um arquivo com o mesmo nome e conteúdo preserva as referências e a categoria do documento guardado.
+
+O Workbox pré-armazena HTML, JavaScript, CSS e ícones no escopo do aplicativo. As telas offline usam fontes e fotos locais. O mapa online carrega imagens externas do OpenStreetMap; elas não são pré-armazenadas pelo service worker. As cópias salvas pelo botão **Adicionar arquivo** ficam no IndexedDB. Os PDFs de uma pasta autorizada são lidos quando você abre o arquivo. Uma atualização de código é oferecida ao usuário; finalize os formulários antes de atualizar. Dados locais não são substituídos por uma atualização.
 
 Google Maps, compra de ingressos e sites externos precisam de internet. O app não guarda mapas nem calcula rotas. Os links do Google Maps podem abrir o aplicativo Android conforme a configuração do aparelho. Sem endereço, o link não é criado. O indicador de conexão reflete o estado informado pelo navegador, sem garantir acesso a serviços externos.
 
@@ -97,7 +93,7 @@ Google Maps, compra de ingressos e sites externos precisam de internet. O app n�
 
 ## Dados locais e privacidade
 
-IndexedDB `atenas-2026` guarda o estado da viagem e os arquivos. Um banco independente, `atenas-weather`, guarda somente o último boletim meteorológico validado; esse cache descartável não entra nos backups da viagem. LocalStorage guarda **somente o tema**. SessionStorage guarda temporariamente o dia escolhido no dashboard. Não há analytics, transmissão de documentos, sincronização ou armazenamento remoto.
+IndexedDB `atenas-2026` guarda o estado da viagem e as cópias de arquivos. O banco `atenas-pdf-folder` guarda a referência à pasta autorizada. O banco `atenas-weather` guarda o último boletim meteorológico validado. A referência à pasta e o cache meteorológico ficam neste aparelho, fora dos backups da viagem. LocalStorage guarda **somente o tema**. SessionStorage guarda temporariamente o dia escolhido no dashboard. Não há analytics, transmissão de documentos, sincronização ou armazenamento remoto.
 
 Arquivos aceitos: PDF, PNG, JPEG e WebP, incluindo imagens/PDF com códigos QR. Limite por arquivo: 10 MB; documentos totais: 50 MB e 100 arquivos, sujeito à cota do navegador. O tipo e a assinatura básica são verificados; isso não é análise antivírus. O leitor de PDF depende do navegador; há download para abrir num leitor local. QR é visualizado como imagem/PDF, sem geração ou leitura automática.
 
@@ -118,11 +114,11 @@ Não existem backups automáticos nem envio a servidores. A escolha do local do 
 
 ## Cronograma recebido e instalações anteriores
 
-Consulte [docs/CRONOGRAMA.md](docs/CRONOGRAMA.md). A transcrição está em `src/data/itinerary-activities.json`; os detalhes, preços e demais módulos em `src/data/itinerary.ts`. `src/data/initial.ts` fornece o plano para novas instalações. Os contratos ficam em `src/data/schema.ts`. Campos ausentes são vazios ou `null`. Fusos Itália/Atenas, preços consultados, estimativas e horários propostos são explícitos. Não coloque códigos de reservas, comprovantes ou documentos privados nesses arquivos públicos.
+Consulte [docs/CRONOGRAMA.md](docs/CRONOGRAMA.md). As atividades estão em `src/data/itineraryActivities.ts` e os demais dados iniciais em `src/data/itinerary.ts`. `src/data/initial.ts` fornece o plano para novas instalações. Os contratos ficam em `src/data/schema.ts`. Campos ausentes são vazios ou `null`. Fusos Itália/Atenas, preços consultados, estimativas e horários propostos são explícitos. Não coloque códigos de reservas, comprovantes ou documentos privados nesses arquivos públicos.
 
-A revisão conhecida anterior recebe a correção automaticamente, conforme a seção Correção do cronograma. Para estados ainda sem cronograma ou de outra revisão, use **Incorporar cronograma** no aviso do aplicativo. A incorporação acrescenta o plano uma vez, mantém atividades já existentes com o mesmo ID ou nome/dia, preserva orçamento, arquivos, reservas, hotel já informado e campos já preenchidos. As despesas previstas ficam desmarcadas por padrão quando já houver gastos locais, para evitar duplicidade. Faça um backup antes e revise eventuais sobreposições. Restaurar backup continua sendo uma operação separada de substituição integral.
+As revisões anteriores conhecidas recebem a atualização automaticamente. Para estados ainda sem cronograma ou de outra revisão, use **Incorporar cronograma** no aviso do aplicativo. A incorporação acrescenta o plano uma vez, mantém atividades já existentes com o mesmo ID ou nome/dia, preserva orçamento, arquivos, reservas, hotel já informado e campos já preenchidos. As despesas previstas ficam desmarcadas por padrão quando já houver gastos locais, para evitar duplicidade. Faça um backup antes e revise eventuais sobreposições. Restaurar backup continua sendo uma operação separada de substituição integral.
 
-O total original sem hotel, alimentação e guias é €361,81; ingressos somam €107. Alimentação é uma única previsão global de €80–120, sem adicionar novamente cada refeição. Hotel por três noites e dois guias têm valor a confirmar. Não há preço de hotel ou guia presumido. Ao registrar gastos realizados, ajuste/substitua as previsões correspondentes. A captura do anúncio da Booking.com permanece fora do Git e não comprova reserva, preço final ou café incluído.
+Os gastos e estimativas atuais estão no [cronograma](docs/CRONOGRAMA.md) e na aba **Gastos**. Ao registrar gastos realizados, ajuste as previsões correspondentes.
 
 ## Estrutura
 
@@ -145,7 +141,7 @@ vite.config.ts               # Base path, PWA, cache e escopo
 
 ## Limites conhecidos
 
-Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. O mapa online depende da disponibilidade dos tiles OpenStreetMap, e os cards continuam utilizáveis em caso de falha. A contagem até a partida permanece em dias de calendário de Atenas. A próxima atividade e conflitos convertem os horários locais usando os fusos IANA Europe/Rome e Europe/Athens; o aparelho pode estar em outro fuso. Intervalos que cruzam meia-noite devem ser divididos por dia. A detecção não infere deslocamentos. A correção elimina a sobreposição do check-in de sexta; o roteiro padrão não apresenta sobreposições detectadas. A escavação de domingo deve ser coordenada com o operador e não tem um bloco extra garantido após o guia. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
+Não há sincronização entre dispositivos, criptografia de backup, OCR, leitura automática de QR, mapas offline ou cálculo de deslocamentos. O mapa online depende da disponibilidade dos tiles OpenStreetMap, e os cards continuam utilizáveis em caso de falha. A contagem até a partida permanece em dias de calendário de Atenas. A próxima atividade e conflitos convertem os horários locais usando os fusos IANA Europe/Rome e Europe/Athens; o aparelho pode estar em outro fuso. Intervalos que cruzam meia-noite devem ser divididos por dia. A detecção não infere deslocamentos. O roteiro padrão está organizado sem sobreposições de horários. Despesas podem ser registradas fora das datas do roteiro, inclusive compras antecipadas. Interface e cache exigem navegadores modernos com IndexedDB e service workers (HTTPS ou localhost).
 
 Implementação alinhada à [documentação do Vite PWA](https://vite-pwa-org.netlify.app/guide/), à [integração Tailwind/Vite](https://tailwindcss.com/docs/installation/using-vite) e ao [workflow oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 

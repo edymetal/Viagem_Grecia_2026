@@ -9,9 +9,9 @@ export const dateLabel = (
   new Intl.DateTimeFormat('pt-BR', { ...options, timeZone: 'Europe/Athens' }).format(
     new Date(`${date}T12:00:00Z`),
   );
-export function athensNow(now = new Date()) {
+function localNow(now: Date, timeZone: 'Europe/Athens' | 'Europe/Rome') {
   const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Athens',
+    timeZone,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -24,6 +24,15 @@ export function athensNow(now = new Date()) {
     date: `${get('year')}-${get('month')}-${get('day')}`,
     time: `${get('hour')}:${get('minute')}`,
   };
+}
+export function athensNow(now = new Date()) {
+  return localNow(now, 'Europe/Athens');
+}
+export function tripNow(now = new Date()) {
+  const italy = localNow(now, 'Europe/Rome');
+  return italy.date >= '2026-11-24' || (italy.date === '2026-11-23' && italy.time >= '13:55')
+    ? italy
+    : athensNow(now);
 }
 export function countdown(now = new Date()) {
   return Math.ceil(
@@ -42,8 +51,10 @@ export function nextActivity(activities: Activity[], now = new Date()) {
     )
     .sort((a, b) => activityInstant(a) - activityInstant(b))[0];
 }
-export function zoneLabel(a: Activity) {
-  return a.timeZone === 'Europe/Rome' ? 'Itália' : 'Atenas';
+export function zoneLabel(a: Activity, part: 'start' | 'end' = 'start') {
+  return (part === 'end' ? (a.endTimeZone ?? a.timeZone) : a.timeZone) === 'Europe/Rome'
+    ? 'Itália'
+    : 'Atenas';
 }
 export function mapDestination(a: Activity) {
   return a.address || a.location || a.transport.destination;
@@ -54,7 +65,7 @@ export function activityInstant(a: Activity, part: 'start' | 'end' = 'start') {
   if (!time) return NaN;
   const guess = Date.parse(`${a.date}T${time}:00Z`);
   const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: a.timeZone || 'Europe/Athens',
+    timeZone: (part === 'end' ? (a.endTimeZone ?? a.timeZone) : a.timeZone) || 'Europe/Athens',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -115,7 +126,11 @@ export function totals(state: AppState) {
         : (Math.round(state.budget * 100) - Math.round(actual * 100)) / 100,
   };
 }
-export function mapsLink(destination: string, mode?: 'walking' | 'transit', origin?: string) {
+export function mapsLink(
+  destination: string,
+  mode?: 'walking' | 'transit' | 'driving',
+  origin?: string,
+) {
   const params = new URLSearchParams({ api: '1' });
   if (!mode) {
     params.set('query', destination);

@@ -1,13 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { correctItinerary, previousItinerary } from '../src/lib/itinerary';
-import { suppliedItinerary, ITINERARY_REVISION } from '../src/data/itinerary';
+import {
+  correctAthensItinerary,
+  correctedAthensItinerary,
+  correctItinerary,
+  previousItinerary,
+} from '../src/lib/itinerary';
+import { suppliedItinerary } from '../src/data/itinerary';
 import { emptyActivity } from '../src/data/factories';
 import { conflicts, plannedRange, totals } from '../src/lib/domain';
 import { stateSchema } from '../src/data/schema';
+import beforeParking from '../src/data/itinerary-before-parking.json' with { type: 'json' };
+import beforeReturn from '../src/data/itinerary-before-return-confirmation.json' with { type: 'json' };
 
 describe('correção enviada com acessos, saídas e margens', () => {
   it('transcreve horários corrigidos e não cria uma visita extra depois do museu', () => {
-    const s = suppliedItinerary();
+    const s = correctedAthensItinerary();
     for (const [id, start, end] of [
       ['plan-1-11', '19:20', '19:35'],
       ['plan-1-12', '19:35', '20:45'],
@@ -58,12 +65,12 @@ describe('correção enviada com acessos, saídas e margens', () => {
 
   it('atualiza os 60 registros antigos e insere 29 etapas uma única vez', () => {
     const before = previousItinerary();
-    const corrected = correctItinerary(before);
-    expect(corrected.activities).toEqual(suppliedItinerary().activities);
+    const corrected = correctAthensItinerary(before);
+    expect(corrected.activities).toEqual(correctedAthensItinerary().activities);
     expect(corrected.activities).toHaveLength(89);
-    expect(corrected.itineraryRevision).toBe(ITINERARY_REVISION);
+    expect(corrected.itineraryRevision).toBe(correctedAthensItinerary().itineraryRevision);
     expect(before.activities).toHaveLength(60);
-    expect(correctItinerary(corrected)).toBe(corrected);
+    expect(correctAthensItinerary(corrected)).toBe(corrected);
     expect(plannedRange(corrected)).toEqual({ min: 441.81, max: 481.81 });
     expect(totals(corrected).actual).toBe(0);
   });
@@ -91,7 +98,7 @@ describe('correção enviada com acessos, saídas e margens', () => {
       documentId: 'local-doc',
     });
     current.checklist[6].done = true;
-    const next = correctItinerary(current);
+    const next = correctAthensItinerary(current);
     expect(next.activities.find((a) => a.id === visit.id)).toMatchObject({
       end: '09:35',
       notes: visit.notes,
@@ -120,7 +127,7 @@ describe('correção enviada com acessos, saídas e margens', () => {
     const extra = { ...emptyActivity('2026-11-21'), title: 'Atividade particular' };
     current.activities.splice(x + 1, 0, extra);
     const ids = current.activities.map((a) => a.id);
-    const next = correctItinerary(current);
+    const next = correctAthensItinerary(current);
     expect(next.activities.some((a) => a.id === 'plan-2-08')).toBe(false);
     expect(next.activities.filter((a) => ids.includes(a.id)).map((a) => a.id)).toEqual(ids);
     expect(next.activities.find((a) => a.id === extra.id)).toEqual(extra);
@@ -133,7 +140,7 @@ describe('correção enviada com acessos, saídas e margens', () => {
     const walk = current.activities.find((a) => a.id === 'plan-2-04')!;
     walk.transport.minutesMax = 26; // Local range conflicts with the new 30-minute stage.
     expect(stateSchema.safeParse(current).success).toBe(true);
-    const next = correctItinerary(current);
+    const next = correctAthensItinerary(current);
     expect(stateSchema.safeParse(next).success).toBe(true);
     expect(next.activities.find((a) => a.id === visit.id)).toEqual(visit);
     expect(next.activities.find((a) => a.id === walk.id)).toEqual(walk);
@@ -142,8 +149,139 @@ describe('correção enviada com acessos, saídas e margens', () => {
   it('não altera revisões desconhecidas nem estados pessoais sem cronograma', () => {
     const current = previousItinerary();
     delete current.itineraryRevision;
-    expect(correctItinerary(current)).toBe(current);
+    expect(correctAthensItinerary(current)).toBe(current);
     current.itineraryRevision = 'revisao-desconhecida';
-    expect(correctItinerary(current)).toBe(current);
+    expect(correctAthensItinerary(current)).toBe(current);
+  });
+});
+
+describe('atualização para Atenas e Roma', () => {
+  it('confirma o P1 na revisão de Roma e aproveita uma despesa manual sem duplicar o valor', () => {
+    const baseline = suppliedItinerary();
+    const parking = baseline.expenses.find((e) => e.id === 'plan-exp-parking')!;
+    const prior = stateSchema.parse({
+      ...baseline,
+      itineraryRevision: beforeParking.itineraryRevision,
+      activities: baseline.activities.map(
+        (a) => beforeParking.activities.find((old) => old.id === a.id) ?? a,
+      ),
+      checklist: baseline.checklist.map(
+        (item) => beforeParking.checklist.find((old) => old.id === item.id) ?? item,
+      ),
+      expenses: baseline.expenses.filter((e) => e.id !== parking.id),
+    });
+    prior.activities.find((a) => a.id === 'nov-20-parking')!.notes = 'Minha nota de estacionamento';
+    const saved = correctItinerary(prior);
+    expect(saved.activities.map((a) => a.id)).toEqual(prior.activities.map((a) => a.id));
+    expect(saved.activities.find((a) => a.id === 'nov-20-parking')).toMatchObject({
+      confirmation: 'Confirmada',
+      notes: 'Minha nota de estacionamento',
+    });
+    expect(saved.checklist.find((item) => item.id === 'trip-check-parking')?.done).toBe(true);
+    expect(saved.expenses.filter((e) => e.id === parking.id)).toEqual([parking]);
+    expect(correctItinerary(saved)).toBe(saved);
+
+    prior.expenses.push({
+      ...parking,
+      id: 'local-p1',
+      title: 'P1 Lunga Sosta',
+      status: 'Previsto',
+      paid: false,
+      amount: 50,
+      amountMax: 70,
+      notes: 'Minha previsão',
+    });
+    const withManualExpense = correctItinerary(prior);
+    expect(withManualExpense.expenses.find((e) => e.id === 'local-p1')).toMatchObject({
+      amount: 65,
+      amountMax: undefined,
+      status: 'Realizado',
+      paid: true,
+      notes: 'Minha previsão',
+    });
+    expect(withManualExpense.expenses.some((e) => e.id === parking.id)).toBe(false);
+    expect(totals(withManualExpense).actual).toBe(694.04);
+  });
+
+  it('confirma o FR3946 em dados salvos sem duplicar a passagem nem apagar notas', () => {
+    const plan = suppliedItinerary();
+    const payment = plan.expenses.find((e) => e.id === 'plan-exp-ryanair')!;
+    const prior = stateSchema.parse({
+      ...plan,
+      itineraryRevision: beforeReturn.itineraryRevision,
+      activities: plan.activities.map(
+        (activity) => beforeReturn.activities.find((old) => old.id === activity.id) ?? activity,
+      ),
+      flights: plan.flights.map(
+        (flight) => beforeReturn.flights.find((old) => old.id === flight.id) ?? flight,
+      ),
+      days: plan.days.map((day) => beforeReturn.days.find((old) => old.date === day.date) ?? day),
+      checklist: plan.checklist.map(
+        (item) => beforeReturn.checklist.find((old) => old.id === item.id) ?? item,
+      ),
+      expenses: plan.expenses.filter((item) => item.id !== payment.id),
+    });
+    prior.activities.find((activity) => activity.id === 'nov-26-flight')!.notes =
+      'Minha nota para o voo';
+    prior.expenses.push({
+      ...payment,
+      id: 'local-fr3946',
+      title: 'FR 3946',
+      paid: false,
+      status: 'Previsto',
+      amount: 70,
+    });
+    const updated = correctItinerary(prior);
+    expect(updated.activities.find((activity) => activity.id === 'nov-26-flight')).toMatchObject({
+      timeCertainty: 'Confirmado',
+      notes: 'Minha nota para o voo',
+    });
+    expect(updated.flights).toEqual(plan.flights);
+    expect(updated.days).toEqual(plan.days);
+    expect(updated.checklist).toEqual(plan.checklist);
+    expect(updated.expenses.find((expense) => expense.id === 'local-fr3946')).toMatchObject({
+      amount: 64.89,
+      paid: true,
+      status: 'Realizado',
+    });
+    expect(updated.expenses.some((expense) => expense.id === payment.id)).toBe(false);
+    expect(totals(updated).actual).toBe(694.04);
+    expect(correctItinerary(updated)).toBe(updated);
+  });
+
+  it('migra backups de quatro dias das duas revisões conhecidas', () => {
+    for (const old of [previousItinerary(), correctedAthensItinerary()]) {
+      const parsed = stateSchema.parse({ ...old, days: old.days.slice(0, 4) });
+      const upgraded = correctItinerary(parsed);
+      const plan = suppliedItinerary();
+      expect(upgraded.activities).toEqual(plan.activities);
+      expect(upgraded.expenses).toEqual(plan.expenses);
+      expect(upgraded.days).toEqual(plan.days);
+      expect(upgraded.romeHotel).toEqual(plan.romeHotel);
+      expect(correctItinerary(upgraded)).toBe(upgraded);
+    }
+  });
+
+  it('move a Biblioteca para domingo mantendo a nota e conserva despesas pagas localmente', () => {
+    const before = correctedAthensItinerary();
+    const library = before.activities.find((a) => a.id === 'plan-2-03')!;
+    library.notes = 'Minha nota local';
+    library.photoDocumentId = 'foto-particular';
+    library.favorite = true;
+    const airfare = before.expenses.find((e) => e.id === 'plan-exp-flights')!;
+    airfare.paid = true;
+    airfare.status = 'Realizado';
+    const updated = correctItinerary(before);
+    expect(updated.activities.find((a) => a.id === library.id)).toMatchObject({
+      date: '2026-11-22',
+      start: '09:05',
+      notes: library.notes,
+      photoDocumentId: library.photoDocumentId,
+      favorite: true,
+    });
+    expect(updated.expenses.filter((e) => e.category === 'Passagens aéreas')).toEqual([
+      airfare,
+      suppliedItinerary().expenses.find((e) => e.id === 'plan-exp-ryanair'),
+    ]);
   });
 });

@@ -34,6 +34,7 @@ export function emptyActivity(date: Activity['date']): Activity {
     title: '',
     start: '',
     end: '',
+    ...(date >= '2026-11-24' ? { timeZone: 'Europe/Rome' as const } : {}),
     description: '',
     address: '',
     price: null,
