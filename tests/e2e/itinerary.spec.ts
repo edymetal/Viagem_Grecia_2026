@@ -22,9 +22,11 @@ test('o cronograma de Atenas e Roma fica acessível offline', async ({ page, con
     'Pendente',
   );
   await page.goto('./#gastos');
-  await expect(page.locator('.trip-total-value')).toContainText('694,04');
-  await expect(page.locator('.planned-range')).toContainText('430,55');
-  await expect(page.locator('.planned-range')).toContainText('460,55');
+  await expect(page.locator('.trip-total-value')).toContainText('969,59');
+  await expect(page.locator('.planned-range:not(.projected-range)')).toContainText('359,70');
+  await expect(page.locator('.planned-range:not(.projected-range)')).toContainText('497,70');
+  await expect(page.locator('.projected-range')).toContainText('1.329,29');
+  await expect(page.locator('.projected-range')).toContainText('1.467,29');
   await expect(page.locator('.balance strong')).toHaveText('—');
   await page.goto('./#hotel');
   await expect(page.getByRole('heading', { name: 'Ilissos Hotel', exact: true })).toBeVisible();

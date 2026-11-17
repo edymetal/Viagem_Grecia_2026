@@ -246,12 +246,12 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
           className={`trip-total-card ${exceeded ? 'budget-exceeded' : ''}`}
           aria-label="Resumo dos gastos realizados"
         >
-          <h2>Total da viagem</h2>
+          <h2>Gastos realizados</h2>
           <div className="trip-total-value">
             <Coins size={34} />
             <strong>{euro(total.actual)}</strong>
           </div>
-          <p>Gastos realizados</p>
+          <p>{euro(total.paid)} pagos</p>
           <progress
             className="budget-progress"
             max={100}
@@ -324,9 +324,14 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
             <strong>{state.budget === null ? 'A definir' : euro(state.budget)}</strong>
           </section>
           <section className="card stat">
-            <span>Gastos realizados</span>
-            <strong>{euro(total.actual)}</strong>
-            <small>{euro(total.paid)} marcados como pagos</small>
+            <span>Total projetado da viagem</span>
+            <strong className="planned-range projected-range">
+              {moneyRange(
+                Math.round((total.actual + planned.min) * 100) / 100,
+                Math.round((total.actual + planned.max) * 100) / 100,
+              )}
+            </strong>
+            <small>Gastos realizados mais despesas previstas</small>
           </section>
           <section className="card stat">
             <span>Gastos previstos</span>
@@ -353,19 +358,10 @@ export function Expenses({ store, now }: { store: TravelStore; now: Date }) {
         </p>
         {state.itineraryRevision && (
           <details className="notice finance-reference">
-            <summary>Referência do cronograma recebido · valores incompletos</summary>
+            <summary>Como atualizar as previsões</summary>
             <p>
-              Subtotal fornecido: €361,81 sem hotel, alimentação e guias. Alimentação global:
-              €80–120. Com alimentação: €441,81–481,81, ainda sem hotel e dois guias.{' '}
-              {state.budget === null
-                ? 'O orçamento total permanece a definir.'
-                : 'O orçamento definido por você aparece no resumo acima.'}
-            </p>
-            <p>
-              Hotel por três noites e os dois guias ainda têm valor a confirmar; não foram lançados
-              como despesas. As refeições do roteiro e os trajetos cobertos pelo passe não geram
-              despesas extras automaticamente. Ao registrar gastos reais, ajuste as previsões
-              correspondentes para evitar duplicidade.
+              Quando pagar uma despesa prevista, abra o lançamento e informe o valor final. Marque o
+              gasto como realizado e pago para atualizar o total.
             </p>
           </details>
         )}

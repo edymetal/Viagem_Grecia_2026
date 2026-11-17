@@ -65,13 +65,13 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
 
   it('preserva valores informados sem somar entradas do tour combinado em duplicidade', () => {
     const s = suppliedItinerary();
-    expect(s.expenses).toHaveLength(23);
+    expect(s.expenses).toHaveLength(37);
     expect(s.expenses.filter((e) => e.id.includes('acropolis')).map((e) => e.amount)).toEqual([
       110,
     ]);
-    expect(plannedRange(s)).toEqual({ min: 430.55, max: 460.55 });
-    expect(totals(s).paid).toBe(694.04);
-    expect(totals(s).actual).toBe(694.04);
+    expect(plannedRange(s)).toEqual({ min: 359.70, max: 497.70 });
+    expect(totals(s).paid).toBe(969.59);
+    expect(totals(s).actual).toBe(969.59);
     expect(s.expenses.find((e) => e.id === 'plan-exp-ryanair')).toMatchObject({
       amount: 64.89,
       paid: true,
@@ -90,7 +90,12 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
     });
     expect(s.checklist.find((item) => item.id === 'trip-check-parking')?.done).toBe(true);
     expect(s.expenses.find((e) => e.id === 'plan-exp-ciao')).toMatchObject({
-      amount: 224.55,
+      amount: 206.55,
+      paid: true,
+      status: 'Realizado',
+    });
+    expect(s.expenses.find((e) => e.id === 'plan-exp-ciao-tax')).toMatchObject({
+      amount: 18,
       paid: false,
       status: 'Previsto',
     });

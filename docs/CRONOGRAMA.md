@@ -18,16 +18,75 @@ O **Ryanair FR3946** de 26/11, de **Roma Fiumicino (FCO)** a **Palermo (PMO)**, 
 
 O checklist acompanha transportes, ingressos, confirmações de horários e valores. O horário do free tour depende da comunicação do fornecedor.
 
-Os gastos realizados informados somam € 694,04. As previsões com valores somam € 430,55–460,55. O total ainda é parcial. Pedágio, combustível e algumas refeições estão sem valor informado. Funicular do Licabeto e passe urbano de Roma são opcionais. O valor indicado do Ciao Termini e o preço anunciado do tour do Vaticano entram como previsão até conferência de pagamento.
+## Gastos revisados em 18/11/2026
+
+**Já pago: € 969,59. A pagar ou previsto: € 359,70–497,70. Total projetado: € 1.329,29–1.467,29**, para uma pessoa. A projeção usa cinco bilhetes BIT em Roma e inclui refeições e gasolina como estimativas. O funicular do Licabeto acrescenta € 13 ida e volta, ou € 10 por trecho. Trocar os cinco bilhetes BIT pelo Roma 72H acrescenta € 14,50 à projeção.
+
+| Categoria | Pago | A pagar ou previsto |
+| --- | ---: | ---: |
+| Voos | € 307,95 | — |
+| Hospedagem e taxas locais | € 342,22 | € 27,00 |
+| Transporte terrestre | € 65,00 | € 89,70–97,70 |
+| Ingressos | € 75,42 | € 27,00–29,00 |
+| Passeios e guias | € 179,00 | € 18,00–23,00 |
+| Alimentação | — | € 198,00–321,00 |
+| **Total** | **€ 969,59** | **€ 359,70–497,70** |
+
+| Pagamento conferido | Valor |
+| --- | ---: |
+| ITA Palermo → Atenas via Fiumicino, com os dois trechos na mesma passagem | € 108,62 |
+| ITA Atenas → Roma | € 134,44 |
+| Ryanair Roma → Palermo | € 64,89 |
+| Ilissos Hotel, Atenas | € 135,67 |
+| Ciao Termini, Roma | € 206,55 |
+| Estacionamento P1 Lunga Sosta | € 65,00 |
+| Tour da Acrópole e do Museu, com entradas | € 110,00 |
+| Museu Kotsanas, com € 0,42 de taxa incluída | € 7,42 |
+| Biblioteca de Adriano | € 10,00 |
+| Templo de Zeus | € 20,00 |
+| Ágora Antiga | € 20,00 |
+| Galleria Borghese | € 18,00 |
+| Tour do Vaticano em italiano | € 69,00 |
+| **Total pago** | **€ 969,59** |
+
+A Booking.com confirmou € 206,55 pagos pelo Ciao Termini e € 18 de taxa municipal a pagar no local (€ 6 × 3 noites). Os € 224,55 incluem os dois componentes. O e-mail da GetYourGuide confirma os € 69 do Vaticano. Os demais valores pagos foram cruzados com os PDFs da viagem.
+
+| A pagar ou previsto | Valor |
+| --- | ---: |
+| Taxa ambiental do Ilissos e taxa municipal do Ciao Termini | € 9,00 + € 18,00 |
+| Passe de Atenas de 72h, com ida e volta ao aeroporto | € 20,00 |
+| Leonardo Express, dois trechos de € 14 | € 28,00 |
+| Metrô de Roma, cinco viagens BIT de € 1,50 | € 7,50 |
+| Pedágio A20 classe A, dois trechos de € 3,10 | € 6,20 |
+| Gasolina para aproximadamente 260 km na Sicília | € 28,00–36,00 |
+| Free tour em Atenas, contribuição voluntária sugerida no voucher | € 10,00–15,00 |
+| Vicus Caprarius com guia, reserva a confirmar | € 8,00 |
+| GAMM, promoção de terça-feira | € 10,00 |
+| Planetário, duas sessões na bilheteria ou em pré-venda | € 17,00–19,00 |
+| Alimentação | € 198,00–321,00 |
+
+| Dia | Alimentação estimada |
+| --- | ---: |
+| 20/11 · Lanche de viagem e jantar em Atenas | € 20–35 |
+| 21/11 · Almoço e jantar em Atenas | € 30–50 |
+| 22/11 · Almoço e jantar em Atenas | € 30–50 |
+| 23/11 · Almoço de viagem e jantar em Roma | € 25–40 |
+| 24/11 · Café, McDonald’s e Empório Brasileiro | € 33–49 |
+| 25/11 · Café, Burger King, açaí e Churrascaria dos Amigos | € 46–72 |
+| 26/11 · Café e almoço de viagem | € 14–25 |
+
+Os cafés da manhã de 21 a 23/11 estão incluídos no Ilissos. A estimativa da Churrascaria dos Amigos é de € 25–40, com disponibilidade e preço da feijoada a confirmar. A gasolina considera consumo estimado de 5,5–7,0 L/100 km e a média regional da gasolina self de cerca de € 1,96/L. Táxis, compras pessoais e extras de bagagem ficam fora da projeção.
 
 ## Fontes públicas verificadas
 
 - [OASA · passe turístico de Atenas](https://www.oasa.gr/en/tickets/prices-of-products/)
 - [Trenitalia · Leonardo Express](https://www.trenitalia.com/it/regionale/collegamenti-regionale/leonardo-express.html) e [avisos de serviço](https://www.trenitalia.com/it/informazioni/Infomobilita/notizie-infomobilita.html)
-- [ATAC · Roma 72H](https://www.atac.roma.it/biglietti-e-abbonamenti/roma72h)
+- [ATAC · bilhete BIT](https://www.atac.roma.it/biglietti-e-abbonamenti/bit) e [Roma 72H](https://www.atac.roma.it/biglietti-e-abbonamenti/roma72h)
+- [Autostrade Siciliane · pedágios A20 de 2026](https://www.autostradesiciliane.it/files/upload/PortaleNews/allegati/a20%20tariffe%201%20gen%202026.pdf) e [MIMIT · preços médios de combustível](https://www.mimit.gov.it/it/prezzo-medio-carburanti/regioni)
 - [Vicus Caprarius · visita e tarifas](https://www.vicuscaprarius.com/faq/)
 - [GAMM · bilheteria](https://www.gammuseum.com/new/biglietteria/)
 - [Planetário de Roma · programa de novembro](https://www.planetarioroma.it/it/mostra-evento/programmazione-del-planetario-dal-1-al-29-novembre) e [tarifas](https://www.planetarioroma.it/informazioni_pratiche/biglietti)
+- [Monte Licabeto · funicular](https://www.lycabettushill.com/cable-car/)
 
 ## Dados locais e backups
 

@@ -16,6 +16,7 @@ import previousData from '../data/itinerary-previous.json' with { type: 'json' }
 import correctedAthensData from '../data/itinerary-athens-corrected.json' with { type: 'json' };
 import beforeParkingData from '../data/itinerary-before-parking.json' with { type: 'json' };
 import beforeReturnData from '../data/itinerary-before-return-confirmation.json' with { type: 'json' };
+import beforeExpenseReview from '../data/itinerary-before-expense-review.json' with { type: 'json' };
 
 // This snapshot contains only the public plan shipped with revision 1, never user data.
 export const previousItinerary = () => stateSchema.parse(previousData);
@@ -163,7 +164,7 @@ function applyRomeUpdate(
   const payment = plan.expenses.find((item) => item.id === paymentId)!;
   return stateSchema.parse({
     ...local,
-    itineraryRevision: ITINERARY_REVISION,
+    itineraryRevision: beforeExpenseReview.itineraryRevision,
     activities: reviseRecords(local.activities, activities, revised, mergeActivity),
     flights: flights.length
       ? reviseRecords(
@@ -233,20 +234,118 @@ function reviseRecords<T extends { id: string }>(
   return result;
 }
 
+function applyExpenseReview(local: AppState, plan: AppState): AppState {
+  const baselineIds = new Set(beforeExpenseReview.expenseIds);
+  const hasPlanExpenses = local.expenses.some((item) => baselineIds.has(item.id));
+  const previous = beforeExpenseReview.expenses.map((item) => expenseSchema.parse(item));
+  const revised = plan.expenses.filter((item) => previous.some((old) => old.id === item.id));
+  const manualPayment = (item: Expense) =>
+    local.expenses.some(
+      (saved) =>
+        !baselineIds.has(saved.id) &&
+        saved.paid &&
+        saved.category === item.category &&
+        saved.amount === item.amount &&
+        (item.id === 'plan-exp-ciao'
+          ? /ciao termini/i.test(saved.title)
+          : item.id === 'plan-exp-vatican' && /vatican/i.test(saved.title)),
+    );
+  const expenses = local.expenses.flatMap((item) => {
+    const old = previous.find((record) => record.id === item.id);
+    const update = revised.find((record) => record.id === item.id);
+    if (!old || !update || item.paid || item.status === 'Realizado') return [item];
+    if (update.paid && item.amount !== old.amount && item.amount !== update.amount) return [item];
+    if (manualPayment(update) && item.amount === old.amount && item.amountMax == null) return [];
+    const merged = expenseSchema.safeParse(mergeUnchanged(item, old, update));
+    return [merged.success ? merged.data : item];
+  });
+  const room = revised.find((item) => item.id === 'plan-exp-ciao')!;
+  const isHotelTax = (item: Expense) =>
+    item.id === 'plan-exp-ciao-tax' ||
+    (item.category === 'Hotel' && /ciao termini/i.test(item.title) && /taxa|imposto|tassa/i.test(item.title));
+  const splitHotelTax =
+    !expenses.some((item) => item.id === room.id && item.amount === 224.55) &&
+    (expenses.some((item) => item.id === room.id && item.amount === room.amount) ||
+      manualPayment(room));
+  const newExpenses = plan.expenses.filter(
+    (item) =>
+      hasPlanExpenses &&
+      !baselineIds.has(item.id) &&
+      (item.id !== 'plan-exp-ciao-tax' || splitHotelTax) &&
+      !expenses.some(
+        (saved) =>
+          saved.id === item.id ||
+          (saved.category === item.category &&
+            saved.date === item.date &&
+            saved.title.toLocaleLowerCase('pt-BR') === item.title.toLocaleLowerCase('pt-BR')) ||
+          (item.id === 'plan-exp-ciao-tax' && isHotelTax(saved)),
+      ),
+  );
+  const activityFields = ({ description, price, priceMax, priceCertainty, website }: Activity) => ({
+    description,
+    price,
+    priceMax,
+    priceCertainty,
+    website,
+  });
+  return stateSchema.parse({
+    ...local,
+    itineraryRevision: ITINERARY_REVISION,
+    expenses: [...expenses, ...newExpenses],
+    activities: local.activities.map((item) => {
+      const old = beforeExpenseReview.activities.find((record) => record.id === item.id);
+      const update = plan.activities.find((record) => record.id === item.id);
+      if (!old || !update) return item;
+      const baseline = activitySchema.parse({ ...item, priceMax: undefined, ...old });
+      const merged = activitySchema.safeParse({
+        ...item,
+        ...mergeUnchanged(activityFields(item), activityFields(baseline), activityFields(update)),
+      });
+      return merged.success ? merged.data : item;
+    }),
+    checklist: local.checklist.map((item) => {
+      const old = beforeExpenseReview.checklist.find((record) => record.id === item.id);
+      const update = plan.checklist.find((record) => record.id === item.id);
+      if (!old || !update || item.title !== old.title) return item;
+      const done =
+        item.id === 'trip-check-ciao'
+          ? expenses.some((expense) => isHotelTax(expense) && expense.paid)
+          : item.done;
+      return { ...item, title: update.title, done };
+    }),
+    romeHotel:
+      local.romeHotel?.notes === beforeExpenseReview.romeHotelNotes
+        ? { ...local.romeHotel, notes: plan.romeHotel!.notes }
+        : local.romeHotel,
+    useful: mergeUnchanged(local.useful, {
+      ...local.useful,
+      personalNotes: beforeExpenseReview.personalNotes,
+      publicTransport: beforeExpenseReview.publicTransport,
+    }, {
+      ...local.useful,
+      personalNotes: plan.useful.personalNotes,
+      publicTransport: plan.useful.publicTransport,
+    }),
+  });
+}
+
 /** Apply each known revision in order, while allowing local records and edits to win. */
 export function correctItinerary(current: AppState): AppState {
+  if (current.itineraryRevision === beforeExpenseReview.itineraryRevision)
+    return applyExpenseReview(current, suppliedItinerary());
   if (current.itineraryRevision === beforeParkingData.itineraryRevision) {
     const plan = suppliedItinerary();
     const withParking = applyRomeUpdate(current, plan, beforeParkingData, PARKING_EXPENSE_ID);
-    return applyRomeUpdate(withParking, plan, beforeReturnData, RETURN_FLIGHT_EXPENSE_ID);
+    const withReturn = applyRomeUpdate(withParking, plan, beforeReturnData, RETURN_FLIGHT_EXPENSE_ID);
+    return applyExpenseReview(withReturn, plan);
   }
-  if (current.itineraryRevision === beforeReturnData.itineraryRevision)
-    return applyRomeUpdate(
-      current,
-      suppliedItinerary(),
-      beforeReturnData,
-      RETURN_FLIGHT_EXPENSE_ID,
+  if (current.itineraryRevision === beforeReturnData.itineraryRevision) {
+    const plan = suppliedItinerary();
+    return applyExpenseReview(
+      applyRomeUpdate(current, plan, beforeReturnData, RETURN_FLIGHT_EXPENSE_ID),
+      plan,
     );
+  }
   const local = correctAthensItinerary(current);
   if (local.itineraryRevision !== correctedAthensData.itineraryRevision) return local;
   const previous = correctedAthensItinerary();

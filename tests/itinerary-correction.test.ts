@@ -11,6 +11,7 @@ import { conflicts, plannedRange, totals } from '../src/lib/domain';
 import { stateSchema } from '../src/data/schema';
 import beforeParking from '../src/data/itinerary-before-parking.json' with { type: 'json' };
 import beforeReturn from '../src/data/itinerary-before-return-confirmation.json' with { type: 'json' };
+import beforeExpenseReview from '../src/data/itinerary-before-expense-review.json' with { type: 'json' };
 
 describe('correção enviada com acessos, saídas e margens', () => {
   it('transcreve horários corrigidos e não cria uma visita extra depois do museu', () => {
@@ -200,7 +201,7 @@ describe('atualização para Atenas e Roma', () => {
       notes: 'Minha previsão',
     });
     expect(withManualExpense.expenses.some((e) => e.id === parking.id)).toBe(false);
-    expect(totals(withManualExpense).actual).toBe(694.04);
+    expect(totals(withManualExpense).actual).toBe(969.59);
   });
 
   it('confirma o FR3946 em dados salvos sem duplicar a passagem nem apagar notas', () => {
@@ -245,7 +246,7 @@ describe('atualização para Atenas e Roma', () => {
       status: 'Realizado',
     });
     expect(updated.expenses.some((expense) => expense.id === payment.id)).toBe(false);
-    expect(totals(updated).actual).toBe(694.04);
+    expect(totals(updated).actual).toBe(969.59);
     expect(correctItinerary(updated)).toBe(updated);
   });
 
@@ -260,6 +261,41 @@ describe('atualização para Atenas e Roma', () => {
       expect(upgraded.romeHotel).toEqual(plan.romeHotel);
       expect(correctItinerary(upgraded)).toBe(upgraded);
     }
+  });
+
+  it('aplica os comprovantes e as previsões uma vez em instalações com o roteiro anterior', () => {
+    const plan = suppliedItinerary();
+    const prior = stateSchema.parse({
+      ...plan,
+      itineraryRevision: beforeExpenseReview.itineraryRevision,
+      expenses: plan.expenses
+        .filter((item) => beforeExpenseReview.expenseIds.includes(item.id))
+        .map((item) => beforeExpenseReview.expenses.find((old) => old.id === item.id) ?? item),
+    });
+    const room = prior.expenses.find((item) => item.id === 'plan-exp-ciao')!;
+    room.notes = 'Minha anotação de hospedagem';
+    prior.expenses.push({
+      ...plan.expenses.find((item) => item.id === 'plan-exp-vatican')!,
+      id: 'vaticano-local',
+      title: 'Vaticano',
+    });
+    const updated = correctItinerary(prior);
+    expect(updated.expenses.find((item) => item.id === room.id)).toMatchObject({
+      amount: 206.55,
+      paid: true,
+      notes: room.notes,
+    });
+    expect(updated.expenses.filter((item) => item.id === 'plan-exp-ciao-tax')).toHaveLength(1);
+    expect(updated.expenses.some((item) => item.id === 'plan-exp-vatican')).toBe(false);
+    expect(totals(updated).paid).toBe(969.59);
+    expect(correctItinerary(updated)).toBe(updated);
+
+    room.amount = 224.55;
+    room.paid = true;
+    room.status = 'Realizado';
+    const withHotelTotal = correctItinerary(prior);
+    expect(withHotelTotal.expenses.find((item) => item.id === room.id)).toEqual(room);
+    expect(withHotelTotal.expenses.some((item) => item.id === 'plan-exp-ciao-tax')).toBe(false);
   });
 
   it('move a Biblioteca para domingo mantendo a nota e conserva despesas pagas localmente', () => {

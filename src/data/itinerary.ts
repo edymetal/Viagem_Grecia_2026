@@ -8,7 +8,7 @@ import {
 } from './itineraryActivities';
 import { stateSchema, tripDates, type AppState, type Expense } from './schema';
 
-export const ITINERARY_REVISION = 'cronograma-2026-11-17-atenas-roma-retorno-confirmado';
+export const ITINERARY_REVISION = 'cronograma-2026-11-18-atenas-roma-gastos-revisados';
 const parkingKey = 'parking';
 const ryanairKey = 'ryanair';
 export const PARKING_EXPENSE_ID = 'plan-exp-' + parkingKey;
@@ -35,13 +35,13 @@ const checklist: [key: string, title: string, done?: boolean][] = [
     'Conferir horário e ponto de encontro do free tour de Atenas nas mensagens do fornecedor',
   ],
   ['leonardo', 'Comprar os dois bilhetes do Leonardo Express e conferir a partida de 26/11'],
-  ['rome-pass', 'Escolher entre o Roma 72H e bilhetes urbanos avulsos'],
+  ['rome-pass', 'Prever cinco bilhetes urbanos BIT de Roma (€ 7,50 no total)'],
   ['vicus', 'Confirmar com a secretaria o guia, horário e valor do Vicus Caprarius'],
-  ['gamm', 'Comprar o ingresso na bilheteria do GAMM e conferir a promoção de terça-feira'],
+  ['gamm', 'Comprar o ingresso do GAMM na terça-feira (€ 10 na bilheteria)'],
   ['planetarium', 'Conferir vagas e comprar os ingressos das duas sessões do Planetário'],
   ['dinner', 'Confirmar disponibilidade e preço da feijoada na Churrascaria dos Amigos'],
   [ryanairKey, 'Fazer o check-in da Ryanair e salvar o cartão de embarque do FR3946'],
-  ['ciao', 'Conferir o pagamento integral do Ciao Termini e o valor pago pelo tour do Vaticano'],
+  ['ciao', 'Pagar a taxa municipal de € 18 no Ciao Termini'],
   ['transport', 'Acompanhar os avisos dos serviços de trem e metrô antes de cada deslocamento'],
   ['environment-tax', 'Conferir o pagamento da taxa ambiental de € 9 no Ilissos'],
 ];
@@ -77,6 +77,10 @@ export function suppliedItinerary(): AppState {
   });
 
   const paid = { paid: true, certainty: 'Confirmado' } as const;
+  const estimate = { certainty: 'Estimativa' } as const;
+  const bitPrice = 1.5;
+  const tollPrice = 3.1;
+  const tollNotes = 'A20 Santo Stefano di Camastra ↔ Buonfornello, carro classe A.';
   state.expenses = [
     expense('ita-out', 'ITA · Palermo → Atenas com conexão', 'Passagens aéreas', 108.62, 0, paid),
     expense('ilissos', 'Ilissos Hotel · hospedagem', 'Hotel', 135.67, 0, paid),
@@ -88,37 +92,94 @@ export function suppliedItinerary(): AppState {
     expense('ita-athens-rome', 'ITA · Atenas → Roma', 'Passagens aéreas', 134.44, 3, paid),
     expense('borghese', 'Galleria Borghese · ingresso', 'Ingressos', 18, 5, paid),
     expense('pass', 'Passe turístico de Atenas · 72h', 'Transporte', 20, 0),
+    expense('fuel', 'Gasolina · Santo Stefano ↔ aeroporto de Palermo', 'Transporte', 28, 0, {
+      ...estimate,
+      amountMax: 36,
+      notes: 'Ida e volta: cerca de 260 km, consumo estimado de 5,5 a 7,0 L/100 km e gasolina self a cerca de € 1,96/L na Sicília.',
+    }),
+    expense('toll-out', 'Pedágio A20 · ida para Palermo', 'Transporte', tollPrice, 0, {
+      notes: tollNotes,
+    }),
+    expense('toll-back', 'Pedágio A20 · volta a Santo Stefano', 'Transporte', tollPrice, 6, {
+      notes: tollNotes,
+    }),
+    expense('athens-arrival-meals', 'Lanche de viagem e jantar em Atenas', 'Alimentação', 20, 0, {
+      ...estimate,
+      amountMax: 35,
+    }),
     expense('athens-lunch', 'Almoço de sábado em Atenas', 'Alimentação', 15, 1, {
+      ...estimate,
       amountMax: 25,
-      certainty: 'Estimativa',
+    }),
+    expense('athens-saturday-dinner', 'Jantar de sábado em Atenas', 'Alimentação', 15, 1, {
+      ...estimate,
+      amountMax: 25,
+    }),
+    expense('athens-sunday-meals', 'Almoço e jantar de domingo em Atenas', 'Alimentação', 30, 2, {
+      ...estimate,
+      amountMax: 50,
     }),
     expense('free-tour', 'Free tour de Atenas · contribuição sugerida', 'Passeios', 10, 2, {
+      ...estimate,
       amountMax: 15,
-      certainty: 'Estimativa',
+      notes: 'Reserva gratuita. O voucher sugere contribuição voluntária de € 10 a € 15 ao guia.',
     }),
     expense('ilissos-tax', 'Ilissos Hotel · taxa ambiental', 'Hotel', 9, 3, {
       notes: 'Indicada para pagamento no hotel. Conferir no check-out.',
     }),
     expense('leonardo-in', 'Leonardo Express · aeroporto → Termini', 'Transporte', 14, 3),
-    expense('ciao', 'Ciao Termini · total informado', 'Hotel', 224.55, 3, {
-      notes: 'Inclui imposto municipal estimado. Pagamento integral a confirmar.',
+    expense('ciao', 'Ciao Termini · hospedagem', 'Hotel', 206.55, 3, {
+      ...paid,
+      notes: 'Hospedagem paga pela Booking.com. A taxa municipal é cobrada pela acomodação.',
     }),
-    expense('vatican', 'Tour do Vaticano · preço anunciado', 'Passeios', 69, 4, {
-      notes: 'Guia reservado. Conferir o valor efetivamente pago.',
+    expense('ciao-tax', 'Ciao Termini · taxa municipal', 'Hotel', 18, 3, {
+      certainty: 'Confirmado',
+      notes: 'Cobrança na acomodação: € 6 por pessoa por noite × 3 noites.',
+    }),
+    expense('rome-arrival-meals', 'Almoço de viagem e jantar em Roma', 'Alimentação', 25, 3, {
+      ...estimate,
+      amountMax: 40,
+    }),
+    expense('rome-metro-tuesday', 'Metrô de Roma · 1 bilhete BIT', 'Transporte', bitPrice, 4, {
+      notes: 'Manzoni → Ottaviano. O Leonardo Express tem bilhete próprio.',
+    }),
+    expense('rome-metro-wednesday', 'Metrô de Roma · 4 bilhetes BIT', 'Transporte', 4 * bitPrice, 5, {
+      notes: 'Manzoni → Spagna, Flaminio → EUR Fermi, EUR Fermi → Cornelia e Cornelia → Manzoni. Cada trajeto com baldeação interna usa um bilhete.',
+    }),
+    expense('vatican', 'Tour do Vaticano · em italiano', 'Passeios', 69, 4, {
+      ...paid,
+      notes: 'Pagamento confirmado no e-mail da GetYourGuide.',
     }),
     expense('vicus', 'Vicus Caprarius · guia em italiano', 'Passeios', 8, 4, {
       notes: 'Solicitação enviada. Horário a confirmar.',
     }),
     expense('gamm', 'GAMM Game Museum · bilheteria', 'Ingressos', 10, 4, {
-      amountMax: 15,
-      notes: '€ 10 na promoção de terça, € 15 tarifa inteira.',
+      notes: 'Happy Tuesday: € 10 para todos às terças. Em outro dia, a tarifa inteira é € 15.',
+    }),
+    expense('rome-tuesday-breakfast', 'Café da manhã de terça em Roma', 'Alimentação', 4, 4, {
+      ...estimate,
+      amountMax: 7,
+    }),
+    expense('rome-tuesday-lunch', 'Almoço no McDonald’s Borgo Pio', 'Alimentação', 9, 4, {
+      ...estimate,
+      amountMax: 12,
     }),
     expense('emporio', 'Jantar no Empório Brasileiro', 'Alimentação', 20, 4, {
+      ...estimate,
       amountMax: 30,
-      certainty: 'Estimativa',
     }),
     expense('planetarium', 'Planetário de Roma · duas sessões', 'Ingressos', 17, 5, {
-      notes: 'Tarifa de bilheteria. Pré-venda online acrescenta € 1 por sessão.',
+      amountMax: 19,
+      notes: '€ 17 na bilheteria ou € 19 na pré-venda (€ 1 adicional por sessão).',
+    }),
+    expense('rome-wednesday-meals', 'Refeições de quarta em Roma', 'Alimentação', 46, 5, {
+      ...estimate,
+      amountMax: 72,
+      notes: 'Café € 4–7, Burger King € 9–12, açaí € 8–13 e jantar € 25–40. Confirmar preço e disponibilidade da feijoada.',
+    }),
+    expense('rome-return-meals', 'Café da manhã e almoço de viagem', 'Alimentação', 14, 6, {
+      ...estimate,
+      amountMax: 25,
     }),
     expense('leonardo-out', 'Leonardo Express · Termini → aeroporto', 'Transporte', 14, 6),
     expense(
@@ -161,7 +222,7 @@ export function suppliedItinerary(): AppState {
     checkIn: '23/11 · 14h–19h, com chegada estimada 15h30–16h30',
     checkOut: '26/11 · 08h–11h, com saída planejada às 09h15',
     notes:
-      'Hospedagem reservada. Total informado de € 224,55, incluindo imposto municipal estimado. Conferir pagamento integral. Café da manhã não incluído. Avisar se a chegada atrasar para depois das 19h.',
+      'Total de € 224,55: € 206,55 de hospedagem pagos pela Booking.com e € 18 de taxa municipal a pagar na acomodação. Café da manhã não incluído. Avisar se a chegada atrasar para depois das 19h.',
     website: '',
   };
 
@@ -209,8 +270,9 @@ export function suppliedItinerary(): AppState {
     publicTransport: [
       'Atenas: passe turístico de 72h por € 20, com ida e volta do aeroporto. Na chegada, linha 3 → Syntagma e linha 2 sentido Elliniko → Syngrou-Fix. Na volta, linha 2 sentido Anthoupoli → Syntagma e linha 3 com letreiro Airport.',
       sources.athensPass,
-      'Roma: Leonardo Express € 14 por trecho e 32 minutos. O Roma 72H custa € 22 e cobre transporte urbano, com o Leonardo Express à parte.',
+      'Roma: Leonardo Express € 14 por trecho e 32 minutos. Para cinco viagens de metrô, o orçamento usa cinco BIT de € 1,50 (total € 7,50). O Roma 72H de € 22 é uma alternativa aos BIT, com o Leonardo Express à parte.',
       sources.leonardo,
+      sources.romeBit,
       sources.romePass,
     ].join('\n'),
     tickets: [
@@ -223,7 +285,7 @@ export function suppliedItinerary(): AppState {
     importantTimes:
       'Horários locais. Atenas está uma hora à frente da Itália. As chegadas e margens estimadas estão assinaladas no roteiro. O free tour está reservado, com encontro e horário sujeitos à mensagem do fornecedor.',
     personalNotes:
-      'O financeiro inclui os valores informados no cronograma. Pedágio, combustível e parte das refeições ainda estão sem valor. O funicular e o passe urbano de Roma são opcionais e ficam fora da soma das despesas.',
+      'O financeiro inclui as compras confirmadas, os valores a pagar e as estimativas de gasolina e refeições. O funicular do Licabeto é opcional. Em Roma, a previsão usa bilhetes BIT; trocar pelo Roma 72H acrescenta € 14,50.',
   };
   state.checklist = checklist.map(([key, title, done = false]) => ({
     id: 'trip-check-' + key,

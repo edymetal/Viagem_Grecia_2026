@@ -1,0 +1,159 @@
+{
+  "itineraryRevision": "cronograma-2026-11-17-atenas-roma-retorno-confirmado",
+  "expenseIds": [
+    "plan-exp-ita-out",
+    "plan-exp-ilissos",
+    "plan-exp-acropolis-tour",
+    "plan-exp-kotsanas",
+    "plan-exp-hadrian",
+    "plan-exp-zeus",
+    "plan-exp-agora",
+    "plan-exp-ita-athens-rome",
+    "plan-exp-borghese",
+    "plan-exp-pass",
+    "plan-exp-athens-lunch",
+    "plan-exp-free-tour",
+    "plan-exp-ilissos-tax",
+    "plan-exp-leonardo-in",
+    "plan-exp-ciao",
+    "plan-exp-vatican",
+    "plan-exp-vicus",
+    "plan-exp-gamm",
+    "plan-exp-emporio",
+    "plan-exp-planetarium",
+    "plan-exp-leonardo-out",
+    "plan-exp-parking",
+    "plan-exp-ryanair"
+  ],
+  "expenses": [
+    {
+      "id": "plan-exp-free-tour",
+      "title": "Free tour de Atenas · contribuição sugerida",
+      "category": "Passeios",
+      "amount": 10,
+      "amountMax": 15,
+      "certainty": "Estimativa",
+      "date": "2026-11-22",
+      "status": "Previsto",
+      "paid": false,
+      "notes": ""
+    },
+    {
+      "id": "plan-exp-ciao",
+      "title": "Ciao Termini · total informado",
+      "category": "Hotel",
+      "amount": 224.55,
+      "certainty": "Consultado",
+      "date": "2026-11-23",
+      "status": "Previsto",
+      "paid": false,
+      "notes": "Inclui imposto municipal estimado. Pagamento integral a confirmar."
+    },
+    {
+      "id": "plan-exp-vatican",
+      "title": "Tour do Vaticano · preço anunciado",
+      "category": "Passeios",
+      "amount": 69,
+      "certainty": "Consultado",
+      "date": "2026-11-24",
+      "status": "Previsto",
+      "paid": false,
+      "notes": "Guia reservado. Conferir o valor efetivamente pago."
+    },
+    {
+      "id": "plan-exp-gamm",
+      "title": "GAMM Game Museum · bilheteria",
+      "category": "Ingressos",
+      "amount": 10,
+      "amountMax": 15,
+      "certainty": "Consultado",
+      "date": "2026-11-24",
+      "status": "Previsto",
+      "paid": false,
+      "notes": "€ 10 na promoção de terça, € 15 tarifa inteira."
+    },
+    {
+      "id": "plan-exp-planetarium",
+      "title": "Planetário de Roma · duas sessões",
+      "category": "Ingressos",
+      "amount": 17,
+      "certainty": "Consultado",
+      "date": "2026-11-25",
+      "status": "Previsto",
+      "paid": false,
+      "notes": "Tarifa de bilheteria. Pré-venda online acrescenta € 1 por sessão."
+    }
+  ],
+  "activities": [
+    {
+      "id": "nov-21-lycabettus",
+      "description": "Vista noturna, se houver disposição. Funicular opcional, com referência de € 13 ida e volta a conferir.",
+      "price": 13,
+      "priceCertainty": "Estimativa",
+      "website": ""
+    },
+    {
+      "id": "nov-23-checkin",
+      "description": "Janela estimada de chegada. A hospedagem recebe das 14h às 19h. Avisar se houver atraso. Total informado de € 224,55 incluindo imposto estimado; conferir pagamento integral.",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "website": ""
+    },
+    {
+      "id": "nov-23-dinner",
+      "description": "Descanso e jantar livres. O Roma 72H é opcional, custa € 22 e não cobre o Leonardo Express.",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "website": "https://www.atac.roma.it/biglietti-e-abbonamenti/roma72h"
+    },
+    {
+      "id": "nov-24-metro",
+      "description": "Linha A em direção a Battistini. Ao descer, caminhar cerca de 300 m / 4 minutos até a Via Germanico, 8.",
+      "price": null,
+      "priceCertainty": "Não informado",
+      "website": ""
+    },
+    {
+      "id": "nov-24-vatican",
+      "description": "Tour reservado em italiano pela GetYourGuide com a Enjoy Rome. Término estimado na Praça de São Pedro. Preço anunciado de € 69; valor pago a conferir.",
+      "price": 69,
+      "priceCertainty": "Consultado",
+      "website": ""
+    },
+    {
+      "id": "nov-24-gamm",
+      "description": "Comprar na bilheteria. Tarifa inteira de € 15; conferir a promoção de terça-feira de € 10 e a disponibilidade.",
+      "price": 10,
+      "priceMax": 15,
+      "priceCertainty": "Consultado",
+      "website": "https://www.gammuseum.com/new/biglietteria/"
+    },
+    {
+      "id": "nov-25-voyager",
+      "description": "Sessão publicada para 17h. Ingresso a comprar. As duas sessões custam € 17 na tarifa inteira de bilheteria; a pré-venda online acrescenta € 1 por ingresso.",
+      "price": 8.5,
+      "priceCertainty": "Consultado",
+      "website": "https://www.planetarioroma.it/it/mostra-evento/programmazione-del-planetario-dal-1-al-29-novembre"
+    }
+  ],
+  "checklist": [
+    {
+      "id": "trip-check-rome-pass",
+      "title": "Escolher entre o Roma 72H e bilhetes urbanos avulsos",
+      "done": false
+    },
+    {
+      "id": "trip-check-gamm",
+      "title": "Comprar o ingresso na bilheteria do GAMM e conferir a promoção de terça-feira",
+      "done": false
+    },
+    {
+      "id": "trip-check-ciao",
+      "title": "Conferir o pagamento integral do Ciao Termini e o valor pago pelo tour do Vaticano",
+      "done": false
+    }
+  ],
+  "romeHotelNotes": "Hospedagem reservada. Total informado de € 224,55, incluindo imposto municipal estimado. Conferir pagamento integral. Café da manhã não incluído. Avisar se a chegada atrasar para depois das 19h.",
+  "publicTransport": "Atenas: passe turístico de 72h por € 20, com ida e volta do aeroporto. Na chegada, linha 3 → Syntagma e linha 2 sentido Elliniko → Syngrou-Fix. Na volta, linha 2 sentido Anthoupoli → Syntagma e linha 3 com letreiro Airport.\nhttps://www.oasa.gr/en/tickets/prices-of-products/\nRoma: Leonardo Express € 14 por trecho e 32 minutos. O Roma 72H custa € 22 e cobre transporte urbano, com o Leonardo Express à parte.\nhttps://www.trenitalia.com/it/regionale/collegamenti-regionale/leonardo-express.html\nhttps://www.atac.roma.it/biglietti-e-abbonamenti/roma72h",
+  "personalNotes": "O financeiro inclui os valores informados no cronograma. Pedágio, combustível e parte das refeições ainda estão sem valor. O funicular e o passe urbano de Roma são opcionais e ficam fora da soma das despesas."
+}

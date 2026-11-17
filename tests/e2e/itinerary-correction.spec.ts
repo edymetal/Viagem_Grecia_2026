@@ -69,9 +69,9 @@ test('instalação existente recebe a correção offline sem duplicar nem perder
   await page.goto('./#hotel');
   await expect(page.getByRole('heading', { name: 'Ciao Termini' })).toBeVisible();
   await page.goto('./#gastos');
-  await expect(page.locator('.trip-total-value')).toContainText('656,99');
+  await expect(page.locator('.trip-total-value')).toContainText('932,54');
   await expect(page.locator('.stat').first()).toContainText('900,00');
-  await expect(page.locator('.expense')).toHaveCount(22);
+  await expect(page.locator('.expense')).toHaveCount(36);
   await page.goto('./#documentos');
   await expect(page.getByRole('heading', { name: 'documento-teste.pdf' })).toBeVisible();
   const saved = await page.evaluate(
