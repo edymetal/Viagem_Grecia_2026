@@ -626,3 +626,8 @@
 .activity-document-item small { overflow-wrap: anywhere; }
 .activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
 .activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }
+
+.activity-document-item { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; margin-top: 1rem; }
+.activity-document-item small { overflow-wrap: anywhere; }
+.activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }

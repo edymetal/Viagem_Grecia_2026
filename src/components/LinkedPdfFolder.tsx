@@ -128,7 +128,7 @@ export function LinkedPdfFolder() {
         )}
       </div>
       {!supported ? (
-        <p className="notice">Abra o app no Chrome atualizado para acessar a pasta do celular.</p>
+        <p className="notice">Este navegador não permite ao app acessar a pasta diretamente. No roteiro, selecione o PDF indicado em cada atividade para abri-lo.</p>
       ) : !folder ? (
         <p className="muted small">
           No Android, selecione <strong>Armazenamento interno → Documents → Viagem</strong>.

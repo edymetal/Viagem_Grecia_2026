@@ -24,6 +24,7 @@ import { timelinePosition } from '../lib/timeline';
 import { PlanningNotice } from '../components/Planning';
 import { ActivityVisual } from '../components/ActivityVisual';
 import { hasVisitDetails } from '../data/placePhotos';
+import { activityPdfs } from '../data/activityPdfs';
 import { ActivityDetails } from './ActivityDetails';
 import {
   AsyncForm,
@@ -511,6 +512,7 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
                           <h3>{a.title}</h3>
                           <div className="timeline-meta">
                             <span>{a.confirmation}</span>
+                            {activityPdfs(a).length > 0 && <span>Documento</span>}
                             {a.timeCertainty && a.timeCertainty !== 'Planejado' && (
                               <span>{a.timeCertainty}</span>
                             )}

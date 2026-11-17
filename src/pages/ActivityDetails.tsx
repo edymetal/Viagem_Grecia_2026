@@ -19,6 +19,7 @@ import { itineraryHref } from '../lib/itineraryRoute';
 import { ActivityVisual, parthenonPhoto } from '../components/ActivityVisual';
 import { LocalImage, MapsLinks } from '../components/ui';
 import { activityPhoto } from '../data/placePhotos';
+import { ActivityDocuments } from '../components/ActivityDocuments';
 
 export function ActivityDetails({
   activity: a,
@@ -190,6 +191,7 @@ export function ActivityDetails({
           </div>
         </div>
         <div className="activity-detail-secondary">
+          <ActivityDocuments activity={a} />
           {a.description && (
             <section className="card detail-section">
               <h3>Sobre a atividade</h3>
