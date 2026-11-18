@@ -8,7 +8,7 @@ import {
 } from './itineraryActivities';
 import { stateSchema, tripDates, type AppState, type Expense } from './schema';
 
-export const ITINERARY_REVISION = 'cronograma-2026-11-18-atenas-roma-deslocamentos-revisados';
+export const ITINERARY_REVISION = 'cronograma-2026-11-18-roma-vicus-confirmado';
 const parkingKey = 'parking';
 const ryanairKey = 'ryanair';
 export const PARKING_EXPENSE_ID = 'plan-exp-' + parkingKey;
@@ -19,7 +19,7 @@ const dayNotes = [
   'Chegar à entrada principal da estação Acropoli até 09h15. Guia das 09h20 às 09h25 e tour às 09h30. Baixar o ingresso anexo ao e-mail da Civitatis. Se o tour atrasar, encurtar ou pular Filopapo para priorizar o Kotsanas. Licabeto é opcional.',
   'Entrar na Biblioteca até 09h30, em Zeus até 12h30 e na Ágora até 15h. Troca da guarda às 11h. Jardim Nacional antes do pôr do sol, cerca de 17h09. Conferir a mensagem do guia antes de ir ao free tour das 18h35.',
   'Sair do Ilissos às 08h. Em Syntagma, mirar a linha 3 Airport das 08h54, com chegada às 09h34. Alternativa: 09h30 → 10h10. Voo às 12h45 na Grécia, chegada às 13h55 na Itália. Ciao Termini recebe até 19h.',
-  'Vaticano às 10h15, com encontro na Via Germanico 8 até 10h. Vicus solicitado para 15h. Se for confirmado, sair da região do Borgo Pio até 14h para fazer o trajeto a pé com margem.',
+  'Vaticano às 10h15, com encontro na Via Germanico 8 até 10h. Vicus confirmado às 15h. Saia do Borgo Pio até 14h para chegar entre 14h35 e 14h55. Depois, caminhe cerca de 21 minutos até o GAMM. Jantar no Empório Brasileiro por volta das 18h30.',
   'Chegar à Galleria Borghese por volta das 09h, com ingresso e documento. Estar em Flaminio até 14h30 para chegar ao Planetário por volta de 15h15–15h30. As sessões das 16h e 17h estão no programa. Ingressos a comprar.',
   'Leonardo Express às 10h05 na grade, com chegada às 10h37. A Ryanair fecha o portão às 13h20 para o voo das 13h50. Com pouso às 15h, retirada do carro no P1 por volta das 15h30–16h e chegada a Santo Stefano entre 17h05 e 18h.',
 ];
@@ -36,7 +36,7 @@ const checklist: [key: string, title: string, done?: boolean][] = [
   ],
   ['leonardo', 'Comprar os dois bilhetes do Leonardo Express e conferir a partida de 26/11'],
   ['rome-pass', 'Prever cinco bilhetes urbanos BIT de Roma (€ 7,50 no total)'],
-  ['vicus', 'Confirmar com a secretaria o guia, horário e valor do Vicus Caprarius'],
+  ['vicus', 'Visita guiada ao Vicus Caprarius confirmada para 15h', true],
   ['gamm', 'Comprar o ingresso do GAMM na terça-feira (€ 10 na bilheteria)'],
   ['planetarium', 'Conferir vagas e comprar os ingressos das duas sessões do Planetário'],
   ['dinner', 'Confirmar disponibilidade e preço da feijoada na Churrascaria dos Amigos'],
@@ -151,7 +151,7 @@ export function suppliedItinerary(): AppState {
       notes: 'Pagamento confirmado no e-mail da GetYourGuide.',
     }),
     expense('vicus', 'Vicus Caprarius · guia em italiano', 'Passeios', 8, 4, {
-      notes: 'Solicitação enviada. Horário a confirmar.',
+      notes: 'Visita guiada confirmada para 15h. Valor de referência.',
     }),
     expense('gamm', 'GAMM Game Museum · bilheteria', 'Ingressos', 10, 4, {
       notes: 'Happy Tuesday: € 10 para todos às terças. Em outro dia, a tarifa inteira é € 15.',
@@ -278,7 +278,7 @@ export function suppliedItinerary(): AppState {
     tickets: [
       'Acrópole e Museu da Acrópole: entradas incluídas no tour. Kotsanas: ingresso válido para o dia 21/11.',
       'Domingo 22/11: Biblioteca de Adriano 08h30–09h30, Zeus 11h30–12h30 e Ágora Antiga 14h–15h são faixas de entrada dos ingressos.',
-      'Vicus Caprarius: reserva guiada solicitada. GAMM e Planetário: ingressos a comprar.',
+      'Vicus Caprarius: visita guiada confirmada para 15h. GAMM e Planetário: ingressos a comprar.',
       sources.vicus,
       sources.planetariumTickets,
     ].join('\n'),

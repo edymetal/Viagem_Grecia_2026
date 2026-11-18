@@ -1,0 +1,56 @@
+{
+  "itineraryRevision": "cronograma-2026-11-18-atenas-roma-deslocamentos-revisados",
+  "activities": [
+    {
+      "id": "nov-24-lunch",
+      "description": "Almoço rápido. Se o tour atrasar e a visita ao Vicus estiver confirmada para 15h, encurtar o almoço ou comer no caminho."
+    },
+    {
+      "id": "nov-24-vicus-walk",
+      "description": "Aproximadamente 2,5 km, ou 35–45 minutos a pé. Para a visita das 15h, sair do Borgo Pio até 14h e chegar ao Vicolo del Puttarello, 25, por volta de 14h35–14h45."
+    },
+    {
+      "id": "nov-24-vicus",
+      "description": "Visita com guia humano solicitada para 15h. Aguardar confirmação da secretaria. De terça a domingo, o sítio funciona das 11h às 17h. A visita guiada dura cerca de 40 minutos.",
+      "end": "15:40",
+      "duration": 40,
+      "confirmation": "Pendente",
+      "timeCertainty": "Proposto"
+    },
+    {
+      "id": "nov-24-gamm-walk",
+      "description": "Aproximadamente 1,4 km e 20–30 minutos a pé, se o Vicus terminar às 15h40.",
+      "start": "15:40",
+      "end": "16:05",
+      "duration": 25,
+      "timeCertainty": "Planejado"
+    },
+    {
+      "id": "nov-24-gamm",
+      "description": "Comprar na bilheteria. Na terça-feira, a promoção Happy Tuesday custa € 10; a tarifa inteira em outro dia é € 15.",
+      "confirmation": "Pendente"
+    }
+  ],
+  "days": [
+    {
+      "date": "2026-11-24",
+      "notes": "Vaticano às 10h15, com encontro na Via Germanico 8 até 10h. Vicus solicitado para 15h. Se for confirmado, sair da região do Borgo Pio até 14h para fazer o trajeto a pé com margem."
+    }
+  ],
+  "expenses": [
+    {
+      "id": "plan-exp-vicus",
+      "notes": "Solicitação enviada. Horário a confirmar."
+    }
+  ],
+  "checklist": [
+    {
+      "id": "trip-check-vicus",
+      "title": "Confirmar com a secretaria o guia, horário e valor do Vicus Caprarius",
+      "done": false
+    }
+  ],
+  "useful": {
+    "tickets": "Acrópole e Museu da Acrópole: entradas incluídas no tour. Kotsanas: ingresso válido para o dia 21/11.\nDomingo 22/11: Biblioteca de Adriano 08h30–09h30, Zeus 11h30–12h30 e Ágora Antiga 14h–15h são faixas de entrada dos ingressos.\nVicus Caprarius: reserva guiada solicitada. GAMM e Planetário: ingressos a comprar.\nhttps://www.vicuscaprarius.com/faq/\nhttps://www.planetarioroma.it/informazioni_pratiche/biglietti"
+  }
+}

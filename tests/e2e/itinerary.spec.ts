@@ -18,9 +18,10 @@ test('o cronograma de Atenas e Roma fica acessível offline', async ({ page, con
     page.getByRole('link', { name: 'Ver detalhes: Biblioteca de Adriano' }),
   ).toContainText('09:05');
   await page.getByRole('tab', { name: /24\/11/ }).click();
-  await expect(page.getByRole('link', { name: /Ver detalhes: Vicus Caprarius/ })).toContainText(
-    'Pendente',
-  );
+  const vicus = page.getByRole('link', { name: /Ver detalhes: Vicus Caprarius/ });
+  await expect(vicus).toContainText('Confirmada');
+  await vicus.click();
+  await expect(page.getByText(/entre 15h20 e 15h30/)).toBeVisible();
   await page.goto('./#gastos');
   await expect(page.locator('.trip-total-value')).toContainText('969,59');
   await expect(page.locator('.planned-range:not(.projected-range)')).toContainText('359,70');

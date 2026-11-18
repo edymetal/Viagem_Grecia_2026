@@ -8,7 +8,7 @@ Revisado em 18/11/2026 com os vouchers da viagem e as tabelas dos operadores. A 
 | 21/11 · sábado | Tour da Acrópole e do Museu em italiano às 09h30, Filopapo, Kotsanas às 16h30 e Licabeto opcional |
 | 22/11 · domingo | Biblioteca de Adriano às 09h05, guarda às 11h, Zeus e Arco, Ágora às 14h, Jardim Nacional e free tour às 18h35 |
 | 23/11 · segunda | Ilissos, metrô para o aeroporto, ITA AZ719 às 12h45 (Grécia), Leonardo Express e Ciao Termini |
-| 24/11 · terça | Vaticano às 10h15, Vicus Caprarius solicitado para 15h, GAMM e jantar no Empório Brasileiro |
+| 24/11 · terça | Vaticano às 10h15, Vicus Caprarius confirmado às 15h, GAMM e jantar no Empório Brasileiro |
 | 25/11 · quarta | Galleria Borghese às 09h30, Planetário às 16h e 17h e Churrascaria dos Amigos |
 | 26/11 · quinta | Leonardo Express previsto às 10h05, voo FR3946 confirmado de Fiumicino às 13h50 a Palermo às 15h00, retirada do carro no P1 Lunga Sosta e volta a Santo Stefano |
 
@@ -85,11 +85,11 @@ A greve geral da CGIL de 20/11 afeta o transporte público local na Itália. O s
 | Até 10h00 | Apresentar-se na Via Germanico 8. Levar documento e cobrir ombros e joelhos. |
 | 10h15–13h15 | Tour em italiano confirmado nos Museus Vaticanos, Capela Sistina e Basílica de São Pedro. Término estimado na região de São Pedro. O acesso à basílica e à capela depende da operação do Vaticano. |
 | 13h15–14h00 | 5–10 min até o McDonald’s Borgo Pio e almoço rápido. Se o tour atrasar e o Vicus estiver confirmado, encurtar o almoço. |
-| Até 14h35–14h45 | Sair do Borgo Pio até 14h. Caminhada de 35–45 min ao Vicus Caprarius, Vicolo del Puttarello 25. |
-| 15h00–15h40 | Vicus Caprarius com guia humano em italiano, solicitado à secretaria. Horário pendente. O sítio publica funcionamento das 11h às 17h de terça a domingo. |
-| 15h40 → 16h00–16h10 | Caminhada de 20–30 min até o GAMM, Via delle Terme di Diocleziano 35/36. |
-| 16h15–18h10 | GAMM. Fecha às 19h30. |
-| 18h30 | Jantar no Empório Brasileiro, Via Milazzo 41/43. Caminhar 12–20 min desde o GAMM e 15–25 min de volta ao hotel depois do jantar. |
+| 14h35–14h55 | Chegada ao Vicus Caprarius, Vicolo del Puttarello 25. Sair do Borgo Pio até 14h. |
+| 15h00–15h20/15h30 | Vicus Caprarius com guia em italiano. Início confirmado às 15h, com término estimado entre 15h20 e 15h30. |
+| Depois da visita | Caminhada de cerca de 21 min até o GAMM, Via delle Terme di Diocleziano 35/36. Chegada prevista entre 15h41 e 15h51. |
+| 16h15–18h10 | Visita planejada ao GAMM. Se chegar antes, pode decidir na hora se entra mais cedo. |
+| Por volta de 18h30 | Jantar planejado no Empório Brasileiro, Via Milazzo 41/43. Caminhar 12–20 min desde o GAMM e 15–25 min de volta ao hotel depois do jantar. |
 
 [Vicus Caprarius](https://www.vicuscaprarius.com/faq/) · [GAMM](https://www.gammuseum.com/new/biglietteria/)
 
@@ -168,7 +168,7 @@ A Booking.com confirmou € 206,55 pagos pelo Ciao Termini e € 18 de taxa muni
 | Pedágio A20 classe A, dois trechos de € 3,10 | € 6,20 |
 | Gasolina para aproximadamente 260 km na Sicília | € 28,00–36,00 |
 | Free tour em Atenas, contribuição voluntária sugerida no voucher | € 10,00–15,00 |
-| Vicus Caprarius com guia, reserva a confirmar | € 8,00 |
+| Vicus Caprarius com guia, visita confirmada. Valor de referência | € 8,00 |
 | GAMM, promoção de terça-feira | € 10,00 |
 | Planetário, duas sessões na bilheteria ou em pré-venda | € 17,00–19,00 |
 | Alimentação | € 198,00–321,00 |

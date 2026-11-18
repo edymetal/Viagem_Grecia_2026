@@ -12,6 +12,7 @@ import {
 import { mergeItinerary } from '../src/lib/itinerary';
 import { createBackup, parseBackup } from '../src/lib/backup';
 import { expenseSchema, stateSchema } from '../src/data/schema';
+import beforeVicusConfirmation from '../src/data/itinerary-before-vicus-confirmation.json';
 
 describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
   it('incorpora os sete dias com horários, estados e faixas de entrada', () => {
@@ -30,8 +31,20 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
     });
     expect(plan.activities.find((a) => a.id === 'nov-24-vicus')).toMatchObject({
       start: '15:00',
-      confirmation: 'Pendente',
-      timeCertainty: 'Proposto',
+      end: '15:30',
+      confirmation: 'Confirmada',
+      timeCertainty: 'Confirmado',
+      description: expect.stringContaining('15h20 e 15h30'),
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-24-gamm-walk')).toMatchObject({
+      transport: { minutes: 21 },
+      description: expect.stringContaining('15h41 e 15h51'),
+    });
+    expect(plan.activities.find((a) => a.id === 'nov-24-gamm')).toMatchObject({
+      start: '16:15',
+      end: '18:10',
+      confirmation: 'Planejada',
+      description: expect.stringContaining('entra mais cedo'),
     });
     expect(plan.activities.find((a) => a.id === 'nov-25-voyager')).toMatchObject({
       start: '17:00',
@@ -156,6 +169,38 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
     delete legacy.itineraryRevision;
     delete legacy.alternatives;
     expect(stateSchema.safeParse(legacy).success).toBe(true);
+  });
+
+  it('atualiza a confirmação e os horários de Roma no roteiro salvo', () => {
+    const saved = suppliedItinerary();
+    saved.itineraryRevision = beforeVicusConfirmation.itineraryRevision;
+    for (const activity of beforeVicusConfirmation.activities)
+      Object.assign(saved.activities.find(({ id }) => id === activity.id)!, activity);
+    Object.assign(
+      saved.days.find(({ date }) => date === beforeVicusConfirmation.days[0].date)!,
+      beforeVicusConfirmation.days[0],
+    );
+    Object.assign(
+      saved.expenses.find(({ id }) => id === beforeVicusConfirmation.expenses[0].id)!,
+      beforeVicusConfirmation.expenses[0],
+    );
+    Object.assign(
+      saved.checklist.find(({ id }) => id === beforeVicusConfirmation.checklist[0].id)!,
+      beforeVicusConfirmation.checklist[0],
+    );
+    Object.assign(saved.useful, beforeVicusConfirmation.useful);
+    const vicus = saved.activities.find(({ id }) => id === 'nov-24-vicus')!;
+    vicus.favorite = true;
+    vicus.notes = 'Anotação pessoal sobre a visita';
+
+    const updated = mergeItinerary(saved);
+    const expected = suppliedItinerary();
+    Object.assign(expected.activities.find(({ id }) => id === vicus.id)!, {
+      favorite: vicus.favorite,
+      notes: vicus.notes,
+    });
+    expect(updated).toEqual(expected);
+    expect(mergeItinerary(updated)).toEqual(updated);
   });
   it('restaura fusos, faixas, alternativas e pendências pelo backup', async () => {
     const s = suppliedItinerary();

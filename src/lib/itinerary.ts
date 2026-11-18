@@ -18,6 +18,7 @@ import beforeParkingData from '../data/itinerary-before-parking.json' with { typ
 import beforeReturnData from '../data/itinerary-before-return-confirmation.json' with { type: 'json' };
 import beforeExpenseReview from '../data/itinerary-before-expense-review.json' with { type: 'json' };
 import beforeRouteReview from '../data/itinerary-before-route-review.json' with { type: 'json' };
+import beforeVicusConfirmation from '../data/itinerary-before-vicus-confirmation.json' with { type: 'json' };
 
 // This snapshot contains only the public plan shipped with revision 1, never user data.
 export const previousItinerary = () => stateSchema.parse(previousData);
@@ -64,26 +65,71 @@ function mergeReviewedFields<T extends object>(local: T, previous: object, revis
   return mergeUnchanged(local, { ...local, ...previous }, after);
 }
 
-function applyRouteReview(local: AppState, plan: AppState): AppState {
-  const previous = new Map(beforeRouteReview.activities.map((record) => [record.id, record]));
-  const revised = new Map(plan.activities.map((record) => [record.id, record]));
+function mergeReviewedRecords<K extends string, T extends Record<K, string>>(
+  local: T[],
+  previous: ReadonlyArray<Record<K, string>>,
+  revised: T[],
+  key: K,
+  merge = mergeReviewedFields<T>,
+): T[] {
+  const before = new Map(previous.map((record) => [record[key], record]));
+  const after = new Map(revised.map((record) => [record[key], record]));
+  return local.map((record) => {
+    const old = before.get(record[key]);
+    const updated = after.get(record[key]);
+    return old && updated ? merge(record, old, updated) : record;
+  });
+}
+
+function mergeReviewedActivity(local: Activity, previous: object, revised: Activity): Activity {
+  const merged = activitySchema.safeParse(mergeReviewedFields(local, previous, revised));
+  return merged.success ? merged.data : local;
+}
+
+function applyVicusConfirmation(local: AppState, plan: AppState): AppState {
   return stateSchema.parse({
     ...local,
     itineraryRevision: ITINERARY_REVISION,
-    activities: local.activities.map((activity) => {
-      const before = previous.get(activity.id);
-      const after = revised.get(activity.id);
-      if (!before || !after) return activity;
-      const merged = activitySchema.safeParse(mergeReviewedFields(activity, before, after));
-      return merged.success ? merged.data : activity;
-    }),
-    days: local.days.map((day) => {
-      const before = beforeRouteReview.days.find((record) => record.date === day.date);
-      const after = plan.days.find((record) => record.date === day.date);
-      return before && after ? mergeReviewedFields(day, before, after) : day;
-    }),
-    hotel: mergeReviewedFields(local.hotel, beforeRouteReview.hotel, plan.hotel),
+    activities: mergeReviewedRecords(
+      local.activities,
+      beforeVicusConfirmation.activities,
+      plan.activities,
+      'id',
+      mergeReviewedActivity,
+    ),
+    days: mergeReviewedRecords(local.days, beforeVicusConfirmation.days, plan.days, 'date'),
+    expenses: mergeReviewedRecords(
+      local.expenses,
+      beforeVicusConfirmation.expenses,
+      plan.expenses,
+      'id',
+    ),
+    checklist: mergeReviewedRecords(
+      local.checklist,
+      beforeVicusConfirmation.checklist,
+      plan.checklist,
+      'id',
+    ),
+    useful: mergeReviewedFields(local.useful, beforeVicusConfirmation.useful, plan.useful),
   });
+}
+
+function applyRouteReview(local: AppState, plan: AppState): AppState {
+  return applyVicusConfirmation(
+    {
+      ...local,
+      activities: mergeReviewedRecords(
+        local.activities,
+        beforeRouteReview.activities,
+        plan.activities,
+        'id',
+        mergeReviewedActivity,
+      ),
+      days: mergeReviewedRecords(local.days, beforeRouteReview.days, plan.days, 'date'),
+      hotel: mergeReviewedFields(local.hotel, beforeRouteReview.hotel, plan.hotel),
+    },
+    plan,
+  );
 }
 
 /** Upgrade only the known previous revision. Local edits, deletions and order win. */
@@ -359,6 +405,8 @@ function applyExpenseReview(local: AppState, plan: AppState): AppState {
 
 /** Apply each known revision in order, while allowing local records and edits to win. */
 export function correctItinerary(current: AppState): AppState {
+  if (current.itineraryRevision === beforeVicusConfirmation.itineraryRevision)
+    return applyVicusConfirmation(current, suppliedItinerary());
   if (current.itineraryRevision === beforeRouteReview.itineraryRevision)
     return applyRouteReview(current, suppliedItinerary());
   if (current.itineraryRevision === beforeExpenseReview.itineraryRevision)
