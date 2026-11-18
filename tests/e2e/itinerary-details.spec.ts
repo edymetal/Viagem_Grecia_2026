@@ -43,7 +43,12 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
     'aria-pressed',
     'true',
   );
-  await page.getByRole('button', { name: 'Editar observações', exact: true }).click();
+  await page
+    .getByRole('button', {
+      name: 'Editar Tour da Acrópole, Partenon e Museu da Acrópole',
+      exact: true,
+    })
+    .click();
   await page.getByLabel('Observações pessoais').fill('Nota de teste offline');
   await page.getByRole('button', { name: 'Salvar alterações', exact: true }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
@@ -107,9 +112,20 @@ test('detalhes e dias funcionam em links diretos, teclado e diferentes larguras'
   await page.goto('./#roteiro/2026-11-21/nao-existe');
   await expect(page.getByText('Atividade não encontrada.', { exact: false })).toBeVisible();
   await expect(page.locator('.activity')).toHaveCount(13);
+  await page.goto('./#roteiro/2026-11-21/plan-2-10');
+  await expect(page.getByRole('link', { name: 'Ir no mapa', exact: true })).toHaveAttribute(
+    'href',
+    'https://goo.gl/maps/84CxmmK2pvrSsRrU9',
+  );
+  await expect(page.getByRole('link', { name: 'Localização', exact: true })).toHaveCount(0);
+  await expect(page.locator('.transport-detail')).toHaveCount(0);
+  await expect(page.locator('.visit-facts')).not.toContainText('Não informado');
   await page.goto('./#roteiro/2026-11-20/plan-1-01');
-  await expect(page.getByText('Sem foto adicionada', { exact: true })).toBeVisible();
-  await expect(page.locator('.detail-hero img')).toHaveCount(0);
+  await expect(page.locator('.detail-hero')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Traçar rota', exact: true })).toHaveAttribute(
+    'href',
+    /travelmode=driving/,
+  );
   await page.goto('./#preferencias');
   await page.getByRole('button', { name: 'Alternar tema claro ou escuro' }).click();
   await page.goto('./#roteiro/2026-11-21/plan-2-11');

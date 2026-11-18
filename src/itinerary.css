@@ -308,16 +308,22 @@
 .activity-detail-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 26px;
+  gap: clamp(14px, 2vw, 24px);
+}
+.activity-screen .route-heading h1:focus {
+  outline: none;
 }
 .activity-detail-primary,
 .activity-detail-secondary {
   min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 14px;
 }
 .detail-hero {
-  height: 290px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--primary-soft);
 }
 .detail-hero > img {
@@ -325,112 +331,100 @@
   height: 100%;
   object-fit: cover;
 }
-.detail-hero.without-photo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 15px;
-  background: linear-gradient(135deg, var(--primary-soft), var(--surface));
+.detail-title-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
 }
-.without-photo .activity-symbol {
-  width: 80px;
-  height: 80px;
-  border-radius: 22px;
-}
-.without-photo .activity-symbol svg {
-  width: 45px;
-  height: 45px;
-}
-.without-photo > span:last-child {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 11px;
+.detail-title-row .activity-symbol {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
 }
 .detail-name {
-  font-size: 26px;
+  font-size: clamp(21px, 4vw, 27px);
+  font-weight: 750;
   line-height: 1.2;
-  margin: 14px 0 10px;
+  margin: 0;
   overflow-wrap: anywhere;
-}
-.detail-location {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-.detail-location svg {
-  color: var(--danger);
-  flex-shrink: 0;
 }
 .detail-status {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin: 12px 0;
+  gap: 6px;
+  margin-top: 7px;
 }
 .detail-description {
-  font-size: 13px;
-  line-height: 1.65;
+  font-size: 14px;
+  line-height: 1.55;
   white-space: pre-line;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 .visit-facts {
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  overflow: hidden;
-  margin-top: 15px;
+  margin: 15px 0 0;
 }
 .visit-facts > div {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  grid-template-columns: minmax(100px, 0.6fr) minmax(0, 1.4fr);
+  align-items: start;
+  gap: 8px;
+  padding: 9px 0;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(100deg, var(--surface), var(--primary-soft));
 }
 .visit-facts > div:last-child {
   border-bottom: 0;
+}
+.visit-facts .detail-scheduled-time {
+  padding: 11px 9px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--primary-soft);
 }
 .visit-facts dt {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--text);
-  font-size: 12px;
+  font-size: 13px;
   margin: 0;
 }
 .visit-facts dt svg {
   flex-shrink: 0;
-  color: var(--coral);
+  color: var(--primary);
 }
 .visit-facts dd {
   text-align: right;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 .visit-facts dd small {
   display: block;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 11px;
+  margin-top: 3px;
 }
-.visit-facts > div:first-child dd strong {
-  background: var(--warm);
-  padding: 3px 6px;
-  border-radius: 5px;
-  display: inline-block;
+.detail-scheduled-time strong {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
 }
 .detail-time-note {
-  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 9px;
+}
+.detail-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.detail-navigation .button {
+  min-height: 44px;
 }
 .detail-map-button {
-  width: 100%;
-  margin-top: 16px;
-  min-height: 46px;
-  justify-content: center;
+  flex: 1;
 }
 .detail-visit-actions {
   display: flex;
@@ -441,26 +435,35 @@
 .detail-visit-actions > :first-child {
   flex: 1;
 }
-.internet-note {
-  margin-top: 9px;
-}
 .detail-section {
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 17px;
+  min-width: 0;
 }
-.detail-section .transport-detail {
-  border: 0;
+.detail-section h3,
+.detail-section h4 {
+  font-size: 15px;
+  font-weight: 700;
+}
+.detail-section.transport-detail {
+  margin-top: 0;
+  padding: 17px;
+}
+.detail-section .detail-grid {
+  gap: 10px 14px;
+  margin: 11px 0 0;
+}
+.detail-section .detail-grid dd {
+  font-size: 13px;
+}
+.detail-photo {
   margin: 0;
-  padding: 0;
-}
-.detail-section .notes {
-  font-size: 12px;
+  padding: 10px;
 }
 .detail-external-links {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 10px 0;
+  flex-wrap: wrap;
+  gap: 2px 15px;
+  margin-top: 3px;
 }
 .detail-external-links a {
   display: flex;
@@ -555,21 +558,11 @@
   }
   .activity-detail-layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
+    gap: 14px;
   }
-  .detail-hero {
-    height: 180px;
-    border-radius: 10px;
-  }
-  .detail-name {
-    font-size: 23px;
-    margin-top: 11px;
-  }
-  .detail-description {
-    font-size: 12px;
-  }
-  .detail-section {
-    padding: 16px;
+  .detail-section:not(.detail-photo),
+  .detail-section.transport-detail {
+    padding: 14px;
   }
 }
 
@@ -622,12 +615,19 @@
     text-transform: capitalize;
   }
 }
-.activity-document-item { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; margin-top: 1rem; }
-.activity-document-item small { overflow-wrap: anywhere; }
-.activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-.activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }
-
-.activity-document-item { display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; margin-top: 1rem; }
+.activity-document-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 9px;
+}
+.activity-document-item .button {
+  min-height: 44px;
+  width: 100%;
+  justify-content: flex-start;
+  overflow-wrap: anywhere;
+}
 .activity-document-item small { overflow-wrap: anywhere; }
 .activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
 .activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }
