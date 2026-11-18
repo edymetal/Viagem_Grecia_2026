@@ -21,11 +21,13 @@ import { LocalImage } from './ui';
 
 export function DestinationLinks({
   destination,
+  routeTo = destination,
   origin,
   title,
   driving,
 }: {
   destination: string;
+  routeTo?: string;
   origin?: string;
   title: string;
   driving?: boolean;
@@ -43,16 +45,16 @@ export function DestinationLinks({
       </a>
       <div className="destination-secondary-links">
         {driving ? (
-          <a href={mapsLink(destination, 'driving', origin)} target="_blank" rel="noreferrer">
+          <a href={mapsLink(routeTo, 'driving', origin)} target="_blank" rel="noreferrer">
             <CarFront size={16} /> De carro
           </a>
         ) : (
           <>
-            <a href={mapsLink(destination, 'walking', origin)} target="_blank" rel="noreferrer">
+            <a href={mapsLink(routeTo, 'walking', origin)} target="_blank" rel="noreferrer">
               <Footprints size={16} />
               <span>A pé</span>
             </a>
-            <a href={mapsLink(destination, 'transit', origin)} target="_blank" rel="noreferrer">
+            <a href={mapsLink(routeTo, 'transit', origin)} target="_blank" rel="noreferrer">
               <TrainFront size={16} />
               <span>Transporte público</span>
             </a>
@@ -66,15 +68,31 @@ export function DestinationLinks({
 export function MapDestinationCard({
   activity: a,
   documents,
+  point,
 }: {
   activity: Activity;
   documents: LocalDocument[];
+  point?: {
+    name: string;
+    destination: string;
+    routeTo?: string;
+    driving?: boolean;
+    photoActivityId?: string;
+  };
 }) {
-  const personalPhoto = documents.find(
-    (d) => d.id === a.photoDocumentId && d.type.startsWith('image/'),
-  );
-  const photo = activityPhoto(a);
-  const cover = photo?.src || (a.id === 'plan-2-11' ? parthenonPhoto : '');
+  const activityDestination = mapDestination(a);
+  const destination = point?.destination ?? activityDestination;
+  const atActivityDestination = destination === activityDestination;
+  const title = point?.name ?? a.title;
+  const personalPhoto = atActivityDestination
+    ? documents.find((d) => d.id === a.photoDocumentId && d.type.startsWith('image/'))
+    : undefined;
+  const photo = point?.photoActivityId
+    ? activityPhoto({ id: point.photoActivityId })
+    : atActivityDestination
+      ? activityPhoto(a)
+      : null;
+  const cover = photo?.src || (atActivityDestination && a.id === 'plan-2-11' ? parthenonPhoto : '');
   const hasPhoto = !!personalPhoto || !!cover;
   const transport = a.transport;
   const hasTransport = !!(
@@ -100,7 +118,7 @@ export function MapDestinationCard({
   return (
     <article
       className={`card location-card destination-card ${a.completed ? 'destination-visited' : ''}`}
-      aria-label={a.title}
+      aria-label={title}
     >
       <div className={`destination-cover ${hasPhoto ? '' : 'destination-placeholder'}`}>
         {personalPhoto ? (
@@ -131,15 +149,15 @@ export function MapDestinationCard({
             · {zoneLabel(a, 'end')}
           </span>
         </div>
-        <h3>{a.title}</h3>
+        <h3>{title}</h3>
         <p className="destination-address">
           <MapPin size={16} />
-          <span>{mapDestination(a)}</span>
+          <span>{destination}</span>
         </p>
         {a.timeCertainty === 'Proposto' && (
           <p className="destination-proposed">Horário proposto · confirmar com o operador</p>
         )}
-        {transport.mode !== 'Não informado' && (
+        {atActivityDestination && transport.mode !== 'Não informado' && (
           <div className="destination-transport-chip">
             <TransportIcon size={14} />
             {transport.mode}
@@ -157,12 +175,13 @@ export function MapDestinationCard({
           </p>
         )}
         <DestinationLinks
-          destination={mapDestination(a)}
-          origin={transport.origin}
-          title={a.title}
-          driving={transport.mode === 'Carro'}
+          destination={destination}
+          routeTo={point?.routeTo}
+          origin={atActivityDestination ? transport.origin : undefined}
+          title={title}
+          driving={point?.driving ?? transport.mode === 'Carro'}
         />
-        {hasTransport && (
+        {atActivityDestination && hasTransport && (
           <details className="destination-transport">
             <summary>
               Detalhes do deslocamento <ChevronDown size={16} />

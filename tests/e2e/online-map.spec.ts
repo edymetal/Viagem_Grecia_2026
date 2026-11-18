@@ -16,16 +16,29 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
   await page.goto('./#mapa');
   await expect(page.getByRole('heading', { name: 'Seus lugares em Atenas' })).toHaveCount(0);
   await expect(page.locator('.map-screen h2').first()).toHaveText('Pontos no mapa');
-  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(21);
   await expect(page.locator('.leaflet-control-attribution')).toContainText('OpenStreetMap');
   await page.getByLabel('Cidade no mapa').selectOption('Roma');
-  await expect(page.locator('.trip-map-marker')).toHaveCount(3);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(24);
   await expect(page.locator('.trip-map-marker[title="Galleria Borghese"]')).toBeVisible();
+  await expect(page.getByRole('button', { name: /Ver ponto: Encontro do Vaticano/ })).toBeVisible();
+  await page.getByLabel('Cidade no mapa').selectOption('Sicília');
+  await expect(page.locator('.trip-map-marker')).toHaveCount(3);
+  await expect(page.getByRole('button', { name: /Ver ponto: P1 Lunga Sosta/ })).toBeVisible();
   await page.getByLabel('Cidade no mapa').selectOption('Atenas');
-  await page.getByRole('searchbox', { name: 'Buscar destinos do roteiro' }).fill('biblioteca');
+  const search = page.getByRole('searchbox', { name: 'Buscar destinos do roteiro' });
+  await search.fill('Museu da Acropole');
+  const museum = page.getByRole('button', { name: 'Ver ponto: Museu da Acrópole', exact: true });
+  await museum.press('Enter');
+  const preview = page.getByRole('dialog', { name: 'Ponto no mapa' });
+  const museumLink = await preview
+    .getByRole('link', { name: 'Abrir Museu da Acrópole no Google Maps', exact: true })
+    .getAttribute('href');
+  expect(new URL(museumLink!).searchParams.get('query')).toBe('Museu da Acrópole, Atenas');
+  await page.keyboard.press('Escape');
+  await search.fill('biblioteca');
   await expect(page.locator('.trip-map-marker')).toHaveCount(1);
   await page.locator('.trip-map-marker[title="Biblioteca de Adriano"]').click();
-  const preview = page.getByRole('dialog', { name: 'Ponto no mapa' });
   await expect(preview).toBeVisible();
   await expect(
     preview.getByRole('heading', { name: 'Biblioteca de Adriano', exact: true }),
@@ -37,8 +50,8 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
         .evaluate((img: HTMLImageElement) => img.naturalWidth > 0),
     )
     .toBe(true);
-  await expect(preview).toContainText('09:05–09:45');
-  await expect(preview).toContainText('08h–15h');
+  await expect(preview).toContainText(/09:05[-–]09:45/);
+  await expect(preview).toContainText(/08h[-–]15h/);
   await expect(preview.getByRole('link', { name: 'A pé', exact: true })).toHaveAttribute(
     'href',
     /travelmode=walking/,
@@ -80,7 +93,7 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
     page.getByRole('article', { name: 'Biblioteca de Adriano', exact: true }),
   ).toBeVisible();
   await context.setOffline(false);
-  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(21);
 });
 
 test('falha nos tiles mantém pontos e cards acessíveis', async ({ page }) => {
@@ -89,7 +102,7 @@ test('falha nos tiles mantém pontos e cards acessíveis', async ({ page }) => {
   await expect(
     page.getByText('O fundo do mapa não pôde ser carregado.', { exact: false }),
   ).toBeVisible();
-  await expect(page.locator('.trip-map-marker')).toHaveCount(9);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(21);
   await expect(
     page.getByRole('article', { name: 'Biblioteca de Adriano', exact: true }),
   ).toBeVisible();

@@ -1,34 +1,42 @@
 [
   {
     "name": "Museu da Acrópole",
+    "city": "Atenas",
     "latitude": 37.969108,
     "longitude": 23.728299,
-    "activityIds": ["plan-3-13", "plan-2-11"],
-    "source": "https://en.wikipedia.org/?curid=10944017"
+    "activityIds": ["plan-2-11", "plan-2-07", "plan-3-13"],
+    "destination": "Museu da Acrópole, Atenas",
+    "photoActivityId": "plan-3-13",
+    "source": "https://www.theacropolismuseum.gr/en/visit"
   },
   {
     "name": "Acrópole e Partenon",
+    "city": "Atenas",
     "latitude": 37.97166667,
     "longitude": 23.72611111,
     "activityIds": ["plan-2-11"],
     "source": "https://en.wikipedia.org/?curid=2076"
   },
   {
-    "name": "Anafiotika",
-    "latitude": 37.97222222,
-    "longitude": 23.72777778,
-    "activityIds": ["plan-2-08"],
-    "source": "https://en.wikipedia.org/?curid=16885889"
+    "name": "Túmulo do Soldado Desconhecido · Troca da guarda",
+    "city": "Atenas",
+    "latitude": 37.97528,
+    "longitude": 23.73639,
+    "activityIds": ["plan-3-06", "plan-3-04", "plan-3-05"],
+    "destination": "Túmulo do Soldado Desconhecido, Praça Syntagma, Atenas",
+    "source": "https://en.wikipedia.org/wiki/Tomb_of_the_Unknown_Soldier_(Athens)"
   },
   {
-    "name": "Ágora Antiga",
-    "latitude": 37.975,
-    "longitude": 23.7225,
-    "activityIds": ["plan-3-03"],
-    "source": "https://en.wikipedia.org/?curid=507380"
+    "name": "Ágora Antiga · Entrada Adrianou 24",
+    "city": "Atenas",
+    "latitude": 37.975984,
+    "longitude": 23.723179,
+    "activityIds": ["plan-3-03", "plan-3-02"],
+    "source": "https://commons.wikimedia.org/wiki/File:Entrance_to_the_archaeological_site_of_the_Ancient_Agora_of_Athens_on_Adrianou_Street_on_March_24,_2020.jpg"
   },
   {
     "name": "Arco de Adriano",
+    "city": "Atenas",
     "latitude": 37.97018,
     "longitude": 23.73203,
     "activityIds": ["plan-3-10"],
@@ -36,61 +44,376 @@
   },
   {
     "name": "Biblioteca de Adriano",
+    "city": "Atenas",
     "latitude": 37.97555556,
     "longitude": 23.72611111,
     "activityIds": ["plan-2-03"],
     "source": "https://en.wikipedia.org/?curid=21605399"
   },
   {
-    "name": "Parlamento / Syntagma",
-    "latitude": 37.97527778,
-    "longitude": 23.73694444,
-    "activityIds": ["plan-3-05", "plan-3-06"],
-    "source": "https://en.wikipedia.org/?curid=2449826"
-  },
-  {
     "name": "Jardim Nacional",
+    "city": "Atenas",
     "latitude": 37.97416667,
     "longitude": 23.73833333,
-    "activityIds": ["plan-3-07"],
+    "activityIds": ["plan-3-07", "nov-22-garden-walk"],
     "source": "https://en.wikipedia.org/?curid=5911297"
   },
   {
     "name": "Templo de Zeus Olímpico",
+    "city": "Atenas",
     "latitude": 37.96937222,
     "longitude": 23.73307778,
-    "activityIds": ["plan-3-09"],
+    "activityIds": ["plan-3-09", "plan-3-08"],
     "source": "https://en.wikipedia.org/?curid=22189"
   },
   {
     "name": "Museu Kotsanas",
+    "city": "Atenas",
     "latitude": 37.9776839,
     "longitude": 23.738217,
-    "activityIds": ["plan-2-05"],
+    "activityIds": ["plan-2-05", "plan-2-04"],
     "source": "https://www.openstreetmap.org/node/11377308267"
+  },
+  {
+    "name": "Aeroporto Internacional de Atenas (ATH)",
+    "city": "Atenas",
+    "latitude": 37.93635,
+    "longitude": 23.946486,
+    "activityIds": ["corr-4-airport", "nov-20-az718"],
+    "source": "https://www.airportmaps.com/ATH"
+  },
+  {
+    "name": "Estação do aeroporto de Atenas · Passe turístico",
+    "city": "Atenas",
+    "latitude": 37.93689,
+    "longitude": 23.9447,
+    "activityIds": ["plan-1-11", "plan-1-10", "plan-4-04"],
+    "destination": "Estação de metrô do aeroporto de Atenas",
+    "note": "Compre o passe na máquina ou na bilheteria da estação. Do terminal, siga as placas Train / Metro pela passarela.",
+    "source": "https://en.wikipedia.org/wiki/Athens_Airport_station"
+  },
+  {
+    "name": "Estação Syngrou-Fix",
+    "city": "Atenas",
+    "latitude": 37.964618,
+    "longitude": 23.726802,
+    "activityIds": ["plan-1-12", "nov-21-fix", "nov-22-fix", "plan-4-03"],
+    "source": "https://en.wikipedia.org/wiki/Syngrou%E2%80%93Fix_station"
+  },
+  {
+    "name": "Estação Syntagma",
+    "city": "Atenas",
+    "latitude": 37.97528,
+    "longitude": 23.73528,
+    "activityIds": ["plan-1-12", "nov-22-monastiraki", "plan-4-04"],
+    "destination": "Estação Syntagma, Atenas",
+    "source": "https://en.wikipedia.org/wiki/Syntagma_metro_station"
+  },
+  {
+    "name": "Ilissos Hotel",
+    "city": "Atenas",
+    "latitude": 37.96142,
+    "longitude": 23.72053,
+    "activityIds": ["plan-1-13", "corr-1-hotel-walk", "plan-2-01", "plan-4-02"],
+    "destination": "Ilissos Hotel, Kallirrois 72, Atenas",
+    "source": "https://mapcarta.com/W332395237"
+  },
+  {
+    "name": "Estação Acropoli · Encontro do guia",
+    "city": "Atenas",
+    "latitude": 37.968983,
+    "longitude": 23.729536,
+    "activityIds": ["plan-2-10", "nov-21-metro"],
+    "destination": "Estação Acropoli, Atenas",
+    "note": "Use o link do guia para chegar ao ponto de encontro na entrada da estação.",
+    "source": "https://goo.gl/maps/84CxmmK2pvrSsRrU9"
+  },
+  {
+    "name": "Colina de Filopapo",
+    "city": "Atenas",
+    "latitude": 37.96736,
+    "longitude": 23.72137,
+    "activityIds": ["nov-21-filopapo", "nov-21-filopapo-walk"],
+    "source": "https://aroundus.com/p/7312802-philopappos-monument"
+  },
+  {
+    "name": "Funicular do Licabeto · Estação inferior",
+    "city": "Atenas",
+    "latitude": 37.98032,
+    "longitude": 23.74398,
+    "activityIds": ["nov-21-lycabettus", "nov-21-lycabettus-walk"],
+    "destination": "Lycabettus Hill Funicular Lower Station, Athens",
+    "note": "Passeio opcional. A estação de embarque fica na esquina de Ploutarchou com Aristippou.",
+    "source": "https://mapcarta.com/W421626322"
+  },
+  {
+    "name": "Estação Evangelismos",
+    "city": "Atenas",
+    "latitude": 37.97613,
+    "longitude": 23.7471,
+    "activityIds": ["plan-2-14"],
+    "destination": "Evangelismos, Atenas",
+    "source": "https://mapcarta.com/N250702355"
+  },
+  {
+    "name": "Estação Monastiraki",
+    "city": "Atenas",
+    "latitude": 37.975985,
+    "longitude": 23.72539,
+    "activityIds": ["nov-22-monastiraki"],
+    "source": "https://en.wikipedia.org/wiki/Monastiraki_metro_station"
+  },
+  {
+    "name": "Zappeion",
+    "city": "Atenas",
+    "latitude": 37.97153,
+    "longitude": 23.736736,
+    "activityIds": ["plan-3-07"],
+    "destination": "Zappeion Hall, Atenas",
+    "note": "Parada opcional para ver a fachada ao sair do Jardim Nacional.",
+    "source": "https://www.religiousgreece.gr/en/attractions/zappeion-hall"
+  },
+  {
+    "name": "Free tour · Igreja da Taxiarchon 7",
+    "city": "Atenas",
+    "latitude": 37.974708,
+    "longitude": 23.725998,
+    "activityIds": ["nov-22-checkin", "nov-22-free-tour", "nov-22-snack"],
+    "note": "Ponto previsto no roteiro. Confirme o local e o horário com o operador.",
+    "source": "https://www.religiousgreece.gr/en/attractions/sacred-pilgrimage-panagia-grigorousa-pammegistoi-taxiarches"
   },
   {
     "name": "Vicus Caprarius",
     "city": "Roma",
     "latitude": 41.900413,
     "longitude": 12.484133,
-    "activityIds": ["nov-24-vicus"],
+    "activityIds": ["nov-24-vicus", "nov-24-vicus-walk"],
     "source": "https://www.turismoroma.it/en/node/1150"
   },
   {
     "name": "Galleria Borghese",
     "city": "Roma",
-    "latitude": 41.91421,
-    "longitude": 12.49214,
-    "activityIds": ["nov-25-borghese"],
-    "source": "https://www.wikidata.org/wiki/Q841506"
+    "latitude": 41.914135,
+    "longitude": 12.492131,
+    "activityIds": ["nov-25-borghese", "nov-25-borghese-route"],
+    "source": "https://www.comune.roma.it/web-resources/cms/documents/PPC2024_1_InformazioneGenerale_Allegati.pdf"
   },
   {
     "name": "Planetário de Roma",
     "city": "Roma",
     "latitude": 41.831025,
     "longitude": 12.477435,
-    "activityIds": ["nov-25-stars", "nov-25-voyager"],
-    "source": "https://www.turismoroma.it/it/eventi/programmazione-del-planetario-dal-1%C2%B0-al-31-ottobre"
+    "activityIds": ["nov-25-stars", "nov-25-voyager", "nov-25-planetarium-route"],
+    "source": "https://www.planetarioroma.it/informazioni_pratiche/come_arrivare"
+  },
+  {
+    "name": "Aeroporto de Roma Fiumicino (FCO)",
+    "city": "Roma",
+    "latitude": 41.79521,
+    "longitude": 12.25535,
+    "activityIds": ["nov-26-airport", "plan-1-08", "plan-4-06", "nov-26-train"],
+    "note": "Área dos terminais. Confira o terminal e o portão no cartão de embarque.",
+    "source": "https://mapcarta.com/W33322809"
+  },
+  {
+    "name": "Roma Termini",
+    "city": "Roma",
+    "latitude": 41.90083,
+    "longitude": 12.50194,
+    "activityIds": ["nov-26-platform", "nov-23-train", "nov-26-termini"],
+    "source": "https://en.wikipedia.org/wiki/Roma_Termini_railway_station"
+  },
+  {
+    "name": "Ciao Termini",
+    "city": "Roma",
+    "latitude": 41.89326558,
+    "longitude": 12.50818338,
+    "activityIds": ["nov-23-checkin", "nov-23-hotel-walk", "nov-26-checkout"],
+    "destination": "Ciao Termini, Via Bixio 71, Roma",
+    "source": "https://turismoroma.it/de/node/171450"
+  },
+  {
+    "name": "Estação Manzoni",
+    "city": "Roma",
+    "latitude": 41.89017,
+    "longitude": 12.50676,
+    "activityIds": ["nov-24-walk", "nov-25-manzoni"],
+    "source": "https://mapcarta.com/N471017058"
+  },
+  {
+    "name": "Estação Ottaviano",
+    "city": "Roma",
+    "latitude": 41.90944,
+    "longitude": 12.45806,
+    "activityIds": ["nov-24-metro"],
+    "source": "https://en.wikipedia.org/wiki/Ottaviano_%E2%80%93_San_Pietro_%E2%80%93_Musei_Vaticani"
+  },
+  {
+    "name": "Encontro do Vaticano · Via Germanico 8",
+    "city": "Roma",
+    "latitude": 41.9074178,
+    "longitude": 12.4559387,
+    "activityIds": ["nov-24-meet"],
+    "destination": "Tours About, Via Germanico 8, Roma",
+    "source": "https://www.toursabout.com/it/index.htm"
+  },
+  {
+    "name": "Museus Vaticanos · Entrada",
+    "city": "Roma",
+    "latitude": 41.906984,
+    "longitude": 12.453378,
+    "activityIds": ["nov-24-vatican"],
+    "destination": "Ingresso Musei Vaticani, Viale Vaticano, Roma",
+    "source": "https://commons.wikimedia.org/wiki/File:Vatican_Museums_entrance_2016.jpg"
+  },
+  {
+    "name": "Capela Sistina",
+    "city": "Roma",
+    "latitude": 41.90293,
+    "longitude": 12.4544,
+    "activityIds": ["nov-24-vatican"],
+    "destination": "Cappella Sistina, Città del Vaticano",
+    "routeTo": "Ingresso Musei Vaticani, Viale Vaticano, Roma",
+    "note": "A Capela Sistina faz parte da visita aos Museus Vaticanos. O acesso é pela entrada dos museus.",
+    "source": "https://mapcarta.com/27903538"
+  },
+  {
+    "name": "Basílica de São Pedro",
+    "city": "Roma",
+    "latitude": 41.90222,
+    "longitude": 12.45333,
+    "activityIds": ["nov-24-vatican"],
+    "destination": "Basilica di San Pietro, Vaticano",
+    "routeTo": "Piazza San Pietro, Vaticano",
+    "source": "https://en.wikipedia.org/wiki/St._Peter%27s_Basilica"
+  },
+  {
+    "name": "Praça de São Pedro",
+    "city": "Roma",
+    "latitude": 41.90225,
+    "longitude": 12.45726,
+    "activityIds": ["nov-24-mcd-walk", "nov-24-vatican"],
+    "destination": "Piazza San Pietro, Vaticano",
+    "source": "https://www.geonames.org/6269269"
+  },
+  {
+    "name": "McDonald’s Borgo Pio",
+    "city": "Roma",
+    "latitude": 41.903832,
+    "longitude": 12.458502,
+    "activityIds": ["nov-24-lunch", "nov-24-mcd-walk"],
+    "source": "https://www.mcdonalds.it/ristorante/lazio/roma/roma-borgo-pio"
+  },
+  {
+    "name": "GAMM Game Museum",
+    "city": "Roma",
+    "latitude": 41.90190145,
+    "longitude": 12.49696885,
+    "activityIds": ["nov-24-gamm", "nov-24-gamm-walk"],
+    "source": "https://www.turismoroma.it/en/places/gamm-game-museum"
+  },
+  {
+    "name": "Empório Brasileiro",
+    "city": "Roma",
+    "latitude": 41.902875,
+    "longitude": 12.505802,
+    "activityIds": ["nov-24-dinner", "nov-24-emporio-walk"],
+    "source": "https://menuhunterai.com/rome-italy/menu/emporio-brasileiro-roma-rome/"
+  },
+  {
+    "name": "Jardins da Villa Borghese",
+    "city": "Roma",
+    "latitude": 41.912886,
+    "longitude": 12.485231,
+    "activityIds": ["nov-25-villa"],
+    "source": "https://www.comune.roma.it/web-resources/cms/documents/PPC2024_1_InformazioneGenerale_Allegati.pdf"
+  },
+  {
+    "name": "Estação Spagna",
+    "city": "Roma",
+    "latitude": 41.9065,
+    "longitude": 12.48306,
+    "activityIds": ["nov-25-borghese-route"],
+    "destination": "Spagna metro, Roma",
+    "source": "https://en.wikipedia.org/wiki/Spagna_(Rome_Metro)"
+  },
+  {
+    "name": "Burger King · Via Nazionale",
+    "city": "Roma",
+    "latitude": 41.89745,
+    "longitude": 12.48798,
+    "activityIds": ["nov-25-lunch", "nov-25-bk-walk"],
+    "source": "https://findit.city/en/italy/rome/places/restaurants/burger-king-2113728140"
+  },
+  {
+    "name": "Oakberry · Piazzale Flaminio",
+    "city": "Roma",
+    "latitude": 41.911978,
+    "longitude": 12.475177,
+    "activityIds": ["nov-25-acai", "nov-25-oakberry-walk"],
+    "source": "https://www.corner.inc/place/pvQzKZpfLcpx"
+  },
+  {
+    "name": "Estação Flaminio",
+    "city": "Roma",
+    "latitude": 41.91194,
+    "longitude": 12.47583,
+    "activityIds": ["nov-25-flaminio"],
+    "source": "https://en.wikipedia.org/wiki/Flaminio_%E2%80%93_Piazza_del_Popolo_(Rome_Metro)"
+  },
+  {
+    "name": "Estação EUR Fermi",
+    "city": "Roma",
+    "latitude": 41.82883,
+    "longitude": 12.47086,
+    "activityIds": ["nov-25-planetarium-route", "nov-25-dinner-route"],
+    "destination": "EUR Fermi metro, Roma",
+    "source": "https://mapcarta.com/28375926"
+  },
+  {
+    "name": "Estação Cornelia",
+    "city": "Roma",
+    "latitude": 41.90222,
+    "longitude": 12.42528,
+    "activityIds": ["nov-25-dinner-route", "nov-25-return"],
+    "destination": "Cornelia metro, Roma",
+    "source": "https://en.wikipedia.org/wiki/Cornelia_(Rome_Metro)"
+  },
+  {
+    "name": "Churrascaria dos Amigos",
+    "city": "Roma",
+    "latitude": 41.8965112,
+    "longitude": 12.4194625,
+    "activityIds": ["nov-25-dinner", "nov-25-dinner-route"],
+    "source": "https://www.thefork.it/ristorante/churrascaria-dos-amigos-r865791"
+  },
+  {
+    "name": "Santo Stefano di Camastra",
+    "city": "Sicília",
+    "latitude": 38.0129,
+    "longitude": 14.3513,
+    "activityIds": ["nov-26-drive"],
+    "driving": true,
+    "source": "https://www.saperecomune.it/sicilia/santo-stefano-di-camastra"
+  },
+  {
+    "name": "P1 Lunga Sosta · Aeroporto de Palermo",
+    "city": "Sicília",
+    "latitude": 38.1860394,
+    "longitude": 13.0999209,
+    "activityIds": ["nov-20-parking", "plan-1-01", "nov-26-luggage"],
+    "destination": "Parcheggio P1 Aeroporto di Palermo",
+    "driving": true,
+    "note": "Estacionamento oficial da reserva, a cerca de 600 m do terminal.",
+    "source": "https://www.aeroportodipalermo.it/parcheggi/p1-parcheggio-lunga-sosta/"
+  },
+  {
+    "name": "Aeroporto de Palermo (PMO) · Terminal",
+    "city": "Sicília",
+    "latitude": 38.186525,
+    "longitude": 13.104779,
+    "activityIds": ["plan-1-06", "nov-26-flight"],
+    "destination": "Aeroporto Falcone Borsellino, Palermo",
+    "source": "https://www.airportmaps.com/PMO"
   }
 ]

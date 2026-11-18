@@ -3,6 +3,7 @@ import { ArrowUpRight, BedDouble, ChevronRight, MapPin, Wifi, Search } from 'luc
 import { DestinationLinks, MapDestinationCard } from '../components/MapDestinationCard';
 import type { TravelStore } from '../hooks/useTravel';
 import { mapDestination } from '../lib/domain';
+import { normalizeMapSearch } from '../lib/mapPoints';
 import { Empty, PageHeading } from '../components/ui';
 import { OnlineMap } from '../components/OnlineMap';
 
@@ -18,16 +19,13 @@ export function MapPage({
     { ...store.state!.hotel, city: 'Atenas' },
     { ...store.state!.romeHotel, city: 'Roma' },
   ];
-  const normalize = (s: string) =>
-    s
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLocaleLowerCase('pt-BR');
-  const locations = store.state!.activities.filter(
+  const { activities } = store.state!;
+  const query = normalizeMapSearch(search);
+  const locations = activities.filter(
     (a) =>
       mapDestination(a) &&
-      normalize(`${a.title} ${mapDestination(a)} ${a.transport.origin}`).includes(
-        normalize(search),
+      normalizeMapSearch(`${a.title} ${mapDestination(a)} ${a.transport.origin}`).includes(
+        query,
       ),
   );
   return (
@@ -37,7 +35,17 @@ export function MapPage({
         title="Mapa e caminhos"
         description="Seus destinos e deslocamentos, reunidos em um lugar."
       />
-      <OnlineMap activities={locations} documents={store.documents} />
+      <label className="map-search">
+        <Search size={20} />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar atrações e lugares"
+          aria-label="Buscar destinos do roteiro"
+        />
+      </label>
+      <OnlineMap activities={activities} documents={store.documents} search={search} />
       <p className="notice inline">
         <Wifi size={18} />
         Google Maps e sites externos precisam de internet. Este aplicativo guarda apenas os
@@ -51,16 +59,6 @@ export function MapPage({
           Editar roteiro <ArrowUpRight size={15} />
         </button>
       </div>
-      <label className="map-search">
-        <Search size={20} />
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar atrações e lugares"
-          aria-label="Buscar destinos do roteiro"
-        />
-      </label>
       {!locations.length ? (
         <section className="card">
           <Empty title={search ? 'Nenhum destino encontrado' : 'Seus caminhos começam no roteiro'}>

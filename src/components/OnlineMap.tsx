@@ -1,43 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import points from '../data/map-points.json';
-import { suppliedItinerary } from '../data/itinerary';
 import type { Activity, LocalDocument } from '../data/schema';
-import { mapDestination } from '../lib/domain';
+import { matchingMapPoints } from '../lib/mapPoints';
 import { MapDestinationCard } from './MapDestinationCard';
 import { Modal } from './ui';
-
-const originalDestinations = new Map(
-  suppliedItinerary().activities.map((a) => [a.id, mapDestination(a)]),
-);
 
 export function OnlineMap({
   activities,
   documents,
+  search,
 }: {
   activities: Activity[];
   documents: LocalDocument[];
+  search: string;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = activities.find((activity) => activity.id === selectedId);
   const [online, setOnline] = useState(navigator.onLine);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [preferredCity, setPreferredCity] = useState('Atenas');
-  const matching = points.flatMap((point) => {
-    const activity = activities.find(
-      (a) =>
-        point.activityIds.includes(a.id) && mapDestination(a) === originalDestinations.get(a.id),
-    );
-    return activity ? [{ ...point, city: point.city ?? 'Atenas', activity }] : [];
-  });
+  const matching = matchingMapPoints(activities, search);
   const cities = [...new Set(matching.map((point) => point.city))];
   const city = cities.includes(preferredCity) ? preferredCity : cities[0];
   const visible = matching.filter((point) => point.city === city);
+  const selected = visible.find((point) => point.name === selectedId);
   const signature = JSON.stringify(
-    visible.map((p) => [p.name, p.activity.id, p.activity.title, p.activity.date]),
+    visible.map((point) => point.name),
   );
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
@@ -84,7 +74,7 @@ export function OnlineMap({
               iconSize: [36, 36],
               iconAnchor: [18, 36],
             }),
-          }).on('click', () => setSelectedId(point.activity.id));
+          }).on('click', () => setSelectedId(point.name));
           marker.on('add', () => {
             const icon = marker.getElement();
             icon?.setAttribute('aria-label', `Ver ponto: ${point.name}`);
@@ -92,7 +82,7 @@ export function OnlineMap({
               if (event.key !== 'Enter' && event.key !== ' ') return;
               event.preventDefault();
               event.stopPropagation();
-              setSelectedId(point.activity.id);
+              setSelectedId(point.name);
             });
           });
           marker.addTo(map);
@@ -158,16 +148,14 @@ export function OnlineMap({
           </>
         )}
         <p className="small muted">
-          Toque em um ponto para abrir os detalhes. Coordenadas indicam o local, não a entrada ou o
-          encontro do guia. Locais sem coordenadas verificadas ficam nos cards. Mapa online:
-          OpenStreetMap; rotas: Google Maps.
+          Toque em um ponto para abrir os detalhes. Use a busca para aproximar um local.
         </p>
       </section>
       {selected && (
         <Modal title="Ponto no mapa" onClose={() => setSelectedId(null)}>
           <div className="map-point-preview">
-            <MapDestinationCard activity={selected} documents={documents} />
-            <p className="small muted">Google Maps e rotas precisam de internet.</p>
+            {selected.note && <p className="notice">{selected.note}</p>}
+            <MapDestinationCard activity={selected.activity} documents={documents} point={selected} />
           </div>
         </Modal>
       )}

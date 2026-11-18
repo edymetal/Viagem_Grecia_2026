@@ -14,7 +14,7 @@ const activityPlaces: Record<string, keyof typeof photos> = {
   'plan-3-10': 'hadrian-arch',
   'plan-3-13': 'acropolis-museum',
 };
-export function activityPhoto(activity: Activity) {
+export function activityPhoto(activity: Pick<Activity, 'id'>) {
   const key = activityPlaces[activity.id];
   if (!key) return null;
   const photo = photos[key];
