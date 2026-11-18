@@ -24,18 +24,33 @@ test('identifica documentos relacionados e permite escolher um PDF', async ({ pa
   );
 });
 
-test('usa a pasta autorizada para abrir o PDF relacionado', async ({ page }) => {
+test('autoriza uma vez e abre PDFs de atividades diferentes após reabrir offline', async ({
+  page,
+  context,
+}) => {
   await page.addInitScript(() => {
+    Object.defineProperty(FileSystemDirectoryHandle.prototype, 'queryPermission', {
+      configurable: true,
+      value: async () => (sessionStorage.getItem('permission-expired') ? 'prompt' : 'granted'),
+    });
+    Object.defineProperty(FileSystemDirectoryHandle.prototype, 'requestPermission', {
+      configurable: true,
+      value: async () => {
+        throw new Error('O acesso não deveria pedir autorização novamente');
+      },
+    });
     Object.defineProperty(window, 'showDirectoryPicker', {
       configurable: true,
       value: async () => {
         const root = await navigator.storage.getDirectory();
         const trip = await root.getDirectoryHandle('Viagem', { create: true });
         const athens = await trip.getDirectoryHandle('Atenas', { create: true });
-        const file = await athens.getFileHandle('agora-antiga-exemplo.pdf', { create: true });
-        const writer = await file.createWritable();
-        await writer.write('%PDF-1.4\n% Agora\n%%EOF');
-        await writer.close();
+        for (const name of ['agora-antiga', 'kotsanas']) {
+          const file = await athens.getFileHandle(`${name}-exemplo.pdf`, { create: true });
+          const writer = await file.createWritable();
+          await writer.write(`%PDF-1.4\n% ${name}\n%%EOF`);
+          await writer.close();
+        }
         return trip;
       },
     });
@@ -61,6 +76,24 @@ test('usa a pasta autorizada para abrir o PDF relacionado', async ({ page }) => 
   await page.goto('./#roteiro/2026-11-22/plan-3-03');
   await page.getByRole('button', { name: 'Escolher pasta Viagem' }).click();
   await page.getByRole('button', { name: 'Abrir ingresso da ágora' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-opened-pdf', /agora-antiga/);
+
+  await page.goto('./#roteiro/2026-11-21/plan-2-05');
+  await page.getByRole('button', { name: 'Abrir ingresso do museu' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-opened-pdf', /kotsanas/);
+
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    sessionStorage.setItem('permission-expired', 'true');
+  });
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller);
+  await context.setOffline(true);
+  await page.reload();
+  await page.getByRole('button', { name: 'Abrir ingresso do museu' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-opened-pdf', /kotsanas/);
   await expect(page.getByRole('button', { name: 'Autorizar acesso à pasta' })).toHaveCount(0);
-  await expect(page.locator('html')).toHaveAttribute('data-opened-pdf', /Agora/);
+
+  await page.goto('./#documentos');
+  await page.getByRole('button', { name: 'Abrir Atenas/agora-antiga-exemplo.pdf' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-opened-pdf', /agora-antiga/);
 });

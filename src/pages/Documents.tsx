@@ -21,8 +21,8 @@ export function Documents({ store }: { store: TravelStore }) {
         <div>
           <strong>Seus documentos ficam com você</strong>
           <p>
-            Seus PDFs ficam neste dispositivo. O Chrome gerencia o acesso à pasta. Guarde um backup
-            dos arquivos que salvar no navegador.
+            Os PDFs da pasta Viagem são guardados neste dispositivo para uso offline. Ao adicionar
+            ou trocar arquivos na pasta, toque em Atualizar PDFs.
           </p>
         </div>
       </div>
