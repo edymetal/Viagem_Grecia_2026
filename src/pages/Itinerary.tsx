@@ -362,7 +362,7 @@ export function Itinerary({ store, now, route }: { store: TravelStore; now: Date
   return (
     <>
       {selected ? (
-        <ActivityDetails activity={selected} store={store} onEdit={() => setEditing(selected)} />
+        <ActivityDetails activity={selected} route={route} store={store} onEdit={() => setEditing(selected)} />
       ) : (
         <section className="itinerary-screen">
           <header className="route-heading">

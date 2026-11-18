@@ -29,6 +29,7 @@ import { ActivityVisual, parthenonPhoto } from '../components/ActivityVisual';
 import { LocalImage } from '../components/ui';
 import { activityPhoto } from '../data/placePhotos';
 import { ActivityDocuments } from '../components/ActivityDocuments';
+import { HotelCheckIn } from '../components/HotelCheckIn';
 
 const airlineStatusPages: Record<string, string | undefined> = {
   AZ: 'https://www.ita-airways.com/it/it/manage-my-bookings/manage/flight-status',
@@ -43,10 +44,12 @@ const departureBoards: Record<string, string | undefined> = {
 
 export function ActivityDetails({
   activity: a,
+  route,
   store,
   onEdit,
 }: {
   activity: Activity;
+  route: string;
   store: TravelStore;
   onEdit: () => void;
 }) {
@@ -147,6 +150,9 @@ export function ActivityDetails({
                 )}
               </div>
             </div>
+            {a.id === 'plan-1-13' && /ilissos/i.test(`${a.title} ${a.location}`) && (
+              <HotelCheckIn route={route} />
+            )}
             <dl className="visit-facts">
               <div className="detail-scheduled-time">
                 <dt>

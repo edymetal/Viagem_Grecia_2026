@@ -631,3 +631,16 @@
 .activity-document-item small { overflow-wrap: anywhere; }
 .activity-pdf-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
 .activity-document-item label:focus-within { outline: 2px solid currentColor; outline-offset: 3px; }
+.reception-languages {
+  display: flex;
+  gap: 8px;
+}
+.reception-languages button { flex: 1; }
+.reception-message {
+  font-size: 1.12rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.reception-message p, .reception-message dl { margin: 1em 0; }
+.reception-message dt { color: var(--muted); font-size: .9em; }
+.reception-message dd { margin: 0 0 .5em; font-weight: 700; font-variant-numeric: tabular-nums; }
