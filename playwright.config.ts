@@ -10,7 +10,14 @@ export default defineConfig({
   timeout: 30_000,
   use: { baseURL: `http://127.0.0.1:4173${base}`, trace: 'retain-on-failure' },
   projects: [
-    { name: 'android-chromium', use: { ...devices['Pixel 7'], defaultBrowserType: 'chromium' } },
+    {
+      name: 'android-chromium',
+      use: {
+        ...devices['Pixel 7'],
+        defaultBrowserType: 'chromium',
+        channel: process.env.PLAYWRIGHT_CHROMIUM_CHANNEL,
+      },
+    },
   ],
   webServer: {
     command: 'npm run preview -- --port 4173 --strictPort',
