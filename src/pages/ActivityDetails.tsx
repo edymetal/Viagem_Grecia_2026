@@ -8,6 +8,7 @@ import {
   Hourglass,
   MapPin,
   Navigation,
+  Plane,
   Route,
   Ticket,
   TrainFront,
@@ -28,6 +29,17 @@ import { ActivityVisual, parthenonPhoto } from '../components/ActivityVisual';
 import { LocalImage } from '../components/ui';
 import { activityPhoto } from '../data/placePhotos';
 import { ActivityDocuments } from '../components/ActivityDocuments';
+
+const airlineStatusPages: Record<string, string | undefined> = {
+  AZ: 'https://www.ita-airways.com/it/it/manage-my-bookings/manage/flight-status',
+  FR: 'https://www.ryanair.com/it/it/lp/travel-updates',
+};
+
+const departureBoards: Record<string, string | undefined> = {
+  PMO: 'https://www.aeroportodipalermo.it/voli/',
+  FCO: 'https://adr.airsiders.com/?lang=it',
+  ATH: 'https://archive.aia.gr/en/traveler/flight-info/rtfi',
+};
 
 export function ActivityDetails({
   activity: a,
@@ -53,6 +65,11 @@ export function ActivityDetails({
           ? 'transit'
           : undefined;
   const origin = a.transport.origin.trim();
+  const airlineCode = /^([A-Z]{2})\s*\d{1,4}$/i.exec(a.transport.lines.trim())?.[1].toUpperCase();
+  const flightStatusUrl =
+    a.transport.mode === 'Avião' && airlineCode ? airlineStatusPages[airlineCode] : undefined;
+  const originAirport = /\(([A-Z]{3})\)$/.exec(origin)?.[1];
+  const departureBoard = flightStatusUrl && originAirport ? departureBoards[originAirport] : undefined;
   const hasRoute = directionMode && origin && destination && origin !== destination;
   const hasStatus = a.confirmation !== 'Planejada' || a.required;
   const scheduledDuration = (activityInstant(a, 'end') - activityInstant(a)) / 60_000;
@@ -198,16 +215,33 @@ export function ActivityDetails({
             {a.timeNote && a.timeNote.trim() !== a.description.trim() && (
               <p className="detail-time-note">{a.timeNote}</p>
             )}
-            {destination && (
+            {(destination || flightStatusUrl) && (
               <div className="detail-navigation">
-                <a
-                  className="button detail-map-button"
-                  href={mapsLink(destination)}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Navigation size={19} /> Ir no mapa
-                </a>
+                {flightStatusUrl && (
+                  <a className="button" href={flightStatusUrl} target="_blank" rel="noreferrer">
+                    <Plane size={19} /> Ver status do voo
+                  </a>
+                )}
+                {departureBoard && (
+                  <a
+                    className="button secondary"
+                    href={departureBoard}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <MapPin size={18} /> Ver portão no aeroporto
+                  </a>
+                )}
+                {destination && (
+                  <a
+                    className={flightStatusUrl ? 'button secondary' : 'button detail-map-button'}
+                    href={mapsLink(destination)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Navigation size={19} /> Ir no mapa
+                  </a>
+                )}
                 {hasRoute && (
                   <a
                     className="button secondary"
