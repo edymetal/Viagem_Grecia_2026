@@ -30,7 +30,7 @@ test('linha avança ao vivo e offline sem concluir visitas automaticamente', asy
   page,
   context,
 }) => {
-  await page.clock.install({ time: new Date('2026-11-20T07:07:30Z') });
+  await page.clock.install({ time: new Date('2026-11-20T06:45:00Z') });
   await page.goto('./#roteiro');
   const current = page
     .locator('.compact-activity')
@@ -52,7 +52,7 @@ test('linha avança ao vivo e offline sem concluir visitas automaticamente', asy
   await expect(page.locator('[data-time-state="current"]')).toHaveCount(0);
   await expect(page.locator('[data-time-state="upcoming"]')).toHaveCount(10);
   await page.getByRole('tab', { name: /20\/11/ }).click();
-  await page.clock.setSystemTime(new Date('2026-11-20T07:15:00Z'));
+  await page.clock.setSystemTime(new Date('2026-11-20T06:50:00Z'));
   await page.clock.runFor(30_000);
   await expect(current).toHaveAttribute('data-time-state', 'elapsed');
 });

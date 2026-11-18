@@ -8,20 +8,20 @@ import {
 } from './itineraryActivities';
 import { stateSchema, tripDates, type AppState, type Expense } from './schema';
 
-export const ITINERARY_REVISION = 'cronograma-2026-11-18-atenas-roma-gastos-revisados';
+export const ITINERARY_REVISION = 'cronograma-2026-11-18-atenas-roma-deslocamentos-revisados';
 const parkingKey = 'parking';
 const ryanairKey = 'ryanair';
 export const PARKING_EXPENSE_ID = 'plan-exp-' + parkingKey;
 export const RETURN_FLIGHT_EXPENSE_ID = 'plan-exp-' + ryanairKey;
 
 const dayNotes = [
-  'Palermo de carro. P1 Lunga Sosta pago, com entrada reservada às 09h00. Levar o QR code do e-mail. Atenas está uma hora à frente da Itália. Comprar e validar o passe de 72h ao chegar ao aeroporto. Chegada estimada ao Ilissos Hotel entre 20h30 e 21h.',
-  'Café no hotel. Tour combinado em italiano às 09h30, com entradas incluídas e encontro até 09h15. Se o tour atrasar, encurtar Filopapo para chegar ao Kotsanas, que fecha às 18h. Licabeto à noite é opcional.',
-  'Acompanhar as faixas de entrada da Biblioteca (08h30–09h30), Zeus (11h30–12h30) e Ágora (14h–15h). Troca da guarda às 11h. Conferir a mensagem do guia antes de ir ao free tour das 18h35.',
-  'Check-out do Ilissos até 08h por causa do voo. Pegar um metrô da linha 3 identificado como Airport. Voo para Roma às 12h45 na Grécia e chegada às 13h55 na Itália. Ciao Termini faz check-in até 19h.',
-  'Vaticano às 10h15, com encontro na Via Germanico 8 até 10h. Vicus Caprarius às 15h solicitado à secretaria. Ajustar almoço ou GAMM se o passeio anterior atrasar ou o Vicus mudar de horário.',
-  'Chegar à Galleria Borghese por volta das 09h, com ingresso e documento. Sair de Flaminio às 14h30. As sessões das 16h e 17h constam no programa oficial. Ingressos a comprar.',
-  'Voo Ryanair FR3946 confirmado de Fiumicino às 13h50 a Palermo às 15h00. Leonardo Express planejado para 10h05. P1 Lunga Sosta com saída reservada às 23h00 e retirada estimada entre 16h30 e 17h. Chegada a Santo Stefano estimada entre 17h30 e 19h.',
+  'Sair de carro às 07h40–07h50. P1 Lunga Sosta a partir de 09h, com QR code. Os voos ITA têm 1h45 de conexão em Fiumicino. Em Atenas, uma hora à frente da Itália, mirar o metrô das 19h22 ou 19h58. Ilissos entre 20h20 e 21h10 se pegar uma dessas saídas.',
+  'Chegar à entrada principal da estação Acropoli até 09h15. Guia das 09h20 às 09h25 e tour às 09h30. Baixar o ingresso anexo ao e-mail da Civitatis. Se o tour atrasar, encurtar ou pular Filopapo para priorizar o Kotsanas. Licabeto é opcional.',
+  'Entrar na Biblioteca até 09h30, em Zeus até 12h30 e na Ágora até 15h. Troca da guarda às 11h. Jardim Nacional antes do pôr do sol, cerca de 17h09. Conferir a mensagem do guia antes de ir ao free tour das 18h35.',
+  'Sair do Ilissos às 08h. Em Syntagma, mirar a linha 3 Airport das 08h54, com chegada às 09h34. Alternativa: 09h30 → 10h10. Voo às 12h45 na Grécia, chegada às 13h55 na Itália. Ciao Termini recebe até 19h.',
+  'Vaticano às 10h15, com encontro na Via Germanico 8 até 10h. Vicus solicitado para 15h. Se for confirmado, sair da região do Borgo Pio até 14h para fazer o trajeto a pé com margem.',
+  'Chegar à Galleria Borghese por volta das 09h, com ingresso e documento. Estar em Flaminio até 14h30 para chegar ao Planetário por volta de 15h15–15h30. As sessões das 16h e 17h estão no programa. Ingressos a comprar.',
+  'Leonardo Express às 10h05 na grade, com chegada às 10h37. A Ryanair fecha o portão às 13h20 para o voo das 13h50. Com pouso às 15h, retirada do carro no P1 por volta das 15h30–16h e chegada a Santo Stefano entre 17h05 e 18h.',
 ];
 
 const checklist: [key: string, title: string, done?: boolean][] = [
@@ -210,7 +210,7 @@ export function suppliedItinerary(): AppState {
   state.hotel = {
     name: 'Ilissos Hotel',
     address: 'Kallirrois 72, Atenas',
-    checkIn: '20/11 · chegada estimada 20h30–21h',
+    checkIn: '20/11 · chegada estimada 20h20–21h10',
     checkOut: '23/11 · até 11h, com saída planejada até 08h',
     notes:
       'Hospedagem paga (€ 135,67). Café da manhã incluído em 21, 22 e 23/11. Taxa ambiental de € 9 indicada para pagamento no hotel. Syngrou-Fix fica a cerca de 650 m.',

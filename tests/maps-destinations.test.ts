@@ -25,4 +25,11 @@ describe('endereços do Google Maps', () => {
     expect(url.searchParams.get('origin')).toBe('Origem personalizada');
     expect(url.searchParams.has('destination_place_id')).toBe(false);
   });
+  it('abre os pontos de encontro informados pelos fornecedores no Google Maps', () => {
+    const activities = itineraryActivities();
+    const acropolis = activities.find((activity) => activity.id === 'plan-2-10')!;
+    const freeTour = activities.find((activity) => activity.id === 'nov-22-checkin')!;
+    expect(mapsLink(mapDestination(acropolis))).toBe('https://goo.gl/maps/84CxmmK2pvrSsRrU9');
+    expect(mapsLink(mapDestination(freeTour))).toBe('https://maps.app.goo.gl/LGBiFCQzG9FhhEVNA');
+  });
 });

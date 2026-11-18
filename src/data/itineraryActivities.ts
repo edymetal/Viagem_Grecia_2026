@@ -7,6 +7,7 @@ const italy = 'Europe/Rome';
 const ilissos = 'Ilissos Hotel, Kallirrois 72, Atenas';
 const ciao = 'Ciao Termini, Via Bixio 71, Roma';
 const ath = 'Aeroporto Internacional de Atenas (ATH)';
+const athensAirportMetro = 'Estação de metrô do aeroporto de Atenas';
 const pmo = 'Aeroporto de Palermo (PMO)';
 export const PALERMO_PARKING = 'P1 Lunga Sosta, Aeroporto de Palermo (PMO)';
 export const PALERMO_PARKING_PRICE = 65;
@@ -14,7 +15,7 @@ export const RYANAIR_RETURN_PRICE = 64.89;
 export const RYANAIR_RETURN_BAG = 'uma mala pequena de até 40 × 30 × 20 cm';
 const fco = 'Aeroporto de Roma Fiumicino (FCO)';
 const termini = 'Roma Termini';
-const syntagma = 'Praça Syntagma, Atenas';
+const syntagma = 'Túmulo do Soldado Desconhecido, Praça Syntagma, Atenas';
 const acropoli = 'Estação Acropoli, Atenas';
 const fix = 'Estação Syngrou-Fix, Atenas';
 const home = 'Santo Stefano di Camastra';
@@ -41,7 +42,7 @@ const churrascaria = 'Churrascaria dos Amigos, Via Aurelia 528A, Roma';
 
 export const sources = {
   athensPass: 'https://www.oasa.gr/en/tickets/prices-of-products/',
-  athensMetro: 'https://www.stasy.gr/en/stations/syntagma/',
+  athensAirportMetro: 'https://www.stasy.gr/en/timetables/line-3/',
   greekTickets: 'https://hhticket.gr/',
   leonardo: 'https://www.trenitalia.com/it/regionale/collegamenti-regionale/leonardo-express.html',
   trenitaliaUpdates:
@@ -101,25 +102,25 @@ const rows: Row[][] = [
   [
     [
       'plan-1-01',
-      '08:00',
-      '08:15',
+      '07:40',
+      '07:50',
       'Saída de Santo Stefano de carro',
-      'Janela de saída. Cerca de 130 km e 1h30 de estrada, com pedágio.',
-      { ...route('Carro', home, PALERMO_PARKING, '', 90), ...approximate },
+      'Cerca de 130 km pela A20/A19/A29, com pedágio. Planejar 1h35–2h de carro e chegar ao P1 entre 09h15 e 09h50.',
+      { ...route('Carro', home, PALERMO_PARKING, '', 95), ...approximate },
     ],
     [
       'nov-20-parking',
       '',
       '10:00',
       'P1 Lunga Sosta · estacionamento e ida ao terminal',
-      'Reserva paga. Entrada reservada em 20/11 às 09h00 e saída reservada em 26/11 às 23h00. Acesso pelo QR code no e-mail de confirmação. O terminal fica a cerca de 6 minutos a pé.',
+      'Reserva paga. Vigência a partir de 09h00 de 20/11 até 23h00 de 26/11. Escanear na cancela de entrada o QR do PDF enviado por e-mail. Do P1 ao terminal são cerca de 600 m, ou 8–12 minutos com mala.',
       {
         ...at(PALERMO_PARKING),
         ...booked,
         ...approximate,
         ...paidPrice(PALERMO_PARKING_PRICE),
         timeNote:
-          'Meta de chegada ao terminal até 10h. A entrada na reserva está indicada para 09h00.',
+          'Meta de chegada ao terminal por volta das 10h. A entrada da reserva está indicada para 09h00.',
       },
     ],
     [
@@ -127,7 +128,7 @@ const rows: Row[][] = [
       '10:00',
       '12:00',
       'Procedimentos no aeroporto de Palermo',
-      'Fazer os procedimentos do voo, passar pela segurança e localizar o portão.',
+      'Ter os dois cartões de embarque à mão. Se despachar mala, confirmar na etiqueta que o destino final é ATH. Passar pela segurança e procurar o portão até 12h.',
       at(pmo),
     ],
     [
@@ -143,7 +144,7 @@ const rows: Row[][] = [
       '13:50',
       '15:35',
       'Conexão em Roma Fiumicino',
-      '1h45 de conexão. Conferir o portão do próximo voo nos painéis.',
+      'Conexão na mesma passagem. Do pouso às 13h50 até a partida seguinte são 1h45. Seguir Connettenti / Flight Connections e ir direto ao portão do AZ718. A ITA informa fechamento 15 minutos antes da partida, às 15h20.',
       at(fco),
     ],
     [
@@ -159,9 +160,9 @@ const rows: Row[][] = [
       '18:35',
       '',
       'Desembarque e caminhada até o metrô',
-      'Seguir as placas para o metrô após o desembarque.',
+      'Prever 30–55 minutos do pouso até a estação e a compra do passe. Após retirar a bagagem, seguir as placas Train / Metro e atravessar a passarela no nível de partidas até a estação.',
       {
-        ...route('A pé', ath, 'Estação de metrô do aeroporto de Atenas'),
+        ...route('A pé', ath, athensAirportMetro, '', 10),
         timeZone: athens,
         ...approximate,
       },
@@ -171,9 +172,9 @@ const rows: Row[][] = [
       '',
       '',
       'Comprar o passe turístico de Atenas',
-      'Passe de 72h a partir da primeira validação. Inclui ida e volta do aeroporto. Guardar o bilhete até o retorno de segunda-feira.',
+      'Comprar o 3-day Tourist Ticket de € 20 na máquina ou bilheteria da estação. Validar na entrada e guardar até segunda. São 72h a partir da primeira validação, incluindo uma ida e uma volta entre aeroporto e cidade.',
       {
-        ...at(ath),
+        ...at(athensAirportMetro),
         ...pending,
         ...referencePrice(20),
         timeZone: athens,
@@ -185,11 +186,11 @@ const rows: Row[][] = [
       '',
       '',
       'Metrô até Syngrou-Fix',
-      'Linha 3 até Syntagma. Trocar para a linha 2 em direção a Elliniko.',
+      'Linha 3: 19h22 → 20h01 ou 19h58 → 20h37 até Syntagma, conforme o desembarque. Se precisar, a próxima saída é 20h34. Em Syntagma, trocar para a linha 2 sentido Elliniko. Prever 8–15 min para troca, espera e dois pontos até Syngrou-Fix.',
       {
-        ...route('Metrô', ath, fix, 'Linha 3 → Syntagma · linha 2 → Elliniko'),
+        ...route('Metrô', athensAirportMetro, fix, 'Linha 3 → Syntagma · linha 2 → Elliniko', 50),
         timeZone: athens,
-        website: sources.athensMetro,
+        website: sources.athensAirportMetro,
       },
     ],
     [
@@ -202,10 +203,10 @@ const rows: Row[][] = [
     ],
     [
       'plan-1-13',
-      '20:30',
-      '21:00',
+      '20:20',
+      '21:10',
       'Chegada e check-in no Ilissos Hotel',
-      'Janela estimada de chegada. Hotel reservado e hospedagem paga. Café da manhã incluído em 21, 22 e 23/11. Taxa ambiental de € 9 indicada para pagamento no hotel.',
+      'Chegada estimada se embarcar às 19h22 ou 19h58. Se pegar o metrô das 20h34, prever 21h30–21h45. Café da manhã incluído em 21, 22 e 23/11. Taxa ambiental de € 9 indicada para pagamento no hotel.',
       {
         ...at(ilissos),
         ...booked,
@@ -245,15 +246,15 @@ const rows: Row[][] = [
       '',
       '',
       'Metrô até Acropoli',
-      'Acropoli fica a uma estação. Incluir o tempo de espera pelo próximo trem.',
-      route('Metrô', fix, acropoli, 'Linha 2 sentido Anthoupoli'),
+      'Acropoli fica a uma estação. Prever 10–20 minutos da entrada em Syngrou-Fix até a saída da estação Acropoli, contando espera e caminhada interna.',
+      route('Metrô', fix, acropoli, 'Linha 2 sentido Anthoupoli', 15),
     ],
     [
       'plan-2-10',
       '',
       '09:15',
       'Chegar ao ponto de encontro do guia',
-      'Apresentar-se na estação Acropoli até 09h15, com 15 minutos de antecedência. Conferir as instruções do voucher.',
+      'Chegar até 09h15 à entrada principal da estação Acropoli. O guia confirmou apresentação entre 09h20 e 09h25. O botão Ir no mapa usa o ponto enviado pelo guia por e-mail.',
       at(acropoli),
     ],
     [
@@ -261,7 +262,7 @@ const rows: Row[][] = [
       '09:30',
       '14:00',
       'Tour da Acrópole, Partenon e Museu da Acrópole',
-      'Guia em italiano. As entradas estão incluídas nos € 110 pagos pelo tour. Término aproximado às 14h.',
+      'Tour Civitatis / Secrets of Greece em italiano, com entradas incluídas. Baixar o ingresso da Acrópole enviado por e-mail, válido para entrada entre 09h e 10h. O guia prevê o museu às 12h e informou que enviará as instruções na sexta. Término estimado às 14h.',
       {
         ...at('Acrópole e Partenon, Atenas'),
         ...booked,
@@ -275,7 +276,7 @@ const rows: Row[][] = [
       '14:00',
       '14:50',
       'Almoço perto do Museu da Acrópole',
-      'Restaurante a escolher. Se o tour atrasar, reduzir a parada em Filopapo para chegar ao Kotsanas a tempo.',
+      'Restaurante a escolher. Se o tour terminar depois das 14h20, encurtar ou pular Filopapo e seguir do museu direto ao Kotsanas, cerca de 25–35 minutos a pé.',
       { ...at(museum), price: 15, priceMax: 25, priceCertainty: 'Estimativa' },
     ],
     [
@@ -283,8 +284,8 @@ const rows: Row[][] = [
       '14:50',
       '15:20',
       'Caminhada e subida a Filopapo',
-      'Cerca de 1 km. A caminhada estimada de 17 minutos tem margem para a subida.',
-      route('A pé', museum, filopapo, '', 17),
+      'Cerca de 1 km, com subida. Planejar 20–30 minutos até o monumento.',
+      route('A pé', museum, filopapo, '', 25),
     ],
     [
       'nov-21-filopapo',
@@ -299,8 +300,8 @@ const rows: Row[][] = [
       '15:50',
       '16:30',
       'Caminhada até o Museu Kotsanas',
-      'Aproximadamente 2,5 km a partir do monumento. Chegar antes do fechamento às 18h.',
-      route('A pé', filopapo, kotsanas, '', 36),
+      'Aproximadamente 2,5 km desde o monumento. Planejar 35–45 minutos, com descida e travessias. Priorizar a chegada ao Kotsanas até 16h45 para fazer a visita com calma.',
+      route('A pé', filopapo, kotsanas, '', 40),
     ],
     [
       'plan-2-05',
@@ -322,15 +323,15 @@ const rows: Row[][] = [
       '17:45',
       '18:10',
       'Caminhada até a região do funicular do Licabeto',
-      'Trecho de subida, aproximadamente 650 m.',
-      route('A pé', kotsanas, funicular, '', 13),
+      'Subida de cerca de 15–25 minutos até a estação inferior, na esquina de Ploutarchou e Aristippou, em Kolonaki.',
+      route('A pé', kotsanas, funicular, '', 20),
     ],
     [
       'nov-21-lycabettus',
       '18:10',
       '',
       'Monte Licabeto · passeio opcional',
-      'Vista noturna, se houver disposição. O funicular é opcional: € 13 ida e volta ou € 10 só um trecho.',
+      'Vista noturna, se houver disposição. O funicular leva cerca de 3 minutos e costuma sair a cada 30 minutos. Conferir o painel na estação. Preço de referência: € 13 ida e volta ou € 10 por trecho.',
       { ...at(funicular), ...referencePrice(13), website: sources.lycabettus },
     ],
     [
@@ -338,8 +339,8 @@ const rows: Row[][] = [
       '',
       '',
       'Jantar e retorno ao Ilissos',
-      'Restaurante e horário livres. Pelo metrô, caminhar até Evangelismos e trocar em Syntagma para a linha 2 sentido Elliniko. Descer em Syngrou-Fix e caminhar até o hotel.',
-      route('Metrô', 'Evangelismos, Atenas', ilissos, 'Linha 3 → Syntagma · linha 2 → Syngrou-Fix'),
+      'Restaurante e horário livres. De Evangelismos, usar a linha 3 até Syntagma, trocar pela linha 2 sentido Elliniko, descer em Syngrou-Fix e caminhar até o hotel. Prever 25–40 minutos da estação Evangelismos até o Ilissos.',
+      route('Metrô', 'Evangelismos, Atenas', ilissos, 'Linha 3 → Syntagma · linha 2 → Syngrou-Fix', 30),
     ],
   ],
   [
@@ -364,12 +365,13 @@ const rows: Row[][] = [
       '',
       '',
       'Metrô até Monastiraki',
-      'Trocar em Syntagma para a linha 3 sentido Dimotiko Theatro. A biblioteca fica a cerca de 2 minutos a pé da estação.',
+      'Linha 2 sentido Anthoupoli até Syntagma. Trocar para a linha 3 sentido Dimotiko Theatro. Prever 20–30 minutos incluindo a troca e a caminhada de 2–4 minutos da estação Monastiraki até a biblioteca.',
       route(
         'Metrô',
         fix,
         'Estação Monastiraki, Atenas',
         'Linha 2 → Syntagma · linha 3 → Monastiraki',
+        25,
       ),
     ],
     [
@@ -391,23 +393,23 @@ const rows: Row[][] = [
       '09:45',
       '10:15',
       'Caminhada até a Praça Syntagma',
-      'Cerca de 1 km. Chegar com antecedência para escolher um local para assistir à cerimônia.',
+      'Cerca de 1 km e 15–20 minutos pela Ermou. A margem até 10h15 serve para escolher onde assistir em frente ao Túmulo do Soldado Desconhecido.',
       route('A pé', library, syntagma, '', 14),
     ],
     [
       'plan-3-06',
       '11:00',
-      '',
+      '11:25',
       'Troca solene da guarda',
-      'Cerimônia dominical em frente ao Parlamento. Término sujeito à duração da cerimônia e ao tempo para sair da praça.',
+      'A cerimônia dominical começa às 11h em frente ao Parlamento. Término estimado. Após a cerimônia, seguir pela avenida Vasilissis Amalias rumo ao Templo de Zeus.',
       at(syntagma),
     ],
     [
       'plan-3-08',
-      '',
-      '',
+      '11:25',
+      '11:50',
       'Caminhada até o Templo de Zeus',
-      'Sair após a troca da guarda. Cerca de 1 km, além do tempo de saída da praça.',
+      'Prever 15–25 minutos incluindo a saída da praça. Ir à entrada do Olympieion pela avenida Vasilissis Olgas. Passar pelo Arco de Adriano depois da entrada no sítio se a cerimônia atrasar.',
       route('A pé', syntagma, zeus, '', 14),
     ],
     [
@@ -416,7 +418,7 @@ const rows: Row[][] = [
       '12:35',
       'Templo de Zeus Olímpico e Arco de Adriano',
       'Ingresso comprado por € 20, com entrada entre 11h30 e 12h30. Ver o Arco de Adriano por fora no mesmo bloco.',
-      { ...at(zeus), ...booked, ...paidPrice(20), ticketUrl: sources.greekTickets },
+      { ...at(zeus), ...booked, ...paidPrice(20), openingHours: '08h–15h (inverno)', ticketUrl: sources.greekTickets, website: 'https://www.hh.gr/en/destinations/olympieion/' },
     ],
     [
       'plan-3-10',
@@ -439,7 +441,7 @@ const rows: Row[][] = [
       '13:30',
       '14:00',
       'Caminhada até a Ágora Antiga',
-      'Cerca de 1,5 km a partir do Templo, dependendo do restaurante. Entrada pela região da Adrianou, 24.',
+      'Cerca de 1,5 km e 20–30 minutos a partir do Templo, dependendo do restaurante. Entrada pela Adrianou, 24. A meta é chegar às 14h.',
       route('A pé', zeus, agora, '', 20),
     ],
     [
@@ -448,14 +450,14 @@ const rows: Row[][] = [
       '15:30',
       'Ágora Antiga de Atenas',
       'Ingresso comprado por € 20. Entrar entre 14h e 15h.',
-      { ...at(agora), ...booked, ...paidPrice(20), ticketUrl: sources.greekTickets },
+      { ...at(agora), ...booked, ...paidPrice(20), openingHours: '08h–17h (inverno)', ticketUrl: sources.greekTickets, website: 'https://www.hh.gr/en/destinations/ancient-agora-athens/' },
     ],
     [
       'nov-22-garden-walk',
       '15:30',
       '16:00',
       'Caminhada até o Jardim Nacional',
-      'Cerca de 1,5 km a partir da Ágora.',
+      'Cerca de 1,5 km a partir da Ágora. Prever 20–30 minutos até a entrada pela avenida Vasilissis Amalias.',
       route('A pé', agora, garden, '', 22),
     ],
     [
@@ -463,16 +465,16 @@ const rows: Row[][] = [
       '16:00',
       '16:40',
       'Jardim Nacional de Atenas',
-      'Passeio gratuito, sujeito ao horário de fechamento no domingo.',
-      { ...at(garden), ...paidPrice(0) },
+      'Passeio gratuito. O jardim fecha ao pôr do sol, cerca de 17h09 neste domingo. Se chegar às 16h, dá para sair pelo lado do Zappeion e ver a fachada antes do lanche.',
+      { ...at(garden), ...paidPrice(0), openingHours: 'Do nascer ao pôr do sol', website: 'https://green-athens.gr/en/national-garden/' },
     ],
     [
       'nov-22-snack',
       '16:40',
       '18:15',
       'Lanche e caminhada ao ponto do free tour',
-      'Do jardim ao ponto previsto na Taxiarchon, cerca de 1 km / 13 minutos a pé. Verificar mensagens do guia antes de sair.',
-      route('A pé', garden, freeTour, '', 13),
+      'Do jardim ou do Zappeion ao ponto previsto, reservar 15–25 minutos a pé, além do lanche. Se o fornecedor confirmar Taxiarchon 7, iniciar a caminhada até 17h50.',
+      route('A pé', garden, freeTour, '', 20),
     ],
     [
       'nov-22-checkin',
@@ -487,7 +489,7 @@ const rows: Row[][] = [
       '18:35',
       '',
       'Free tour de Atenas em italiano',
-      'Reserva gratuita informada. Ponto previsto na Taxiarchon 7. O voucher sugere contribuição de € 10–15; conferir as mensagens do fornecedor.',
+      'O voucher mostra 18h35 e Taxiarchon 7. O fornecedor confirma o horário e o ponto exatos. Duração publicada de 2–3 horas e contribuição voluntária sugerida de € 10–15.',
       {
         ...at(freeTour),
         ...booked,
@@ -503,7 +505,7 @@ const rows: Row[][] = [
       '',
       '',
       'Retorno ao Ilissos Hotel',
-      'Metrô e caminhada conforme o local onde o passeio terminar.',
+      'Se terminar na região de Monastiraki ou Plaka, prever 25–40 minutos até o Ilissos. Pelo metrô, usar Syntagma e a linha 2 sentido Elliniko até Syngrou-Fix. A obra noturna da linha 2 afeta estações ao norte de Attiki.',
       at(ilissos),
     ],
   ],
@@ -537,19 +539,19 @@ const rows: Row[][] = [
       '08:15',
       '',
       'Metrô até o aeroporto de Atenas',
-      'Linha 2 sentido Anthoupoli até Syntagma. Na linha 3, embarcar somente em um trem com o letreiro Airport / Αεροδρόμιο. Usar o passe de 72h se ainda estiver válido.',
+      'Linha 2 sentido Anthoupoli até Syntagma. Estar na plataforma da linha 3 até 08h45. Na tabela STASY, os trens Airport saem às 08h54 e 09h30 e chegam às 09h34 e 10h10. Usar o passe validado na sexta-feira.',
       {
-        ...route('Metrô', fix, ath, 'Linha 2 → Syntagma · linha 3 → Airport'),
+        ...route('Metrô', fix, athensAirportMetro, 'Linha 2 → Syntagma · linha 3 → Airport', 80),
         ...approximate,
-        website: sources.athensMetro,
+        website: sources.athensAirportMetro,
       },
     ],
     [
       'corr-4-airport',
-      '09:45',
-      '10:15',
+      '09:40',
+      '10:25',
       'Chegada estimada ao aeroporto de Atenas',
-      'A janela depende da espera e da troca de metrô. Após chegar, fazer os procedimentos de embarque e conferir o portão.',
+      'Da estação até o terminal, prever 8–15 minutos. A janela cobre os trens das 08h54 e 09h30. Seguir ao check-in ou à segurança e conferir o portão do AZ719.',
       { ...at(ath), ...approximate },
     ],
     [
@@ -567,10 +569,10 @@ const rows: Row[][] = [
     ],
     [
       'nov-23-train',
-      '13:55',
+      '14:38',
       '',
       'Leonardo Express de Fiumicino a Termini',
-      'Após desembarcar, seguir as placas para a estação e pegar o trem direto. Horário de embarque a escolher. Tarifa oficial de € 14.',
+      'O voo chega às 13h55. Prever 25–55 minutos para desembarque, eventual bagagem e acesso à estação. Opções na grade regular: 14h38 → 15h10 ou 14h53 → 15h25. Com atraso, pegar a próxima saída. Tarifa de € 14.',
       {
         ...route('Trem', fco, termini, 'Leonardo Express', 32),
         ...pending,
@@ -584,8 +586,8 @@ const rows: Row[][] = [
       '',
       '',
       'Caminhada de Termini até o Ciao Termini',
-      'Referência de 650 m / 9 minutos. Contar margem com a mala.',
-      { ...route('A pé', termini, ciao, '', 9), timeZone: italy },
+      'Sair de Termini pelo lado da Via Giolitti. Prever 10–20 minutos a pé com a mala para chegar à Via Bixio, 71.',
+      { ...route('A pé', termini, ciao, '', 15), timeZone: italy },
     ],
     [
       'nov-23-checkin',
@@ -626,13 +628,14 @@ const rows: Row[][] = [
       '09:10',
       '',
       'Metrô até Ottaviano',
-      'Linha A em direção a Battistini. Bilhete BIT de € 1,50. Ao descer, caminhar cerca de 300 m / 4 minutos até a Via Germanico, 8.',
+      'Linha A sentido Battistini. Prever 25–40 minutos de Manzoni ao ponto de encontro, com espera, saída em Ottaviano e caminhada de 4–7 minutos à Via Germanico, 8.',
       {
         ...route(
           'Metrô',
           'Estação Manzoni, Roma',
           'Estação Ottaviano, Roma',
           'Linha A sentido Battistini',
+          30,
         ),
         ...referencePrice(1.5),
         website: sources.romeBit,
@@ -643,7 +646,7 @@ const rows: Row[][] = [
       '',
       '10:00',
       'Chegar ao ponto de encontro do tour do Vaticano',
-      'Apresentar-se até 10h, com 15 minutos de antecedência. Cobrir ombros e joelhos.',
+      'Apresentar-se até 10h na Via Germanico, 8. Ida do hotel ao encontro em 35–50 minutos. Levar documento e cobrir ombros e joelhos.',
       at(vaticanMeeting),
     ],
     [
@@ -651,7 +654,7 @@ const rows: Row[][] = [
       '10:15',
       '13:15',
       'Museus Vaticanos, Capela Sistina e Basílica de São Pedro',
-      'Tour em italiano reservado e pago pela GetYourGuide (€ 69). Término estimado na Praça de São Pedro.',
+      'Tour em italiano com duração anunciada de 3 horas. Término estimado na região de São Pedro. A Basílica e a Capela Sistina estão sujeitas a mudanças de acesso por decisão do Vaticano.',
       {
         ...at('Museus Vaticanos, Vaticano'),
         ...booked,
@@ -672,7 +675,7 @@ const rows: Row[][] = [
       '13:25',
       '13:55',
       'Almoço no McDonald’s Borgo Pio',
-      'Almoço rápido para manter a janela da visita seguinte.',
+      'Almoço rápido. Se o tour atrasar e a visita ao Vicus estiver confirmada para 15h, encurtar o almoço ou comer no caminho.',
       at(mcdonalds),
     ],
     [
@@ -680,7 +683,7 @@ const rows: Row[][] = [
       '13:55',
       '14:35',
       'Caminhada até o Vicus Caprarius',
-      'Aproximadamente 2,5 km. Chegada estimada às 14h35, com margem antes do horário solicitado.',
+      'Aproximadamente 2,5 km, ou 35–45 minutos a pé. Para a visita das 15h, sair do Borgo Pio até 14h e chegar ao Vicolo del Puttarello, 25, por volta de 14h35–14h45.',
       route('A pé', mcdonalds, vicus, '', 35),
     ],
     [
@@ -688,7 +691,7 @@ const rows: Row[][] = [
       '15:00',
       '15:40',
       'Vicus Caprarius · visita guiada em italiano',
-      'Visita solicitada à secretaria. Aguardar a confirmação do horário. Tarifa oficial de € 8 para visita guiada; duração prevista de 40 minutos.',
+      'Visita com guia humano solicitada para 15h. Aguardar confirmação da secretaria. De terça a domingo, o sítio funciona das 11h às 17h. A visita guiada dura cerca de 40 minutos.',
       {
         ...at(vicus),
         ...pending,
@@ -702,7 +705,7 @@ const rows: Row[][] = [
       '15:40',
       '16:05',
       'Caminhada até o GAMM',
-      'Aproximadamente 1,4 km, se o Vicus terminar às 15h40.',
+      'Aproximadamente 1,4 km e 20–30 minutos a pé, se o Vicus terminar às 15h40.',
       route('A pé', vicus, gamm, '', 21),
     ],
     [
@@ -724,7 +727,7 @@ const rows: Row[][] = [
       '18:10',
       '18:25',
       'Caminhada até o Empório Brasileiro',
-      'Cerca de 1 km a partir do GAMM. Chegada estimada entre 18h25 e 18h40.',
+      'Prever 12–20 minutos a pé até o Empório da Via Milazzo, 41/43. Chegada estimada entre 18h25 e 18h40.',
       route('A pé', gamm, emporio, '', 14),
     ],
     [
@@ -740,7 +743,7 @@ const rows: Row[][] = [
       '',
       '',
       'Caminhada ao Ciao Termini',
-      'Cerca de 1,4 km depois do jantar.',
+      'Caminhada de cerca de 15–25 minutos até o Ciao Termini depois do jantar.',
       route('A pé', emporio, ciao, '', 19),
     ],
   ],
@@ -766,8 +769,8 @@ const rows: Row[][] = [
       '08:10',
       '09:00',
       'Metrô e caminhada até a Galleria Borghese',
-      'Linha A sentido Battistini até Spagna. Caminhar aproximadamente 1,3 km / 18 minutos e reservar margem para a saída da estação e os jardins.',
-      { ...route('Metrô', 'Estação Manzoni, Roma', borghese, 'Linha A → Spagna'), ...approximate },
+      'Linha A sentido Battistini até Spagna. Planejar 18–25 minutos de caminhada até Piazzale Scipione Borghese, 5, incluindo a saída e a subida. Prever 35–50 minutos desde Manzoni.',
+      { ...route('Metrô', 'Estação Manzoni, Roma', borghese, 'Linha A → Spagna', 45), ...approximate },
     ],
     [
       'nov-25-borghese',
@@ -795,8 +798,8 @@ const rows: Row[][] = [
       '12:00',
       '12:35',
       'Caminhada ao Burger King',
-      'Da galeria, a referência é de 2,3–2,4 km / 31–32 minutos. A distância pode mudar conforme a saída dos jardins.',
-      route('A pé', 'Villa Borghese, Roma', burgerKing),
+      'Prever 30–40 minutos. A distância depende do ponto em que terminar a caminhada nos jardins. Se houver atraso, preservar a ida ao Planetário.',
+      route('A pé', 'Villa Borghese, Roma', burgerKing, '', 35),
     ],
     [
       'nov-25-lunch',
@@ -811,7 +814,7 @@ const rows: Row[][] = [
       '13:10',
       '13:45',
       'Caminhada até a Oakberry',
-      'Cerca de 2,2 km a partir do Burger King.',
+      'Cerca de 2,2 km e 30–40 minutos a partir do Burger King. Se o almoço atrasar, encurtar a parada do açaí para estar em Flaminio até 14h30.',
       route('A pé', burgerKing, oakberry, '', 30),
     ],
     [
@@ -835,7 +838,7 @@ const rows: Row[][] = [
       '14:30',
       '15:30',
       'Metrô e caminhada até o Planetário de Roma',
-      'Linha A sentido Anagnina até Termini, linha B sentido Laurentina até EUR Fermi. Caminhar cerca de 800 m / 12 minutos. Chegada estimada entre 15h15 e 15h30.',
+      'Linha A sentido Anagnina até Termini, linha B sentido Laurentina até EUR Fermi. Caminhar 10–15 minutos até Piazza Giovanni Agnelli, 10. Reservar 45–60 minutos no total e chegar até 15h30.',
       {
         ...route('Metrô', 'Estação Flaminio, Roma', planetarium, 'A → Termini · B → EUR Fermi', 45),
         ...approximate,
@@ -846,7 +849,7 @@ const rows: Row[][] = [
       '16:00',
       '',
       'Planetário · Ritorno alle stelle',
-      'Sessão publicada para 16h. Ingresso a comprar, preferencialmente na bilheteria. Disponibilidade a conferir.',
+      'Sessão publicada para 16h. Ingresso a comprar. Chegar até 15h30 para retirar ou comprar os dois ingressos e localizar a entrada.',
       {
         ...at(planetarium),
         ...pending,
@@ -874,9 +877,9 @@ const rows: Row[][] = [
       '18:00',
       '',
       'Metrô e caminhada até a Churrascaria dos Amigos',
-      'Descer a pé até EUR Fermi. Linha B sentido Rebibbia ou Jonio até Termini. Linha A sentido Battistini até Cornelia, depois cerca de 850 m / 11 minutos a pé.',
+      'Descer a pé até EUR Fermi. Linha B sentido Rebibbia ou Jonio até Termini. Linha A sentido Battistini até Cornelia, depois 12–18 minutos a pé. Prever 65–90 minutos com a troca e a espera.',
       {
-        ...route('Metrô', planetarium, churrascaria, 'B → Termini · A → Cornelia'),
+        ...route('Metrô', planetarium, churrascaria, 'B → Termini · A → Cornelia', 75),
         ...approximate,
       },
     ],
@@ -885,7 +888,7 @@ const rows: Row[][] = [
       '19:15',
       '',
       'Jantar na Churrascaria dos Amigos',
-      'Janela de chegada 19h15–19h45. Sem reserva de mesa. Confirmar se haverá feijoada à la carte e o preço.',
+      'Janela de chegada 19h15–19h45. O restaurante publica abertura às 18h na quarta. A mesa e a disponibilidade de feijoada seguem a confirmar.',
       { ...at(churrascaria), ...approximate, ...pending },
     ],
     [
@@ -893,8 +896,8 @@ const rows: Row[][] = [
       '',
       '',
       'Retorno ao Ciao Termini',
-      'Andar até Cornelia, linha A sentido Anagnina até Manzoni, e caminhar 6–7 minutos até o hotel.',
-      route('Metrô', churrascaria, ciao, 'Linha A · Cornelia → Manzoni'),
+      'Andar até Cornelia, pegar a linha A sentido Anagnina até Manzoni e caminhar mais 6–10 minutos até o hotel. Prever 40–55 minutos no total.',
+      route('Metrô', churrascaria, ciao, 'Linha A · Cornelia → Manzoni', 45),
     ],
   ],
   [
@@ -909,14 +912,14 @@ const rows: Row[][] = [
     [
       'nov-26-termini',
       '09:15',
-      '09:30',
+      '09:35',
       'Caminhada do Ciao Termini a Roma Termini',
       'Reservar cerca de 10–20 minutos com mala.',
-      route('A pé', ciao, termini),
+      route('A pé', ciao, termini, '', 15),
     ],
     [
       'nov-26-platform',
-      '09:30',
+      '09:35',
       '10:00',
       'Bilhete e plataforma em Roma Termini',
       'Comprar ou apresentar o bilhete e localizar o trem. Conferir a partida também na véspera.',
@@ -941,7 +944,7 @@ const rows: Row[][] = [
       '10:37',
       '',
       'Procedimentos de embarque em Fiumicino',
-      'Seguir ao terminal, passar pela segurança e conferir o portão. Apresentar o cartão de embarque do FR3946.',
+      'Da estação até o terminal, planejar 10–15 minutos e seguir a indicação do cartão de embarque. Passar pela segurança e mirar o portão até 13h. A Ryanair informa fechamento do portão às 13h20 para a saída das 13h50.',
       { ...at(fco), ...approximate },
     ],
     [
@@ -960,11 +963,11 @@ const rows: Row[][] = [
     [
       'nov-26-luggage',
       '15:00',
-      '16:30',
+      '16:00',
       'Desembarque e retirada do carro no P1 Lunga Sosta',
-      'Após o desembarque, caminhar cerca de 6 minutos até o P1 Lunga Sosta. Usar o QR code do e-mail. A retirada do carro está estimada entre 16h30 e 17h.',
+      'A reserva da Ryanair inclui mala pequena de cabine. Prever 25–60 minutos do pouso até o carro, incluindo 8–12 minutos a pé ao P1. A saída é pela leitura da placa. Manter o QR disponível se precisar de assistência.',
       {
-        ...route('A pé', pmo, PALERMO_PARKING, '', 6),
+        ...route('A pé', pmo, PALERMO_PARKING, '', 10),
         ...approximate,
         timeNote:
           'Saída indicada na reserva às 23h00. O intervalo do roteiro é uma estimativa do desembarque e do deslocamento até o estacionamento.',
@@ -972,11 +975,11 @@ const rows: Row[][] = [
     ],
     [
       'nov-26-drive',
-      '16:30',
+      '16:00',
       '',
       'Retorno de carro a Santo Stefano',
-      'A saída pode variar entre 16h e 17h, conforme o desembarque. Cerca de 130 km e 1h30–2h. Chegada estimada entre 17h30 e 19h.',
-      { ...route('Carro', PALERMO_PARKING, home, '', 90), ...approximate },
+      'Com pouso no horário, prever saída do P1 entre 15h30 e 16h. São cerca de 130 km e 1h35–2h de estrada. Chegada estimada entre 17h05 e 18h, sujeita ao trânsito e ao voo.',
+      { ...route('Carro', PALERMO_PARKING, home, '', 95), ...approximate },
     ],
   ],
 ];

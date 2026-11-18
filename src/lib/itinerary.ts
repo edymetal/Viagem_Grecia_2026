@@ -17,6 +17,7 @@ import correctedAthensData from '../data/itinerary-athens-corrected.json' with {
 import beforeParkingData from '../data/itinerary-before-parking.json' with { type: 'json' };
 import beforeReturnData from '../data/itinerary-before-return-confirmation.json' with { type: 'json' };
 import beforeExpenseReview from '../data/itinerary-before-expense-review.json' with { type: 'json' };
+import beforeRouteReview from '../data/itinerary-before-route-review.json' with { type: 'json' };
 
 // This snapshot contains only the public plan shipped with revision 1, never user data.
 export const previousItinerary = () => stateSchema.parse(previousData);
@@ -55,6 +56,34 @@ function mergeActivity(local: Activity, previous: Activity, revised: Activity) {
   const merged = activitySchema.safeParse(mergeUnchanged(local, previous, revised));
   // A local start time can be later than the revised end time.
   return merged.success ? merged.data : local;
+}
+
+function mergeReviewedFields<T extends object>(local: T, previous: object, revised: T): T {
+  const after = { ...local };
+  for (const key of Object.keys(previous) as (keyof T)[]) after[key] = revised[key];
+  return mergeUnchanged(local, { ...local, ...previous }, after);
+}
+
+function applyRouteReview(local: AppState, plan: AppState): AppState {
+  const previous = new Map(beforeRouteReview.activities.map((record) => [record.id, record]));
+  const revised = new Map(plan.activities.map((record) => [record.id, record]));
+  return stateSchema.parse({
+    ...local,
+    itineraryRevision: ITINERARY_REVISION,
+    activities: local.activities.map((activity) => {
+      const before = previous.get(activity.id);
+      const after = revised.get(activity.id);
+      if (!before || !after) return activity;
+      const merged = activitySchema.safeParse(mergeReviewedFields(activity, before, after));
+      return merged.success ? merged.data : activity;
+    }),
+    days: local.days.map((day) => {
+      const before = beforeRouteReview.days.find((record) => record.date === day.date);
+      const after = plan.days.find((record) => record.date === day.date);
+      return before && after ? mergeReviewedFields(day, before, after) : day;
+    }),
+    hotel: mergeReviewedFields(local.hotel, beforeRouteReview.hotel, plan.hotel),
+  });
 }
 
 /** Upgrade only the known previous revision. Local edits, deletions and order win. */
@@ -288,9 +317,8 @@ function applyExpenseReview(local: AppState, plan: AppState): AppState {
     priceCertainty,
     website,
   });
-  return stateSchema.parse({
+  return applyRouteReview(stateSchema.parse({
     ...local,
-    itineraryRevision: ITINERARY_REVISION,
     expenses: [...expenses, ...newExpenses],
     activities: local.activities.map((item) => {
       const old = beforeExpenseReview.activities.find((record) => record.id === item.id);
@@ -326,11 +354,13 @@ function applyExpenseReview(local: AppState, plan: AppState): AppState {
       personalNotes: plan.useful.personalNotes,
       publicTransport: plan.useful.publicTransport,
     }),
-  });
+  }), plan);
 }
 
 /** Apply each known revision in order, while allowing local records and edits to win. */
 export function correctItinerary(current: AppState): AppState {
+  if (current.itineraryRevision === beforeRouteReview.itineraryRevision)
+    return applyRouteReview(current, suppliedItinerary());
   if (current.itineraryRevision === beforeExpenseReview.itineraryRevision)
     return applyExpenseReview(current, suppliedItinerary());
   if (current.itineraryRevision === beforeParkingData.itineraryRevision) {

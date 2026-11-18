@@ -57,7 +57,7 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
       timeNote: expect.stringContaining('09h00'),
     });
     expect(plan.activities.find((a) => a.id === 'nov-26-luggage')).toMatchObject({
-      end: '16:30',
+      end: '16:00',
       timeCertainty: 'Estimativa',
       timeNote: expect.stringContaining('23h00'),
     });

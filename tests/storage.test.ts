@@ -77,7 +77,7 @@ describe('armazenamento e backup', () => {
     expect(corrected.activities).toHaveLength(91);
     expect(corrected.activities[0].photoDocumentId).toBe('teste-local');
     expect(corrected.activities[0].notes).toBe('Nota particular');
-    expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:30');
+    expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:20');
     expect(await loadState()).toEqual(corrected);
     expect(await (await listDocuments())[0].blob.text()).toContain('%PDF');
   });

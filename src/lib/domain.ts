@@ -132,12 +132,18 @@ export function totals(state: AppState) {
 }
 // Nomes testados no Google Maps. Place IDs evitam anúncios e resultados homônimos.
 // A substituição só se aplica às strings originais; endereços editados seguem normalmente.
-const verifiedMapPlaces: Record<string, { query: string; placeId?: string }> = {
+const verifiedMapPlaces: Record<string, { query: string; placeId?: string; openUrl?: string }> = {
   'Túmulo do Soldado Desconhecido, Praça Syntagma, Atenas': { query: 'Tomb of the Unknown Soldier Athens Greece' },
   'Ciao Termini, Via Bixio 71, Roma': { query: 'Via Bixio 71, Roma' },
   'Ágora Antiga, Adrianou 24, Atenas': { query: 'Ancient Agora entrance Adrianou 24 Athens' },
+  'Templo de Zeus Olímpico, Atenas': { query: 'Olympieion entrance Vasilissis Olgas Athens' },
+  'Estação Acropoli, Atenas': {
+    query: 'Acropoli metro station Athens Greece',
+    openUrl: 'https://goo.gl/maps/84CxmmK2pvrSsRrU9',
+  },
   'Igreja dos Santos Arcanjos e da Virgem Maria Vigilante, Taxiarchon 7, Atenas': {
     query: 'Holy Church of the All-Great Taxiarchs and the Virgin Mary Gregorousa, Athens',
+    openUrl: 'https://maps.app.goo.gl/LGBiFCQzG9FhhEVNA',
   },
   'Estação de metrô do aeroporto de Atenas': { query: 'Athens Airport metro station Greece' },
   'Evangelismos, Atenas': { query: 'Evangelismos metro station Athens Greece' },
@@ -157,6 +163,7 @@ export function mapsLink(
   const params = new URLSearchParams({ api: '1' });
   const destinationPlace = verifiedMapPlaces[destination] ?? { query: destination };
   if (!mode) {
+    if (destinationPlace.openUrl) return destinationPlace.openUrl;
     params.set('query', destinationPlace.query);
     if (destinationPlace.placeId) params.set('query_place_id', destinationPlace.placeId);
     return `https://www.google.com/maps/search/?${params}`;

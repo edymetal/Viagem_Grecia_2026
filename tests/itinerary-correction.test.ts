@@ -12,6 +12,7 @@ import { stateSchema } from '../src/data/schema';
 import beforeParking from '../src/data/itinerary-before-parking.json' with { type: 'json' };
 import beforeReturn from '../src/data/itinerary-before-return-confirmation.json' with { type: 'json' };
 import beforeExpenseReview from '../src/data/itinerary-before-expense-review.json' with { type: 'json' };
+import beforeRouteReview from '../src/data/itinerary-before-route-review.json' with { type: 'json' };
 
 describe('correção enviada com acessos, saídas e margens', () => {
   it('transcreve horários corrigidos e não cria uma visita extra depois do museu', () => {
@@ -296,6 +297,36 @@ describe('atualização para Atenas e Roma', () => {
     const withHotelTotal = correctItinerary(prior);
     expect(withHotelTotal.expenses.find((item) => item.id === room.id)).toEqual(room);
     expect(withHotelTotal.expenses.some((item) => item.id === 'plan-exp-ciao-tax')).toBe(false);
+  });
+
+  it('atualiza horários da revisão de deslocamentos uma vez e conserva alterações locais', () => {
+    const plan = suppliedItinerary();
+    const prior = stateSchema.parse({
+      ...plan,
+      itineraryRevision: beforeRouteReview.itineraryRevision,
+      activities: plan.activities.map((item) => ({
+        ...item,
+        ...beforeRouteReview.activities.find((old) => old.id === item.id),
+      })),
+      days: plan.days.map((item) => ({
+        ...item,
+        ...beforeRouteReview.days.find((old) => old.date === item.date),
+      })),
+      hotel: { ...plan.hotel, ...beforeRouteReview.hotel },
+    });
+    const metro = prior.activities.find((item) => item.id === 'plan-4-04')!;
+    metro.notes = 'Minha anotação para o aeroporto';
+    metro.completed = true;
+    prior.days[0].notes = 'Minha saída de Santo Stefano';
+
+    const updated = correctItinerary(prior);
+    expect(updated.activities).toEqual(plan.activities.map((item) => (
+      item.id === metro.id ? { ...item, notes: metro.notes, completed: true } : item
+    )));
+    expect(updated.days).toEqual([{ ...plan.days[0], notes: prior.days[0].notes }, ...plan.days.slice(1)]);
+    expect(updated.hotel).toEqual(plan.hotel);
+    expect(updated.expenses).toEqual(prior.expenses);
+    expect(correctItinerary(updated)).toBe(updated);
   });
 
   it('move a Biblioteca para domingo mantendo a nota e conserva despesas pagas localmente', () => {
