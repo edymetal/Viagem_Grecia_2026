@@ -109,7 +109,7 @@ export function ActivityDetails({
             aria-labelledby="activity-detail-name"
           >
             <div className="detail-title-row">
-              <ActivityVisual activity={a} />
+              <ActivityVisual activity={a} showPhoto={false} />
               <div>
                 <h2 className="detail-name" id="activity-detail-name">
                   {a.title}

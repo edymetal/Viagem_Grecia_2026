@@ -130,7 +130,13 @@ function activitySymbol(a: Activity): [LucideIcon, string] {
   return [MapPin, 'blue'];
 }
 
-export function ActivityVisual({ activity: a }: { activity: Activity }) {
+export function ActivityVisual({
+  activity: a,
+  showPhoto = true,
+}: {
+  activity: Activity;
+  showPhoto?: boolean;
+}) {
   const brand = activityBrand(a);
   if (brand)
     return (
@@ -143,10 +149,10 @@ export function ActivityVisual({ activity: a }: { activity: Activity }) {
         />
       </span>
     );
-  const photo = activityPhoto(a);
+  const photo = showPhoto ? activityPhoto(a) : undefined;
   if (photo)
     return <img className="activity-thumb" src={photo.src} alt={photo.alt} loading="lazy" />;
-  if (a.id === 'plan-2-11')
+  if (showPhoto && a.id === 'plan-2-11')
     return (
       <img
         className="activity-thumb"
