@@ -444,6 +444,24 @@
   font-size: 15px;
   font-weight: 700;
 }
+.airport-pass-steps {
+  list-style: decimal outside;
+  padding-inline-start: 1.4rem;
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.airport-pass-steps li + li {
+  margin-top: 8px;
+}
+.airport-pass-phrase {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  font-size: 15px;
+  line-height: 1.45;
+}
 .detail-section.transport-detail {
   margin-top: 0;
   padding: 17px;

@@ -1,5 +1,30 @@
 import { test, expect } from '@playwright/test';
 
+test('mostra o caminho e a compra do passe de Atenas nas duas etapas, mesmo offline', async ({
+  page,
+  context,
+}) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('./#roteiro/2026-11-20/plan-1-10');
+  await expect(page.getByRole('heading', { name: 'Do desembarque à máquina' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Abrir estação no mapa' })).toHaveAttribute(
+    'href',
+    /query=37\.93689%2C23\.9447/,
+  );
+  await page.evaluate(() => navigator.serviceWorker.ready.then(() => undefined));
+  await page.reload();
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller);
+  await context.setOffline(true);
+  await page.goto('./#roteiro/2026-11-20/plan-1-11');
+  await page.reload();
+  await expect(page.getByRole('region', { name: 'Como comprar na máquina' })).toContainText(
+    '1 bilhete, 3 dias e € 20',
+  );
+  await expect(page.locator('blockquote[lang="el"]').last()).toContainText('Δεν μιλάω αγγλικά');
+  await expect(page.getByRole('region', { name: 'Validar e embarcar' })).toContainText('72 horas');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta ao mesmo dia', async ({
   page,
   context,

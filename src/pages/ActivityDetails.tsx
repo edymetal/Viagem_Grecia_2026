@@ -29,6 +29,7 @@ import { ActivityVisual, parthenonPhoto } from '../components/ActivityVisual';
 import { LocalImage } from '../components/ui';
 import { activityPhoto } from '../data/placePhotos';
 import { ActivityDocuments } from '../components/ActivityDocuments';
+import { AthensAirportPass } from '../components/AthensAirportPass';
 import { HotelCheckIn } from '../components/HotelCheckIn';
 
 const airlineStatusPages: Record<string, string | undefined> = {
@@ -74,6 +75,9 @@ export function ActivityDetails({
   const originAirport = /\(([A-Z]{3})\)$/.exec(origin)?.[1];
   const departureBoard = flightStatusUrl && originAirport ? departureBoards[originAirport] : undefined;
   const hasRoute = directionMode && origin && destination && origin !== destination;
+  const showAirportPass =
+    (a.id === 'plan-1-10' || a.id === 'plan-1-11') &&
+    destination === 'Estação de metrô do aeroporto de Atenas';
   const hasStatus = a.confirmation !== 'Planejada' || a.required;
   const scheduledDuration = (activityInstant(a, 'end') - activityInstant(a)) / 60_000;
   const showDuration =
@@ -245,10 +249,11 @@ export function ActivityDetails({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Navigation size={19} /> Ir no mapa
+                    <Navigation size={19} />
+                    {showAirportPass ? 'Abrir estação no mapa' : 'Ir no mapa'}
                   </a>
                 )}
-                {hasRoute && (
+                {hasRoute && !showAirportPass && (
                   <a
                     className="button secondary"
                     href={mapsLink(destination, directionMode, origin)}
@@ -268,6 +273,7 @@ export function ActivityDetails({
               <p className="detail-description">{a.description}</p>
             </section>
           )}
+          {showAirportPass && <AthensAirportPass />}
         </div>
         <div className="activity-detail-secondary">
           <TransportDetails activity={a} card />

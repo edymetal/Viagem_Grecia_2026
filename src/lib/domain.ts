@@ -145,7 +145,9 @@ const verifiedMapPlaces: Record<string, { query: string; placeId?: string; openU
     query: 'Holy Church of the All-Great Taxiarchs and the Virgin Mary Gregorousa, Athens',
     openUrl: 'https://maps.app.goo.gl/LGBiFCQzG9FhhEVNA',
   },
-  'Estação de metrô do aeroporto de Atenas': { query: 'Athens Airport metro station Greece' },
+  'Estação de metrô do aeroporto de Atenas': {
+    query: '37.93689,23.9447',
+  },
   'Evangelismos, Atenas': { query: 'Evangelismos metro station Athens Greece' },
   'Estação Monastiraki, Atenas': { query: 'Monastiraki metro station Athens Greece' },
   'Estação Syngrou-Fix, Atenas': { query: 'Syngrou-Fix metro Athens', placeId: 'ChIJddlgsBq9oRQRmCsWlm96bHQ' },
