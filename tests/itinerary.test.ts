@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { suppliedItinerary, ITINERARY_REVISION } from '../src/data/itinerary';
+import { FIUMICINO_WALK_ID } from '../src/data/itineraryActivities';
 import { emptyActivity, emptyState } from '../src/data/factories';
 import {
   activityInstant,
@@ -9,7 +10,7 @@ import {
   totals,
   tripNow,
 } from '../src/lib/domain';
-import { mergeItinerary } from '../src/lib/itinerary';
+import { correctItinerary, mergeItinerary } from '../src/lib/itinerary';
 import { createBackup, parseBackup } from '../src/lib/backup';
 import { expenseSchema, stateSchema } from '../src/data/schema';
 import beforeVicusConfirmation from '../src/data/itinerary-before-vicus-confirmation.json';
@@ -20,7 +21,7 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
     expect(stateSchema.parse(plan)).toEqual(plan);
     expect(
       plan.days.map((day) => plan.activities.filter((a) => a.date === day.date).length),
-    ).toEqual([12, 13, 18, 10, 14, 16, 8]);
+    ).toEqual([12, 13, 18, 11, 14, 16, 8]);
     expect(plan.reservations).toEqual([]);
     expect(plan.activities.every((activity) => !activity.completed)).toBe(true);
     expect(plan.activities.find((a) => a.id === 'plan-2-03')).toMatchObject({
@@ -202,6 +203,33 @@ describe('cronograma de Atenas e Roma de 20 a 26/11', () => {
     expect(updated).toEqual(expected);
     expect(mergeItinerary(updated)).toEqual(updated);
   });
+  it('inclui a caminhada de Fiumicino uma vez no roteiro salvo, antes do trem', () => {
+    const saved = suppliedItinerary();
+    saved.itineraryRevision = 'cronograma-2026-11-18-roma-vicus-confirmado';
+    saved.activities = saved.activities.filter(({ id }) => id !== FIUMICINO_WALK_ID);
+    const train = saved.activities.find(({ id }) => id === 'nov-23-train')!;
+    train.notes = 'Minha anotação para o trem';
+    train.favorite = true;
+
+    const updated = correctItinerary(saved);
+    const trainIndex = updated.activities.findIndex(({ id }) => id === train.id);
+    expect(updated.activities.slice(trainIndex - 2, trainIndex + 1).map(({ id }) => id)).toEqual([
+      'plan-4-06',
+      FIUMICINO_WALK_ID,
+      train.id,
+    ]);
+    expect(updated.activities[trainIndex]).toEqual(train);
+    expect(updated.activities[trainIndex - 1].transport).toMatchObject({
+      mode: 'A pé',
+      minutes: 10,
+      minutesMax: 15,
+    });
+    expect(correctItinerary(updated)).toBe(updated);
+
+    saved.activities = saved.activities.filter(({ id }) => id !== train.id);
+    expect(correctItinerary(saved).activities.some(({ id }) => id === FIUMICINO_WALK_ID)).toBe(false);
+  });
+
   it('restaura fusos, faixas, alternativas e pendências pelo backup', async () => {
     const s = suppliedItinerary();
     s.activities[0].favorite = true;

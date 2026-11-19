@@ -572,6 +572,37 @@
   margin: 4px 0 0;
   overflow-wrap: anywhere;
 }
+.arrival-guide h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.arrival-guide h3 svg {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.arrival-point {
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.arrival-guide .metro-steps > li:last-child {
+  padding-bottom: 0;
+}
+.arrival-note {
+  margin-top: 12px;
+  padding: 9px 11px;
+  border-inline-start: 2px solid var(--primary);
+  background: var(--primary-soft);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.arrival-route-links {
+  display: grid;
+  justify-items: start;
+  margin-top: 8px;
+}
 .metro-sign {
   flex-wrap: wrap;
 }

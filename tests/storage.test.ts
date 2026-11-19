@@ -74,7 +74,7 @@ describe('armazenamento e backup', () => {
     await addDocument(doc());
     const corrected = await loadState();
     expect(corrected.itineraryRevision).toBe(ITINERARY_REVISION);
-    expect(corrected.activities).toHaveLength(91);
+    expect(corrected.activities).toHaveLength(92);
     expect(corrected.activities[0].photoDocumentId).toBe('teste-local');
     expect(corrected.activities[0].notes).toBe('Nota particular');
     expect(corrected.activities.find((a) => a.id === 'plan-1-13')!.start).toBe('20:20');

@@ -242,10 +242,10 @@ const guides: Record<string, MetroGuide> = {
       {
         title: 'Saia pela praça Monastiraki',
         sign: 'Monastiraki square / Πλατεία Μοναστηρακίου',
-        text: 'Valide na saída e suba para a praça. Siga em direção à rua Areos, ao lado da mesquita da praça, até a entrada da Biblioteca de Adriano.',
+        text: 'Valide na saída e suba para a praça. Siga em direção à rua Areos, ao lado da mesquita da praça, e procure a entrada da Biblioteca de Adriano no número 3.',
         map: {
           label: 'Caminhada até a Biblioteca de Adriano',
-          destination: 'Biblioteca de Adriano, Atenas',
+          destination: 'Hadrian’s Library entrance, Areos 3, Athens',
           origin: monastiraki,
         },
         photo: 'monastiraki',

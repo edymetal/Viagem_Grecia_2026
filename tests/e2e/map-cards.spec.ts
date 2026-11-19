@@ -37,7 +37,7 @@ test('cards do mapa mostram fotos, rotas, detalhes e navegação para a atividad
   await expect(walk.locator('.destination-transport-chip')).toContainText('14 min');
   await expect(walk.getByRole('link', { name: 'A pé', exact: true })).toHaveAttribute(
     'href',
-    /origin=Biblioteca/,
+    /origin=Areos\+3/,
   );
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 844 });

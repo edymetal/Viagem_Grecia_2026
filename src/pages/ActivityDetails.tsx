@@ -34,6 +34,9 @@ import { HotelCheckIn } from '../components/HotelCheckIn';
 import { LeonardoExpressGuide } from '../components/LeonardoExpressGuide';
 import { MetroDirections } from '../components/MetroDirections';
 import { metroGuideFor } from '../data/metroGuides';
+import { arrivalGuideFor } from '../data/arrivalGuides';
+import { itineraryAccessFor } from '../data/itineraryAccess';
+import { FIUMICINO_TRAIN_STATION, FIUMICINO_WALK_ID, sources } from '../data/itineraryActivities';
 
 const airlineStatusPages: Record<string, string | undefined> = {
   AZ: 'https://www.ita-airways.com/it/it/manage-my-bookings/manage/flight-status',
@@ -61,6 +64,11 @@ export function ActivityDetails({
     (d) => d.id === a.photoDocumentId && d.type.startsWith('image/'),
   );
   const destination = mapDestination(a);
+  const arrivalGuide = arrivalGuideFor(a);
+  const access = itineraryAccessFor(a, store.state?.activities ?? []);
+  const mapTarget = arrivalGuide?.mapTarget?.destination ?? access?.point ?? destination;
+  const showAccess = Boolean(access?.directions || access?.walk || access?.via.length);
+  const reference = arrivalGuide?.source ?? access?.source;
   const placePhoto = activityPhoto(a);
   const metroGuide = metroGuideFor(a);
   const photoSource = placePhoto?.src ?? (a.id === 'plan-2-11' ? parthenonPhoto : undefined);
@@ -82,6 +90,11 @@ export function ActivityDetails({
   const showAirportPass =
     (a.id === 'plan-1-10' || a.id === 'plan-1-11') &&
     destination === 'Estação de metrô do aeroporto de Atenas';
+  const showFiumicinoWalk =
+    a.id === FIUMICINO_WALK_ID && destination === FIUMICINO_TRAIN_STATION;
+  const fiumicinoTrain = showFiumicinoWalk
+    ? store.state?.activities.find((item) => item.id === 'nov-23-train' && item.date === a.date)
+    : undefined;
   const leonardoFromAirport =
     a.id === 'nov-23-train' && a.transport.lines === 'Leonardo Express';
   const leonardoToAirport =
@@ -107,7 +120,13 @@ export function ActivityDetails({
           : 'Ver ingressos',
     },
     { url: a.guideUrl, label: 'Reservar guia' },
-    { url: a.website, label: 'Site oficial' },
+    {
+      url: a.website,
+      label:
+        showFiumicinoWalk && a.website === sources.fiumicinoWalk
+          ? 'Mapa oficial da caminhada'
+          : 'Site oficial',
+    },
   ].filter(({ url }, index, all) => url && all.findIndex((link) => link.url === url) === index);
   const toggle = (field: 'favorite' | 'completed') => {
     void store
@@ -198,7 +217,7 @@ export function ActivityDetails({
                   <dt>
                     <MapPin size={19} /> Local
                   </dt>
-                  <dd>{destination}</dd>
+                  <dd>{arrivalGuide?.mapTarget ? arrivalGuide.point : destination}</dd>
                 </div>
               )}
               {a.openingHours && (
@@ -254,32 +273,96 @@ export function ActivityDetails({
                 {destination && (
                   <a
                     className={flightStatusUrl ? 'button secondary' : 'button detail-map-button'}
-                    href={mapsLink(destination)}
+                    href={mapsLink(mapTarget)}
                     target="_blank"
                     rel="noreferrer"
                   >
                     <Navigation size={19} />
-                    {showAirportPass ? 'Abrir estação no mapa' : 'Ir no mapa'}
+                    {showAirportPass || showFiumicinoWalk
+                      ? 'Abrir estação no mapa'
+                      : arrivalGuide?.mapTarget?.label ?? 'Ir no mapa'}
                   </a>
                 )}
                 {hasRoute && !showAirportPass && (
                   <a
                     className="button secondary"
-                    href={mapsLink(destination, directionMode, origin)}
+                    href={mapsLink(mapTarget, directionMode, origin)}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Route size={18} /> Traçar rota
+                    <Route size={18} />{' '}
+                    {showFiumicinoWalk && directionMode === 'walking'
+                      ? 'Traçar caminhada'
+                      : 'Traçar rota'}
                   </a>
                 )}
               </div>
             )}
           </section>
+          {(arrivalGuide || showAccess) && (
+            <section
+              className="card detail-section arrival-guide"
+              aria-labelledby="arrival-guide-title"
+            >
+              <h3 id="arrival-guide-title">
+                <MapPin size={19} aria-hidden="true" /> {arrivalGuide?.heading ?? 'Como chegar'}
+              </h3>
+              {arrivalGuide && <p className="arrival-point">{arrivalGuide.point}</p>}
+              {access?.directions && <p className="detail-description">{access.directions}</p>}
+              {arrivalGuide && (
+                <ol className="metro-steps" role="list">
+                  {arrivalGuide.steps.map((step) => (
+                    <li key={step}>
+                      <p>{step}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              {arrivalGuide?.note && <p className="arrival-note">{arrivalGuide.note}</p>}
+              {access && access.via.length > 0 && (
+                <nav aria-label="Deslocamentos do roteiro" className="arrival-route-links">
+                  {access.via.map((leg) => (
+                    <a key={leg.id} className="metro-map-link" href={itineraryHref(leg.date, leg.id)}>
+                      <Route size={16} aria-hidden="true" /> {leg.title}
+                    </a>
+                  ))}
+                </nav>
+              )}
+              {access?.walk && (
+                <a
+                  className="metro-map-link"
+                  href={mapsLink(access.walk.to ?? mapTarget, 'walking', access.walk.from)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <MapPin size={16} aria-hidden="true" /> {access.walk.label ?? 'Traçar caminhada'}
+                </a>
+              )}
+              {reference && !links.some(({ url }) => url === reference) && (
+                <a
+                  className="metro-map-link"
+                  href={reference}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Ver referência
+                </a>
+              )}
+            </section>
+          )}
           <ActivityDocuments key={a.id} activity={a} />
           {metroGuide ? <MetroDirections key={a.id} guide={metroGuide} /> : a.description && (
             <section className="card detail-section">
               <h3>Orientações</h3>
               <p className="detail-description">{a.description}</p>
+              {fiumicinoTrain && (
+                <a
+                  className="metro-map-link"
+                  href={itineraryHref(fiumicinoTrain.date, fiumicinoTrain.id)}
+                >
+                  <Ticket size={16} aria-hidden="true" /> Como comprar o bilhete
+                </a>
+              )}
             </section>
           )}
           {showAirportPass && <AthensAirportPass stage={a.id === 'plan-1-10' ? 'walk' : 'buy'} />}

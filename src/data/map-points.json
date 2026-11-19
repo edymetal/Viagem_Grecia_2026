@@ -32,7 +32,7 @@
     "latitude": 37.975984,
     "longitude": 23.723179,
     "activityIds": ["plan-3-03", "plan-3-02"],
-    "source": "https://commons.wikimedia.org/wiki/File:Entrance_to_the_archaeological_site_of_the_Ancient_Agora_of_Athens_on_Adrianou_Street_on_March_24,_2020.jpg"
+    "source": "https://www.hh.gr/en/announcements/phaistos-29-7/"
   },
   {
     "name": "Arco de Adriano",
@@ -48,15 +48,15 @@
     "latitude": 37.97555556,
     "longitude": 23.72611111,
     "activityIds": ["plan-2-03"],
-    "source": "https://en.wikipedia.org/?curid=21605399"
+    "source": "https://www.hh.gr/en/destinations/hadrian-library/"
   },
   {
-    "name": "Jardim Nacional",
+    "name": "Jardim Nacional · Entrada Vasilissis Amalias",
     "city": "Atenas",
-    "latitude": 37.97416667,
-    "longitude": 23.73833333,
+    "latitude": 37.9739,
+    "longitude": 23.7355,
     "activityIds": ["plan-3-07", "nov-22-garden-walk"],
-    "source": "https://en.wikipedia.org/?curid=5911297"
+    "source": "https://www.thisisathens.org/itineraries/accessible-national-garden-surrounding-highlights-visual-impaired"
   },
   {
     "name": "Templo de Zeus Olímpico",
@@ -64,7 +64,8 @@
     "latitude": 37.96937222,
     "longitude": 23.73307778,
     "activityIds": ["plan-3-09", "plan-3-08"],
-    "source": "https://en.wikipedia.org/?curid=22189"
+    "note": "A entrada para visitantes fica na Vasilissis Olgas.",
+    "source": "https://www.hh.gr/en/destinations/olympieion/"
   },
   {
     "name": "Museu Kotsanas",
@@ -123,7 +124,7 @@
     "city": "Atenas",
     "latitude": 37.968983,
     "longitude": 23.729536,
-    "activityIds": ["plan-2-10", "nov-21-metro"],
+    "activityIds": ["plan-2-10", "nov-21-metro", "plan-2-11"],
     "destination": "Estação Acropoli, Atenas",
     "note": "Use o link do guia para chegar ao ponto de encontro na entrada da estação.",
     "source": "https://goo.gl/maps/84CxmmK2pvrSsRrU9"
@@ -216,6 +217,15 @@
     "source": "https://mapcarta.com/W33322809"
   },
   {
+    "name": "Estação ferroviária de Fiumicino Aeroporto",
+    "city": "Roma",
+    "latitude": 41.79417,
+    "longitude": 12.25111,
+    "activityIds": ["nov-23-fiumicino-walk"],
+    "note": "Máquinas da Trenitalia no saguão da estação, antes das catracas.",
+    "source": "https://en.wikipedia.org/wiki/Fiumicino_Aeroporto_railway_station"
+  },
+  {
     "name": "Roma Termini",
     "city": "Roma",
     "latitude": 41.90083,
@@ -253,7 +263,7 @@
     "city": "Roma",
     "latitude": 41.9074178,
     "longitude": 12.4559387,
-    "activityIds": ["nov-24-meet"],
+    "activityIds": ["nov-24-meet", "nov-24-vatican"],
     "destination": "Tours About, Via Germanico 8, Roma",
     "source": "https://www.toursabout.com/it/index.htm"
   },

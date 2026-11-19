@@ -71,7 +71,8 @@ A greve geral da CGIL de 20/11 afeta o transporte público local na Itália. O s
 | 08h00–08h45 | Caminhar 10–15 min até Syngrou-Fix. Linha 2 sentido Anthoupoli até Syntagma. Chegar à plataforma da linha 3 até 08h45. |
 | 08h54 → 09h34 | Linha 3 com letreiro Airport, com o passe de sexta-feira ainda válido. Alternativa da grade STASY: 09h30 → 10h10. Da estação ao terminal, prever 8–15 min. |
 | 12h45 → 13h55 | AZ719 Atenas → Fiumicino, Terminal 1. Atenas em horário grego e Roma em horário italiano. Voo de 2h10. |
-| 14h38 → 15h10 ou 14h53 → 15h25 | Leonardo Express na grade publicada. Prever 25–55 min do pouso à estação, conforme bagagem. Escolher a saída depois de desembarcar. |
+| Após 13h55 | Caminhada do saguão de chegadas do Terminal 1 às máquinas da Trenitalia. Siga as placas Treni / Train pelo Terminal 3 e atravesse a passarela até a estação. Reserve 10–15 min a pé e 25–55 min no total desde o pouso, conforme o desembarque e a bagagem. |
+| 14h38 → 15h10 ou 14h53 → 15h25 | Leonardo Express na grade publicada. Compre o bilhete para Roma Termini nas máquinas antes das catracas e escolha uma saída que dê tempo de embarcar. |
 | 15h30–16h30 | Caminhar 10–20 min de Termini pelo lado da Via Giolitti até Ciao Termini, Via Bixio 71. A recepção funciona de 14h a 19h. Jantar livre. |
 
 [Metrô STASY](https://www.stasy.gr/en/timetables/line-3/) · [Quadro do Leonardo Express](https://www.trenitalia.com/content/dam/trenitalia/allegati/info/orario-digitale/collegamenti/orari-leonardo-express.pdf)

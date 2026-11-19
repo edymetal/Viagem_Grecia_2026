@@ -14,6 +14,8 @@ export const PALERMO_PARKING_PRICE = 65;
 export const RYANAIR_RETURN_PRICE = 64.89;
 export const RYANAIR_RETURN_BAG = 'uma mala pequena de até 40 × 30 × 20 cm';
 const fco = 'Aeroporto de Roma Fiumicino (FCO)';
+export const FIUMICINO_WALK_ID = 'nov-23-fiumicino-walk';
+export const FIUMICINO_TRAIN_STATION = 'Stazione ferroviaria Fiumicino Aeroporto, Fiumicino';
 const termini = 'Roma Termini';
 const syntagma = 'Túmulo do Soldado Desconhecido, Praça Syntagma, Atenas';
 const acropoli = 'Estação Acropoli, Atenas';
@@ -45,6 +47,8 @@ export const sources = {
   athensAirportMetro: 'https://www.stasy.gr/en/timetables/line-3/',
   greekTickets: 'https://hhticket.gr/',
   leonardo: 'https://www.trenitalia.com/it/regionale/collegamenti-regionale/leonardo-express.html',
+  fiumicinoWalk:
+    'https://www.adr.it/documents/10157/15959937/MappaFiumicinoarrivi_ita20190102.pdf/847f9cd7-afa7-48ba-a7e4-a9c266c47143',
   trenitaliaUpdates:
     'https://www.trenitalia.com/it/informazioni/infomobilita/notizie-infomobilita.html',
   romePass: 'https://www.atac.roma.it/biglietti-e-abbonamenti/roma72h',
@@ -83,6 +87,7 @@ const route = (
   destination: string,
   lines = '',
   minutes: number | null = null,
+  minutesMax?: number,
 ): Partial<Activity> => ({
   location: destination,
   transport: {
@@ -91,6 +96,7 @@ const route = (
     destination,
     lines,
     minutes,
+    ...(minutesMax === undefined ? {} : { minutesMax }),
     station: '',
     price: null,
     certainty: mode === 'Avião' ? 'Confirmado' : 'Estimativa',
@@ -565,6 +571,32 @@ const rows: Row[][] = [
         ...booked,
         ...paidPrice(134.44),
         endTimeZone: italy,
+      },
+    ],
+    [
+      FIUMICINO_WALK_ID,
+      '13:55',
+      '',
+      'Desembarque e caminhada até as máquinas do Leonardo Express',
+      [
+        '1. No Terminal 1, siga Arrivi (Chegadas). Se despachou mala, retire-a em Ritiro bagagli e saia para o saguão público.',
+        '2. Siga as placas Treni / Train. Pelo percurso indicado no mapa do aeroporto, use a saída 5 do Terminal 1 e siga pelo caminho coberto até a entrada 1 do Terminal 3.',
+        '3. No Terminal 3, siga a sinalização de trem, suba ao Piano 2 (nível 2) pelo elevador ou pela escada rolante e atravesse a passarela até a estação.',
+        '4. Antes das catracas, procure as máquinas vermelhas da Trenitalia com a placa Biglietti / Tickets ou a bilheteria Biglietteria. O destino a selecionar é Roma Termini.',
+      ].join('\n\n'),
+      {
+        ...route(
+          'A pé',
+          'Terminal 1 Arrivi, Aeroporto di Roma Fiumicino',
+          FIUMICINO_TRAIN_STATION,
+          '',
+          10,
+          15,
+        ),
+        ...approximate,
+        timeZone: italy,
+        timeNote: 'Caminhada de 10 a 15 min a partir do saguão de chegadas. Preveja 25 a 55 min do pouso até a estação, conforme o desembarque e a bagagem.',
+        website: sources.fiumicinoWalk,
       },
     ],
     [

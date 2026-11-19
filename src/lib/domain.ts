@@ -135,14 +135,23 @@ export function totals(state: AppState) {
 const verifiedMapPlaces: Record<string, { query: string; placeId?: string; openUrl?: string }> = {
   'Túmulo do Soldado Desconhecido, Praça Syntagma, Atenas': { query: 'Tomb of the Unknown Soldier Athens Greece' },
   'Ciao Termini, Via Bixio 71, Roma': { query: 'Via Bixio 71, Roma' },
-  'Ágora Antiga, Adrianou 24, Atenas': { query: 'Ancient Agora entrance Adrianou 24 Athens' },
+  'Biblioteca de Adriano, Atenas': { query: 'Areos 3, Monastiraki, Athens' },
+  'Ágora Antiga, Adrianou 24, Atenas': { query: '37.975984,23.723179' },
   'Templo de Zeus Olímpico, Atenas': { query: 'Olympieion entrance Vasilissis Olgas Athens' },
+  'Jardim Nacional de Atenas': { query: '37.9739,23.7355' },
+  'National Garden main entrance, Vasilissis Amalias, Athens': { query: '37.9739,23.7355' },
+  'Funicular do Monte Licabeto, Atenas': { query: 'Lycabettus Hill Funicular Lower Station, Athens' },
+  'Pindarou 6, Atenas': { query: 'Kotsanas Museum, Pindarou 6, Athens' },
+  'Museu Kotsanas, Pindarou 6, Atenas': { query: 'Kotsanas Museum, Pindarou 6, Athens' },
+  'Via Germanico 8, Roma': { query: 'Tours About, Via Germanico 8, Roma' },
+  'P1 Lunga Sosta, Aeroporto de Palermo (PMO)': { query: 'Parcheggio P1 Aeroporto di Palermo' },
   'Estação Acropoli, Atenas': {
     query: 'Acropoli metro station Athens Greece',
     openUrl: 'https://goo.gl/maps/84CxmmK2pvrSsRrU9',
   },
   'Igreja dos Santos Arcanjos e da Virgem Maria Vigilante, Taxiarchon 7, Atenas': {
-    query: 'Holy Church of the All-Great Taxiarchs and the Virgin Mary Gregorousa, Athens',
+    query: 'Panagia Grigorousa, Taxiarchon 7, Athens',
+    placeId: 'ChIJF2-wkCK9oRQRFe6b4T27MQw',
     openUrl: 'https://maps.app.goo.gl/LGBiFCQzG9FhhEVNA',
   },
   'Estação de metrô do aeroporto de Atenas': {

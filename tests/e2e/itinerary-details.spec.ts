@@ -1,4 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
+
+const { version } = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'));
 
 test('guia do metrô mostra baldeações e fotos precacheadas no celular', async ({
   page,
@@ -93,9 +96,9 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await expect(page.getByRole('heading', { name: 'Detalhes', exact: true })).toBeVisible();
   await expect(page.locator('.visit-facts')).toContainText('09:30 – 14:00');
   await expect(page.locator('.detail-status')).toContainText('Confirmada');
-  await expect(page.getByRole('link', { name: 'Ir no mapa', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'Abrir encontro no mapa' })).toHaveAttribute(
     'href',
-    /google\.com\/maps\/search/,
+    'https://goo.gl/maps/84CxmmK2pvrSsRrU9',
   );
   await page.screenshot({ path: 'test-results/roteiro-detalhes.png', fullPage: false });
   await page.getByRole('button', { name: 'Adicionar aos favoritos' }).click();
@@ -125,6 +128,9 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Detalhes', exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Ponto de encontro', exact: true })).toContainText(
+    'Entrada principal do metrô Acropoli',
+  );
   await expect(page.getByRole('button', { name: 'Remover dos favoritos' })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -154,6 +160,30 @@ test('linha do tempo abre detalhes, mantém favoritos e visitas offline e volta 
   expect(errors).toEqual([]);
 });
 
+test('destaca os endereços do voucher e leva cada tour ao ponto de encontro', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto('./#inicio');
+  await expect(page.locator('.app-version').filter({ visible: true })).toHaveText(`Versão ${version}`);
+  await page.goto('./#roteiro/2026-11-22/nov-22-free-tour');
+  const freeTour = page.getByRole('region', { name: 'Ponto de encontro do voucher' });
+  await expect(freeTour.locator('.arrival-point')).toContainText('Taxiarchon 7');
+  await expect(freeTour.locator('.arrival-note')).toContainText('Epimenidou 9');
+  await expect(page.getByRole('link', { name: 'Ir no mapa', exact: true })).toHaveAttribute(
+    'href',
+    'https://maps.app.goo.gl/LGBiFCQzG9FhhEVNA',
+  );
+
+  await page.goto('./#roteiro/2026-11-24/nov-24-vatican');
+  await expect(page.getByRole('region', { name: 'Ponto de encontro', exact: true })).toContainText(
+    'Agência Tours About, Via Germanico 8',
+  );
+  await expect(page.getByRole('link', { name: 'Abrir encontro no mapa' })).toHaveAttribute(
+    'href',
+    /query=Tours\+About%2C\+Via\+Germanico\+8/,
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('detalhes e dias funcionam em links diretos, teclado e diferentes larguras', async ({
   page,
 }) => {
@@ -178,7 +208,7 @@ test('detalhes e dias funcionam em links diretos, teclado e diferentes larguras'
   await expect(page.getByText('Atividade não encontrada.', { exact: false })).toBeVisible();
   await expect(page.locator('.activity')).toHaveCount(13);
   await page.goto('./#roteiro/2026-11-21/plan-2-10');
-  await expect(page.getByRole('link', { name: 'Ir no mapa', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'Abrir encontro no mapa' })).toHaveAttribute(
     'href',
     'https://goo.gl/maps/84CxmmK2pvrSsRrU9',
   );

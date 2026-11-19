@@ -1,4 +1,5 @@
 import { MapPin, Ticket } from 'lucide-react';
+import { FIUMICINO_TRAIN_STATION, sources } from '../data/itineraryActivities';
 import { mapsLink } from '../lib/domain';
 
 export function LeonardoExpressGuide({ fromAirport }: { fromAirport: boolean }) {
@@ -33,7 +34,7 @@ export function LeonardoExpressGuide({ fromAirport }: { fromAirport: boolean }) 
               </p>
               <a
                 className="metro-map-link"
-                href={mapsLink('Stazione ferroviaria Fiumicino Aeroporto, Fiumicino')}
+                href={mapsLink(FIUMICINO_TRAIN_STATION)}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -157,7 +158,7 @@ export function LeonardoExpressGuide({ fromAirport }: { fromAirport: boolean }) 
         <div className="detail-external-links">
           {fromAirport && (
             <a
-              href="https://www.adr.it/documents/10157/15959937/MappaFiumicinoarrivi_ita20190102.pdf/847f9cd7-afa7-48ba-a7e4-a9c266c47143"
+              href={sources.fiumicinoWalk}
               target="_blank"
               rel="noreferrer"
             >

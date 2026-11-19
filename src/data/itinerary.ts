@@ -8,7 +8,7 @@ import {
 } from './itineraryActivities';
 import { stateSchema, tripDates, type AppState, type Expense } from './schema';
 
-export const ITINERARY_REVISION = 'cronograma-2026-11-18-roma-vicus-confirmado';
+export const ITINERARY_REVISION = 'cronograma-2026-11-19-caminhada-fiumicino';
 const parkingKey = 'parking';
 const ryanairKey = 'ryanair';
 export const PARKING_EXPENSE_ID = 'plan-exp-' + parkingKey;

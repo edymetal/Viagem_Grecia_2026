@@ -91,5 +91,5 @@ test('instalação existente recebe a correção offline sem duplicar nem perder
         };
       }),
   );
-  expect(saved).toEqual({ revision: ITINERARY_REVISION, count: 91 });
+  expect(saved).toEqual({ revision: ITINERARY_REVISION, count: 92 });
 });

@@ -19,6 +19,9 @@ import beforeReturnData from '../data/itinerary-before-return-confirmation.json'
 import beforeExpenseReview from '../data/itinerary-before-expense-review.json' with { type: 'json' };
 import beforeRouteReview from '../data/itinerary-before-route-review.json' with { type: 'json' };
 import beforeVicusConfirmation from '../data/itinerary-before-vicus-confirmation.json' with { type: 'json' };
+import { FIUMICINO_WALK_ID } from '../data/itineraryActivities';
+
+const beforeFiumicinoWalkRevision = 'cronograma-2026-11-18-roma-vicus-confirmado';
 
 // This snapshot contains only the public plan shipped with revision 1, never user data.
 export const previousItinerary = () => stateSchema.parse(previousData);
@@ -89,7 +92,7 @@ function mergeReviewedActivity(local: Activity, previous: object, revised: Activ
 function applyVicusConfirmation(local: AppState, plan: AppState): AppState {
   return stateSchema.parse({
     ...local,
-    itineraryRevision: ITINERARY_REVISION,
+    itineraryRevision: beforeFiumicinoWalkRevision,
     activities: mergeReviewedRecords(
       local.activities,
       beforeVicusConfirmation.activities,
@@ -403,8 +406,7 @@ function applyExpenseReview(local: AppState, plan: AppState): AppState {
   }), plan);
 }
 
-/** Apply each known revision in order, while allowing local records and edits to win. */
-export function correctItinerary(current: AppState): AppState {
+function correctEarlierItinerary(current: AppState): AppState {
   if (current.itineraryRevision === beforeVicusConfirmation.itineraryRevision)
     return applyVicusConfirmation(current, suppliedItinerary());
   if (current.itineraryRevision === beforeRouteReview.itineraryRevision)
@@ -454,7 +456,7 @@ export function correctItinerary(current: AppState): AppState {
 
   return stateSchema.parse({
     ...local,
-    itineraryRevision: ITINERARY_REVISION,
+    itineraryRevision: beforeFiumicinoWalkRevision,
     days: plan.days.map((day) => {
       const existing = local.days.find((item) => item.date === day.date);
       const old = previous.days.find((item) => item.date === day.date);
@@ -463,7 +465,7 @@ export function correctItinerary(current: AppState): AppState {
     activities: reviseRecords(
       local.activities,
       previous.activities,
-      plan.activities,
+      plan.activities.filter(({ id }) => id !== FIUMICINO_WALK_ID),
       mergeActivity,
     ),
     expenses: plan.expenses.filter(isBookingPayment).reduce(withBookingPayment, expenses),
@@ -478,6 +480,28 @@ export function correctItinerary(current: AppState): AppState {
       plan.alternatives ?? [],
     ),
   });
+}
+
+/** Apply each known revision in order, while allowing local records and edits to win. */
+export function correctItinerary(current: AppState): AppState {
+  const local = correctEarlierItinerary(current);
+  if (local.itineraryRevision !== beforeFiumicinoWalkRevision) return local;
+
+  const walk = suppliedItinerary().activities.find(({ id }) => id === FIUMICINO_WALK_ID)!;
+  const activities = [...local.activities];
+  const trainIndex = activities.findIndex(
+    ({ id, date }) => id === 'nov-23-train' && date === walk.date,
+  );
+  if (
+    trainIndex >= 0 &&
+    activities.some(({ id, date }) => id === 'plan-4-06' && date === walk.date) &&
+    !activities.some(
+      ({ id, date, title }) => id === walk.id || (date === walk.date && title === walk.title),
+    )
+  ) {
+    activities.splice(trainIndex, 0, walk);
+  }
+  return { ...local, activities, itineraryRevision: ITINERARY_REVISION };
 }
 
 // Add the supplied plan once, preserving local edits, documents and existing expenses.
