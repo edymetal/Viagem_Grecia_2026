@@ -350,7 +350,7 @@ export function ActivityDetails({
               )}
             </section>
           )}
-          <ActivityDocuments key={a.id} activity={a} />
+          <ActivityDocuments key={a.id} activity={a} documents={store.documents} />
           {metroGuide ? <MetroDirections key={a.id} guide={metroGuide} /> : a.description && (
             <section className="card detail-section">
               <h3>Orientações</h3>
