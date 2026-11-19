@@ -31,6 +31,8 @@ import { activityPhoto } from '../data/placePhotos';
 import { ActivityDocuments } from '../components/ActivityDocuments';
 import { AthensAirportPass } from '../components/AthensAirportPass';
 import { HotelCheckIn } from '../components/HotelCheckIn';
+import { MetroDirections } from '../components/MetroDirections';
+import { metroGuideFor } from '../data/metroGuides';
 
 const airlineStatusPages: Record<string, string | undefined> = {
   AZ: 'https://www.ita-airways.com/it/it/manage-my-bookings/manage/flight-status',
@@ -59,6 +61,7 @@ export function ActivityDetails({
   );
   const destination = mapDestination(a);
   const placePhoto = activityPhoto(a);
+  const metroGuide = metroGuideFor(a);
   const photoSource = placePhoto?.src ?? (a.id === 'plan-2-11' ? parthenonPhoto : undefined);
   const directionMode =
     a.transport.mode === 'A pé'
@@ -267,13 +270,13 @@ export function ActivityDetails({
             )}
           </section>
           <ActivityDocuments key={a.id} activity={a} />
-          {a.description && (
+          {metroGuide ? <MetroDirections key={a.id} guide={metroGuide} /> : a.description && (
             <section className="card detail-section">
               <h3>Orientações</h3>
               <p className="detail-description">{a.description}</p>
             </section>
           )}
-          {showAirportPass && <AthensAirportPass />}
+          {showAirportPass && <AthensAirportPass stage={a.id === 'plan-1-10' ? 'walk' : 'buy'} />}
         </div>
         <div className="activity-detail-secondary">
           <TransportDetails activity={a} card />

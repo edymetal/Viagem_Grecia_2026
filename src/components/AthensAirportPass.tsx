@@ -1,6 +1,8 @@
-export function AthensAirportPass() {
-  return (
-    <>
+import { MetroPhoto } from './MetroPhoto';
+
+export function AthensAirportPass({ stage }: { stage: 'walk' | 'buy' }) {
+  if (stage === 'walk') {
+    return (
       <section className="card detail-section" aria-labelledby="athens-airport-walk">
         <h3 id="athens-airport-walk">Do desembarque à máquina</h3>
         <ol className="airport-pass-steps">
@@ -9,8 +11,8 @@ export function AthensAirportPass() {
             <strong lang="en">Baggage Claim</strong> e siga para o saguão público de chegadas.
           </li>
           <li>
-            Procure as placas <strong lang="en">To Trains / Metro</strong> e suba um andar pelo
-            elevador ou pela escada rolante. A passarela fica no nível de{' '}
+            Procure as placas <strong lang="en">To Trains &amp; Long-Term Parking</strong> e suba um
+            andar pelo elevador ou pela escada rolante. A passarela fica no nível de{' '}
             <strong lang="en">Departures</strong> (Partidas), na área pública.
           </li>
           <li>
@@ -29,6 +31,7 @@ export function AthensAirportPass() {
         <blockquote className="airport-pass-phrase" lang="el">
           Πού είναι το μηχάνημα έκδοσης εισιτηρίων του μετρό;
         </blockquote>
+        <MetroPhoto id="airportBridge" />
         <div className="detail-external-links">
           <a
             href="https://media.aia.gr/assets/aiaportal/media/root/traveller/shop-and-dining/aia_sc_map_dec_2025.pdf"
@@ -39,21 +42,25 @@ export function AthensAirportPass() {
           </a>
         </div>
       </section>
+    );
+  }
 
+  return (
+    <>
       <section className="card detail-section" aria-labelledby="athens-airport-purchase">
         <h3 id="athens-airport-purchase">Como comprar na máquina</h3>
         <ol className="airport-pass-steps">
           <li>
             Selecione <strong lang="en">English</strong> (inglês) e depois{' '}
-            <strong lang="en">Buy Ticket</strong> ou{' '}
-            <strong lang="en">Buy Travel Product</strong> (comprar bilhete).
+            <strong lang="en">Buy Ticket</strong> ou <strong lang="en">Buy Travel Product</strong>{' '}
+            (comprar bilhete).
           </li>
           <li>
             No menu de tarifas, procure <strong lang="en">3-Day Tourist Ticket</strong> ou{' '}
             <strong lang="en">3 Days</strong>. Se a máquina mostrar categorias, abra{' '}
             <strong lang="en">Athens &amp; Airport, Round</strong> e procure os 3 dias dentro dela.
-            Antes de pagar, confira <strong>1 bilhete, 3 dias e € 20</strong>. Se aparecer € 9 ou
-            € 16 no menu rápido, volte à lista de tarifas.
+            Antes de pagar, confira <strong>1 bilhete, 3 dias e € 20</strong>. Se aparecer € 9 ou €
+            16 no menu rápido, volte à lista de tarifas.
           </li>
           <li>
             Pague com cartão no leitor da máquina ou selecione <strong lang="en">Cash</strong>{' '}
@@ -100,12 +107,13 @@ export function AthensAirportPass() {
             em Syngrou-Fix. O trem suburbano aparece como <strong>Proastiakos</strong> no painel.
           </li>
           <li>
-            As <strong>72 horas</strong> começam na primeira catraca. Se validar às 19h15 de
-            sexta (20/11), o passe vale até 19h15 de segunda (23/11), no horário de Atenas. O
-            mesmo bilhete cobre o percurso do aeroporto até a cidade na sexta e a volta ao
-            aeroporto na segunda de manhã.
+            As <strong>72 horas</strong> começam na primeira catraca. Se validar às 19h15 de sexta
+            (20/11), o passe vale até 19h15 de segunda (23/11), no horário de Atenas. O mesmo
+            bilhete cobre o percurso do aeroporto até a cidade na sexta e a volta ao aeroporto na
+            segunda de manhã.
           </li>
         </ol>
+        <MetroPhoto id="airportGates" />
       </section>
     </>
   );

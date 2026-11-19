@@ -28,6 +28,20 @@ Fotos do Wikimedia Commons, redimensionadas para 800 px e convertidas para WebP;
 - **monastiraki.webp** — Praça Monastiraki. Autor: Jakub Hałun. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0). [Arquivo original e informações](https://commons.wikimedia.org/wiki/File:Church_of_the_Virgin_Mary_Pantanassa_-_Monastiraki_Square,_Athens,_20240531_1631_9845.jpg).
 - **kotsanas.webp** — Exposição do Museu Kotsanas em Atenas. Autor: Denexeitelos. [CC BY 4.0](https://creativecommons.org/licenses/by/4.0). [Arquivo original e informações](https://commons.wikimedia.org/wiki/File:Ancient_vending_music,_Kotsanas_Museum_of_Ancient_Technology,_Athens,_Greece.jpg).
 
+## Fotos das estações
+
+As fotos foram redimensionadas e convertidas para WebP para que o guia do metrô funcione offline.
+
+- `ath-airport-bridge.webp` · Peloponnisios · [Original](https://commons.wikimedia.org/wiki/File:Athens_airport_train_station.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-airport.webp` · George Kokkinidis-GR · [Original](https://commons.wikimedia.org/wiki/File:Athens_Airport_suburban_rail_and_metro_station.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-airport-gates.webp` · AleWi · [Original](https://commons.wikimedia.org/wiki/File:Athens_International_Airport_metro_-_1.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-syntagma.webp` · HerrGutmannsWiki · [Original](https://commons.wikimedia.org/wiki/File:Entrance_of_Syntagma_station.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-syngrou-fix.webp` · Argybz · [Original](https://commons.wikimedia.org/wiki/File:Sygrou-Fix_metro_station_entrance_Sygrou.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-acropoli.webp` · Argybz · [Original](https://commons.wikimedia.org/wiki/File:Akropoli_metro_station_entrance_Makrygianni.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- `ath-monastiraki.webp` · Юкатан · [Original](https://commons.wikimedia.org/wiki/File:Monastiraki_station.jpg) · [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)
+- `rome-manzoni.webp` · Simone Ramella · [Original](https://commons.wikimedia.org/wiki/File:L%27ingresso_della_metropolitana_di_Manzoni.jpg) · [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)
+- `rome-ottaviano.webp` · Chabe01 · [Original](https://commons.wikimedia.org/wiki/File:Entr%C3%A9e_Station_M%C3%A9tro_Ottaviano_San_Pietro_Viale_Guilio_Cesare_-_Rome_(IT62)_-_2021-08-28_-_2.jpg) · [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+
 ## Símbolos de transporte
 
 - **brands/ita-airways.png** – Símbolo ITA recortado do [logotipo da ITA Airways](https://commons.wikimedia.org/wiki/File:ITA_Airways_Logo.svg), Wikimedia Commons.

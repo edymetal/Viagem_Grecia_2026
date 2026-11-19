@@ -1,5 +1,45 @@
 import { test, expect } from '@playwright/test';
 
+test('guia do metrô mostra baldeações e fotos precacheadas no celular', async ({
+  page,
+  context,
+}) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto('./#roteiro/2026-11-20/plan-1-12');
+  const guide = page.getByRole('region', { name: 'Metrô passo a passo' });
+  await expect(guide).toContainText('Dimotiko Theatro');
+  await expect(guide).toContainText('Elliniko');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload();
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await context.setOffline(true);
+
+  for (const [href, sign, photo] of [
+    ['2026-11-21/nov-21-metro', 'Makrygianni', 'Entrada da estação Acropoli'],
+    ['2026-11-23/plan-4-04', 'Airport / Αεροδρόμιο', 'Plataformas da estação ferroviária'],
+    ['2026-11-24/nov-24-metro', 'Battistini', 'Acesso à estação Ottaviano'],
+  ]) {
+    await page.goto(`./#roteiro/${href}`);
+    await page.reload();
+    await expect(guide).toContainText(sign);
+    const stationPhoto = guide.getByRole('img', { name: new RegExp(photo) });
+    await stationPhoto.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => stationPhoto.evaluate((img: HTMLImageElement) => img.naturalWidth))
+      .toBeGreaterThan(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      320,
+    );
+  }
+
+  await page.goto('./#roteiro/2026-11-25/nov-25-planetarium-route');
+  await expect(guide).toContainText('Laurentina');
+  await expect(guide.getByRole('link', { name: 'Caminhada até o Planetário' })).toHaveAttribute(
+    'href',
+    /travelmode=walking/,
+  );
+});
+
 test('mostra o caminho e a compra do passe de Atenas nas duas etapas, mesmo offline', async ({
   page,
   context,
