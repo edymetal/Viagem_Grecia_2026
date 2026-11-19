@@ -1,5 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { version } from '../../package.json';
+
+const { version } = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'));
 
 test('mostra os destinos e opções de compra do Leonardo Express offline', async ({
   context,
