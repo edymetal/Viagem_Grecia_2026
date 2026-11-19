@@ -31,6 +31,7 @@ import { activityPhoto } from '../data/placePhotos';
 import { ActivityDocuments } from '../components/ActivityDocuments';
 import { AthensAirportPass } from '../components/AthensAirportPass';
 import { HotelCheckIn } from '../components/HotelCheckIn';
+import { LeonardoExpressGuide } from '../components/LeonardoExpressGuide';
 import { MetroDirections } from '../components/MetroDirections';
 import { metroGuideFor } from '../data/metroGuides';
 
@@ -81,6 +82,11 @@ export function ActivityDetails({
   const showAirportPass =
     (a.id === 'plan-1-10' || a.id === 'plan-1-11') &&
     destination === 'Estação de metrô do aeroporto de Atenas';
+  const leonardoFromAirport =
+    a.id === 'nov-23-train' && a.transport.lines === 'Leonardo Express';
+  const leonardoToAirport =
+    (a.id === 'nov-26-train' && a.transport.lines === 'Leonardo Express') ||
+    (a.id === 'nov-26-platform' && destination === 'Roma Termini');
   const hasStatus = a.confirmation !== 'Planejada' || a.required;
   const scheduledDuration = (activityInstant(a, 'end') - activityInstant(a)) / 60_000;
   const showDuration =
@@ -277,6 +283,9 @@ export function ActivityDetails({
             </section>
           )}
           {showAirportPass && <AthensAirportPass stage={a.id === 'plan-1-10' ? 'walk' : 'buy'} />}
+          {(leonardoFromAirport || leonardoToAirport) && (
+            <LeonardoExpressGuide fromAirport={leonardoFromAirport} />
+          )}
         </div>
         <div className="activity-detail-secondary">
           <TransportDetails activity={a} card />

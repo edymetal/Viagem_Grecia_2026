@@ -1,0 +1,30 @@
+import { expect, test } from '@playwright/test';
+import { version } from '../../package.json';
+
+test('mostra os destinos e opções de compra do Leonardo Express offline', async ({
+  context,
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('./');
+  await expect(page.locator('.mobile-app-name .app-version')).toHaveText(`Versão ${version}`);
+  await page.goto('./#roteiro/2026-11-23/nov-23-train');
+  const guide = page.getByRole('region', { name: /Leonardo Express.*Como comprar na máquina/ });
+  await expect(guide.getByRole('link', { name: 'Abrir estação no mapa' })).toHaveAttribute(
+    'href',
+    /Fiumicino\+Aeroporto/,
+  );
+  await expect(guide.locator('blockquote[lang="it"]')).toContainText('per Roma Termini');
+  await page.evaluate(() => navigator.serviceWorker.ready.then(() => undefined));
+  await page.reload();
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await context.setOffline(true);
+  await page.goto('./#roteiro/2026-11-26/nov-26-platform');
+  await page.reload();
+
+  await expect(guide.locator('blockquote[lang="it"]')).toContainText('per Fiumicino Aeroporto');
+  await expect(guide).toContainText('Ordinaria');
+  await expect(guide).toContainText('€ 14');
+  await expect(guide).toContainText('23 e 24');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+});
