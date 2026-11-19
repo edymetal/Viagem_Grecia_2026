@@ -19,8 +19,11 @@ test('mapa online mostra pontos, filtra a busca e volta aos cards offline', asyn
   await expect(page.locator('.trip-map-marker')).toHaveCount(21);
   await expect(page.locator('.leaflet-control-attribution')).toContainText('OpenStreetMap');
   await page.getByLabel('Cidade no mapa').selectOption('Roma');
-  await expect(page.locator('.trip-map-marker')).toHaveCount(24);
+  await expect(page.locator('.trip-map-marker')).toHaveCount(25);
   await expect(page.locator('.trip-map-marker[title="Galleria Borghese"]')).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Ver ponto: Estação ferroviária de Fiumicino Aeroporto' }),
+  ).toBeVisible();
   await expect(page.getByRole('button', { name: /Ver ponto: Encontro do Vaticano/ })).toBeVisible();
   await page.getByLabel('Cidade no mapa').selectOption('Sicília');
   await expect(page.locator('.trip-map-marker')).toHaveCount(3);
