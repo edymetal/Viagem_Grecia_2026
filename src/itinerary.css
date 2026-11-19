@@ -462,6 +462,39 @@
   font-size: 15px;
   line-height: 1.45;
 }
+.airport-pass-fare {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--primary-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+.airport-pass-fare strong {
+  color: var(--primary);
+  font-size: 22px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.airport-pass-option {
+  padding: 1px 5px 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.metro-steps > li > .airport-pass-tip {
+  margin-top: 9px;
+  padding: 6px 9px;
+  border-inline-start: 2px solid var(--primary);
+  background: var(--primary-soft);
+}
 .metro-guide h3,
 .metro-stations li,
 .metro-sign {

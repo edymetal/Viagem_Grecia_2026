@@ -1,3 +1,4 @@
+import { Ticket } from 'lucide-react';
 import { MetroPhoto } from './MetroPhoto';
 
 export function AthensAirportPass({ stage }: { stage: 'walk' | 'buy' }) {
@@ -47,31 +48,71 @@ export function AthensAirportPass({ stage }: { stage: 'walk' | 'buy' }) {
 
   return (
     <>
-      <section className="card detail-section" aria-labelledby="athens-airport-purchase">
-        <h3 id="athens-airport-purchase">Como comprar na máquina</h3>
-        <ol className="airport-pass-steps">
+      <section
+        className="card detail-section metro-guide"
+        aria-labelledby="athens-airport-purchase"
+      >
+        <h3 id="athens-airport-purchase">
+          <Ticket size={19} aria-hidden="true" /> Como comprar na máquina
+        </h3>
+        <p className="airport-pass-fare">
+          1 bilhete, 3 dias e <strong>€ 20</strong>
+        </p>
+        <ol className="metro-steps" role="list">
           <li>
-            Selecione <strong lang="en">English</strong> (inglês) e depois{' '}
-            <strong lang="en">Buy Ticket</strong> ou <strong lang="en">Buy Travel Product</strong>{' '}
-            (comprar bilhete).
+            <h4>Abra o menu de compra</h4>
+            <p>
+              Toque em{' '}
+              <strong className="airport-pass-option" lang="en">
+                English
+              </strong>{' '}
+              (inglês). Depois, escolha{' '}
+              <strong className="airport-pass-option" lang="en">
+                Buy Ticket
+              </strong>{' '}
+              ou{' '}
+              <strong className="airport-pass-option" lang="en">
+                Buy Travel Product
+              </strong>{' '}
+              (comprar bilhete).
+            </p>
           </li>
           <li>
-            No menu de tarifas, procure <strong lang="en">3-Day Tourist Ticket</strong> ou{' '}
-            <strong lang="en">3 Days</strong>. Se a máquina mostrar categorias, abra{' '}
-            <strong lang="en">Athens &amp; Airport, Round</strong> e procure os 3 dias dentro dela.
-            Antes de pagar, confira <strong>1 bilhete, 3 dias e € 20</strong>. Se aparecer € 9 ou €
-            16 no menu rápido, volte à lista de tarifas.
+            <h4>Escolha o passe de 3 dias</h4>
+            <p>
+              Procure{' '}
+              <strong className="airport-pass-option" lang="en">
+                3-Day Tourist Ticket
+              </strong>{' '}
+              ou{' '}
+              <strong className="airport-pass-option" lang="en">
+                3 Days
+              </strong>
+              . Se houver categorias, abra{' '}
+              <strong className="airport-pass-option" lang="en">
+                Athens &amp; Airport, Round
+              </strong>{' '}
+              (ida e volta) e selecione os 3 dias.
+            </p>
+            <p className="airport-pass-tip">
+              Viu <strong>€ 9</strong> ou <strong>€ 16</strong> no menu rápido? Volte à lista de
+              tarifas e selecione o passe de <strong>€ 20</strong>.
+            </p>
           </li>
           <li>
-            Pague com cartão no leitor da máquina ou selecione <strong lang="en">Cash</strong>{' '}
-            (dinheiro), se disponível. Retire o bilhete físico <strong>ATH.ENA Ticket</strong>, o
-            recibo e o eventual troco na bandeja.
+            <h4>Pague e retire o bilhete</h4>
+            <p>
+              Use o cartão no leitor ou selecione{' '}
+              <strong className="airport-pass-option" lang="en">
+                Cash
+              </strong>{' '}
+              (dinheiro), se disponível. Pegue o <strong>ATH.ENA Ticket</strong>, o recibo e o
+              eventual troco na bandeja.
+            </p>
           </li>
         </ol>
-        <p className="detail-description">
-          Se precisar de ajuda, mostre a frase abaixo no guichê do metrô. O horário publicado pela
-          STASY para a sexta-feira é das 06h às 23h30.
-        </p>
+        <h4>Frase em grego para mostrar na bilheteria</h4>
+        <p className="detail-description">Horário de sexta-feira · 06h–23h30</p>
         <blockquote className="airport-pass-phrase" lang="el">
           Δεν μιλάω αγγλικά. Θα ήθελα ένα τουριστικό εισιτήριο τριών ημερών, με μία διαδρομή από το
           αεροδρόμιο και μία επιστροφή στο αεροδρόμιο με το μετρό. Ευχαριστώ!
